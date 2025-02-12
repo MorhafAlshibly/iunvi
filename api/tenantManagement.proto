@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "github.com/MorhafAlshibly/iunvi/gen/api";
+
+service TenantManagementService {
+  rpc CreateWorkspace(CreateWorkspaceRequest) returns (CreateWorkspaceResponse);
+  rpc GetWorkspaces(GetWorkspacesRequest) returns (GetWorkspacesResponse);
+}
+
+message CreateWorkspaceRequest {
+  string name = 1;
+}
+
+message CreateWorkspaceResponse {
+  string id = 1;
+}
+
+message GetWorkspacesRequest {
+}
+
+message GetWorkspacesResponse {
+  repeated Workspace workspaces = 1;
+}
+
+message Workspace {
+  string id = 1;
+  string name = 2;
+}

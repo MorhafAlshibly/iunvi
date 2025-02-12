@@ -1,0 +1,14 @@
+version: "3"
+
+includes:
+   client:
+      taskfile: client/Client.yml
+      dir: client
+   tenantManagement:
+      taskfile: cmd/tenantManagement/TenantManagement.yml
+      dir: cmd/tenantManagement
+
+tasks:
+   generate:
+      cmds:
+         - buf generate
