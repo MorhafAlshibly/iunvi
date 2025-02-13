@@ -1,36 +1,27 @@
 import { ReactNode, useCallback } from "react";
-import { useMsal, useIsAuthenticated } from "@azure/msal-react";
-
-export enum ROLES {
-  ADMIN = "ADMIN",
-  USER = "USER",
-}
-
-type RoleTypes = keyof typeof ROLES;
+import { useUser } from "@/lib/authentication";
+import { ROLES, Role } from "@/types/user";
 
 export const POLICIES = {};
 
 export const useAuthorization = () => {
-  const { accounts } = useMsal();
-  const isAuthenticated = useIsAuthenticated();
-  if (!isAuthenticated) {
+  const user = useUser();
+  if (!user.data) {
     throw Error("User does not exist!");
   }
 
-  let role = accounts[0]?.idTokenClaims?.role as RoleTypes;
-
   const checkAccess = useCallback(
-    ({ allowedRoles }: { allowedRoles: RoleTypes[] }) => {
-      if (allowedRoles && allowedRoles.length > 0 && role) {
-        return allowedRoles?.includes(role);
+    ({ allowedRoles }: { allowedRoles: Role[] }) => {
+      if (allowedRoles && allowedRoles.length > 0 && user.data.role) {
+        return allowedRoles?.includes(user.data.role);
       }
 
       return true;
     },
-    [role],
+    [user.data.role],
   );
 
-  return { checkAccess, role };
+  return { checkAccess };
 };
 
 type AuthorizationProps = {
@@ -38,7 +29,7 @@ type AuthorizationProps = {
   children: ReactNode;
 } & (
   | {
-      allowedRoles: RoleTypes[];
+      allowedRoles: Role[];
       policyCheck?: never;
     }
   | {

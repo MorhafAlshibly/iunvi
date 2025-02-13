@@ -1,28 +1,28 @@
 import { useNavigate, useSearchParams } from "react-router";
-import { useMsal, useIsAuthenticated } from "@azure/msal-react";
 import { paths } from "@/config/paths";
 import { useEffect } from "react";
+import { useLogin } from "@/lib/authentication";
 
 const LoginRoute = () => {
   const navigate = useNavigate();
-  const { instance } = useMsal();
-  const isAuthenticated = useIsAuthenticated();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
+  const login = useLogin({
+    onSuccess: () => {
+      navigate(
+        `${redirectTo ? `${redirectTo}` : paths.app.dashboard.getHref()}`,
+        {
+          replace: true,
+        },
+      );
+    },
+  });
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate(paths.app.dashboard.getHref(), { replace: true });
-    }
-    const authenticate = async () => {
-      await instance.initialize();
-      console.log(import.meta.env.VITE_AZUREADSCOPE);
-      await instance.loginRedirect({
-        scopes: [import.meta.env.VITE_AZUREADSCOPE as string],
-      });
-    };
-    authenticate();
-  }, [isAuthenticated, instance, navigate]);
+    login.mutate({});
+  }, []);
 
-  return <></>;
+  return <>Login window opened</>;
 };
 
 export default LoginRoute;

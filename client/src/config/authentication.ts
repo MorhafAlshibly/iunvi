@@ -1,10 +1,9 @@
 export const msalConfig = {
   auth: {
-    clientId: import.meta.env.VITE_AZUREADCLIENTID,
-    authority:
-      "https://login.microsoftonline.com/" +
-      import.meta.env.VITE_AZUREADTENANTID,
-    redirectUri: import.meta.env.VITE_AZUREADREDIRECTURI,
+    clientId: import.meta.env.VITE_AZUREADCLIENTID as string,
+    authority: ("https://login.microsoftonline.com/" +
+      import.meta.env.VITE_AZUREADTENANTID) as string,
+    redirectUri: import.meta.env.VITE_AZUREADREDIRECTURI as string,
   },
   cache: {
     cacheLocation: "sessionStorage", // 'sessionStorage' is more secure but 'localStorage' keeps the user signed in
@@ -16,5 +15,5 @@ export const msalConfig = {
 };
 
 export const loginRequest = {
-  scopes: ["User.Read"], // Define permissions you need (e.g., Microsoft Graph API)
+  scopes: [import.meta.env.VITE_AZUREADSCOPE as string],
 };

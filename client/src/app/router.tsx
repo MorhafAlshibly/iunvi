@@ -9,8 +9,7 @@ import {
 } from "./routes/app/root";
 
 import { paths } from "@/config/paths";
-import { MsalAuthenticationTemplate } from "@azure/msal-react";
-import { InteractionType } from "@azure/msal-browser";
+import { ProtectedRoute } from "@/lib/authentication";
 
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;
@@ -35,40 +34,40 @@ export const createAppRouter = (queryClient: QueryClient) =>
     {
       path: paths.app.root.path,
       element: (
-        <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}>
+        <ProtectedRoute>
           <AppRoot />
-        </MsalAuthenticationTemplate>
+        </ProtectedRoute>
       ),
       ErrorBoundary: AppRootErrorBoundary,
-      //   children: [
-      //     {
-      //       path: paths.app.discussions.path,
-      //       lazy: () =>
-      //         import("./routes/app/discussions/discussions").then(
-      //           convert(queryClient),
-      //         ),
-      //     },
-      //     {
-      //       path: paths.app.discussion.path,
-      //       lazy: () =>
-      //         import("./routes/app/discussions/discussion").then(
-      //           convert(queryClient),
-      //         ),
-      //     },
-      //     {
-      //       path: paths.app.users.path,
-      //       lazy: () => import("./routes/app/users").then(convert(queryClient)),
-      //     },
-      //     {
-      //       path: paths.app.profile.path,
-      //       lazy: () => import("./routes/app/profile").then(convert(queryClient)),
-      //     },
-      //     {
-      //       path: paths.app.dashboard.path,
-      //       lazy: () =>
-      //         import("./routes/app/dashboard").then(convert(queryClient)),
-      //     },
-      //   ],
+      children: [
+        //     {
+        //       path: paths.app.discussions.path,
+        //       lazy: () =>
+        //         import("./routes/app/discussions/discussions").then(
+        //           convert(queryClient),
+        //         ),
+        //     },
+        //     {
+        //       path: paths.app.discussion.path,
+        //       lazy: () =>
+        //         import("./routes/app/discussions/discussion").then(
+        //           convert(queryClient),
+        //         ),
+        //     },
+        //     {
+        //       path: paths.app.users.path,
+        //       lazy: () => import("./routes/app/users").then(convert(queryClient)),
+        //     },
+        //     {
+        //       path: paths.app.profile.path,
+        //       lazy: () => import("./routes/app/profile").then(convert(queryClient)),
+        //     },
+        {
+          path: paths.app.dashboard.path,
+          lazy: () =>
+            import("./routes/app/dashboard").then(convert(queryClient)),
+        },
+      ],
     },
     {
       path: "*",

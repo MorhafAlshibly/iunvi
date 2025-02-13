@@ -5,8 +5,8 @@ import { NavLink, useNavigate, useNavigation } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { paths } from "@/config/paths";
-import { useMsal } from "@azure/msal-react";
-import { ROLES, useAuthorization } from "@/lib/authorization";
+import { ROLES } from "@/types/user";
+import { useAuthorization } from "@/lib/authorization";
 import { cn } from "@/utils/cn";
 
 import {
@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Link } from "../ui/link";
+import { useLogout } from "@/lib/authentication";
 
 type SideNavigationItem = {
   name: string;
@@ -76,7 +77,9 @@ const Progress = () => {
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
-  const { instance, accounts } = useMsal();
+  const logout = useLogout({
+    onSuccess: () => navigate(paths.auth.login.getHref(location.pathname)),
+  });
   const { checkAccess } = useAuthorization();
   const navigation = [
     { name: "Dashboard", to: paths.app.dashboard.getHref(), icon: Home },
@@ -130,10 +133,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 <span className="sr-only">Toggle Menu</span>
               </Button>
             </DrawerTrigger>
-            <DrawerContent
-              // side="left"
-              className="bg-black pt-10 text-white sm:max-w-60"
-            >
+            <DrawerContent className="bg-black pt-10 text-white sm:max-w-60">
               <nav className="grid gap-6 text-lg font-medium">
                 <div className="flex h-16 shrink-0 items-center px-4">
                   <Logo />
@@ -185,14 +185,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className={cn("block px-4 py-2 text-sm text-gray-700 w-full")}
-                onClick={() =>
-                  instance.logoutRedirect({
-                    account: accounts[0],
-                    postLogoutRedirectUri: paths.auth.login.getHref(
-                      location.pathname,
-                    ),
-                  })
-                }
+                onClick={() => logout.mutate({})}
               >
                 Sign Out
               </DropdownMenuItem>
