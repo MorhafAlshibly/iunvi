@@ -10,7 +10,6 @@ import { loginRequest } from "@/config/authentication";
 
 const getUser = async (): Promise<User> => {
   const user = instance.getActiveAccount()?.idTokenClaims;
-  console.log("Got user", user);
   if (!user) {
     throw new Error("User not found");
   }
@@ -26,7 +25,6 @@ const getUser = async (): Promise<User> => {
 
 const login = async (): Promise<User> => {
   await instance.loginPopup(loginRequest);
-  console.log("Logged in");
   return getUser();
 };
 
