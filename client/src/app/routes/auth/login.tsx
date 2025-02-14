@@ -1,12 +1,13 @@
 import { useNavigate, useSearchParams } from "react-router";
 import { paths } from "@/config/paths";
 import { useEffect } from "react";
-import { useLogin } from "@/lib/authentication";
+import { useLogin, useUser } from "@/lib/authentication";
 
 const LoginRoute = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo");
+  const user = useUser();
   const login = useLogin({
     onSuccess: () => {
       navigate(
@@ -19,10 +20,14 @@ const LoginRoute = () => {
   });
 
   useEffect(() => {
+    if (user.data) {
+      navigate(paths.app.dashboard.getHref(), { replace: true });
+      return;
+    }
     login.mutate({});
-  }, []);
+  }, [user.data]);
 
-  return <>Login window opened</>;
+  return <>Login popup opened</>;
 };
 
 export default LoginRoute;
