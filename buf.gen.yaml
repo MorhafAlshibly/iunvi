@@ -10,3 +10,7 @@ plugins:
     out: client/src/types
     include_imports: true
     opt: target=ts
+  - remote: buf.build/connectrpc/query-es
+    out: client/src/types
+    include_imports: true
+    opt: target=ts

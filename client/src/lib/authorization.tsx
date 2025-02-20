@@ -1,8 +1,10 @@
 import { ReactNode, useCallback } from "react";
 import { useUser } from "@/lib/authentication";
-import { ROLES, Role } from "@/types/user";
+import { ROLES, Role, User } from "@/types/user";
 
-export const POLICIES = {};
+export const POLICIES = {
+  "admin:access": (user: User) => user.role === ROLES.ADMIN,
+};
 
 export const useAuthorization = () => {
   const user = useUser();

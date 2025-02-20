@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file api/tenantManagement.proto.
  */
 export const file_api_tenantManagement: GenFile = /*@__PURE__*/
-  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoCSIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiJQoJV29ya3NwYWNlEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkyrwEKF1RlbmFudE1hbmFnZW1lbnRTZXJ2aWNlEkwKD0NyZWF0ZVdvcmtzcGFjZRIbLmFwaS5DcmVhdGVXb3Jrc3BhY2VSZXF1ZXN0GhwuYXBpLkNyZWF0ZVdvcmtzcGFjZVJlc3BvbnNlEkYKDUdldFdvcmtzcGFjZXMSGS5hcGkuR2V0V29ya3NwYWNlc1JlcXVlc3QaGi5hcGkuR2V0V29ya3NwYWNlc1Jlc3BvbnNlQilaJ2dpdGh1Yi5jb20vTW9yaGFmQWxzaGlibHkvaXVudmkvZ2VuL2FwaWIGcHJvdG8z");
+  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoDCIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAwSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiJQoJV29ya3NwYWNlEgoKAmlkGAEgASgMEgwKBG5hbWUYAiABKAky9wEKF1RlbmFudE1hbmFnZW1lbnRTZXJ2aWNlEkwKD0NyZWF0ZVdvcmtzcGFjZRIbLmFwaS5DcmVhdGVXb3Jrc3BhY2VSZXF1ZXN0GhwuYXBpLkNyZWF0ZVdvcmtzcGFjZVJlc3BvbnNlEkYKDUdldFdvcmtzcGFjZXMSGS5hcGkuR2V0V29ya3NwYWNlc1JlcXVlc3QaGi5hcGkuR2V0V29ya3NwYWNlc1Jlc3BvbnNlEkYKDUVkaXRXb3Jrc3BhY2USGS5hcGkuRWRpdFdvcmtzcGFjZVJlcXVlc3QaGi5hcGkuRWRpdFdvcmtzcGFjZVJlc3BvbnNlQilaJ2dpdGh1Yi5jb20vTW9yaGFmQWxzaGlibHkvaXVudmkvZ2VuL2FwaWIGcHJvdG8z");
 
 /**
  * @generated from message api.CreateWorkspaceRequest
@@ -34,9 +34,9 @@ export const CreateWorkspaceRequestSchema: GenMessage<CreateWorkspaceRequest> = 
  */
 export type CreateWorkspaceResponse = Message<"api.CreateWorkspaceResponse"> & {
   /**
-   * @generated from field: string id = 1;
+   * @generated from field: bytes id = 1;
    */
-  id: string;
+  id: Uint8Array;
 };
 
 /**
@@ -77,13 +77,48 @@ export const GetWorkspacesResponseSchema: GenMessage<GetWorkspacesResponse> = /*
   messageDesc(file_api_tenantManagement, 3);
 
 /**
+ * @generated from message api.EditWorkspaceRequest
+ */
+export type EditWorkspaceRequest = Message<"api.EditWorkspaceRequest"> & {
+  /**
+   * @generated from field: bytes id = 1;
+   */
+  id: Uint8Array;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message api.EditWorkspaceRequest.
+ * Use `create(EditWorkspaceRequestSchema)` to create a new message.
+ */
+export const EditWorkspaceRequestSchema: GenMessage<EditWorkspaceRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 4);
+
+/**
+ * @generated from message api.EditWorkspaceResponse
+ */
+export type EditWorkspaceResponse = Message<"api.EditWorkspaceResponse"> & {
+};
+
+/**
+ * Describes the message api.EditWorkspaceResponse.
+ * Use `create(EditWorkspaceResponseSchema)` to create a new message.
+ */
+export const EditWorkspaceResponseSchema: GenMessage<EditWorkspaceResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 5);
+
+/**
  * @generated from message api.Workspace
  */
 export type Workspace = Message<"api.Workspace"> & {
   /**
-   * @generated from field: string id = 1;
+   * @generated from field: bytes id = 1;
    */
-  id: string;
+  id: Uint8Array;
 
   /**
    * @generated from field: string name = 2;
@@ -96,7 +131,7 @@ export type Workspace = Message<"api.Workspace"> & {
  * Use `create(WorkspaceSchema)` to create a new message.
  */
 export const WorkspaceSchema: GenMessage<Workspace> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 4);
+  messageDesc(file_api_tenantManagement, 6);
 
 /**
  * @generated from service api.TenantManagementService
@@ -117,6 +152,14 @@ export const TenantManagementService: GenService<{
     methodKind: "unary";
     input: typeof GetWorkspacesRequestSchema;
     output: typeof GetWorkspacesResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.EditWorkspace
+   */
+  editWorkspace: {
+    methodKind: "unary";
+    input: typeof EditWorkspaceRequestSchema;
+    output: typeof EditWorkspaceResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_api_tenantManagement, 0);

@@ -163,6 +163,20 @@ END;
 END;
 GO;
 -- =============================================
+-- Helper functions
+-- =============================================
+GO;
+CREATE FUNCTION auth.fn_GetSessionTenantId() RETURNS UNIQUEIDENTIFIER WITH SCHEMABINDING AS BEGIN RETURN CAST(
+    SESSION_CONTEXT(N'TenantDirectoryId') AS UNIQUEIDENTIFIER
+);
+END;
+GO;
+CREATE FUNCTION auth.fn_GetSessionUserId() RETURNS UNIQUEIDENTIFIER WITH SCHEMABINDING AS BEGIN RETURN CAST(
+    SESSION_CONTEXT(N'UserObjectId') AS UNIQUEIDENTIFIER
+);
+END;
+GO;
+-- =============================================
 -- Roles and Permissions
 -- =============================================
 -- Create roles
@@ -225,20 +239,8 @@ GRANT SELECT ON app.ModelRunStatuses TO WebApp;
 GRANT SELECT,
     INSERT,
     DELETE ON app.ModelRuns TO WebApp;
--- =============================================
--- Helper functions
--- =============================================
-GO;
-CREATE FUNCTION auth.fn_GetSessionTenantId() RETURNS UNIQUEIDENTIFIER WITH SCHEMABINDING AS BEGIN RETURN CAST(
-    SESSION_CONTEXT(N'TenantDirectoryId') AS UNIQUEIDENTIFIER
-);
-END;
-GO;
-CREATE FUNCTION auth.fn_GetSessionUserId() RETURNS UNIQUEIDENTIFIER WITH SCHEMABINDING AS BEGIN RETURN CAST(
-    SESSION_CONTEXT(N'UserObjectId') AS UNIQUEIDENTIFIER
-);
-END;
-GO;
+GRANT EXECUTE ON auth.fn_GetSessionTenantId TO WebApp;
+GRANT EXECUTE ON auth.fn_GetSessionUserId TO WebApp;
 -- =============================================
 -- Row-Level Security (RLS) Policies
 -- =============================================

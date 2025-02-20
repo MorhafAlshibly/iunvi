@@ -3,6 +3,8 @@ package model
 import (
 	"context"
 	"database/sql"
+
+	mssql "github.com/microsoft/go-mssqldb"
 )
 
 const CreateWorkspace = `-- name: CreateWorkspace :execresult
@@ -11,7 +13,7 @@ VALUES (auth.fn_GetSessionTenantId(), @Name)
 `
 
 func (q *Queries) CreateWorkspace(ctx context.Context, name string) (sql.Result, error) {
-	return q.db.ExecContext(ctx, CreateWorkspace, name)
+	return q.db.ExecContext(ctx, CreateWorkspace, sql.Named("Name", name))
 }
 
 const GetWorkspaces = `-- name: GetWorkspaces :many
@@ -19,8 +21,7 @@ SELECT WorkspaceId,
     TenantDirectoryId,
     Name,
     CreatedAt
-FROM auth.Workspaces
-LIMIT @Limit OFFSET @Offset
+FROM auth.Workspaces;
 `
 
 type GetWorkspacesParams struct {
@@ -29,7 +30,7 @@ type GetWorkspacesParams struct {
 }
 
 func (q *Queries) GetWorkspaces(ctx context.Context, arg GetWorkspacesParams) ([]AuthWorkspace, error) {
-	rows, err := q.db.QueryContext(ctx, GetWorkspaces, arg.Limit, arg.Offset)
+	rows, err := q.db.QueryContext(ctx, GetWorkspaces, sql.Named("Limit", arg.Limit), sql.Named("Offset", arg.Offset))
 	if err != nil {
 		return nil, err
 	}
@@ -62,12 +63,11 @@ SELECT WorkspaceId,
 	Name,
 	CreatedAt
 FROM auth.Workspaces
-WHERE Name = @Name
-LIMIT 1
+WHERE Name = @Name;
 `
 
 func (q *Queries) GetWorkspace(ctx context.Context, name string) (AuthWorkspace, error) {
-	row := q.db.QueryRowContext(ctx, GetWorkspaceByName, name)
+	row := q.db.QueryRowContext(ctx, GetWorkspaceByName, sql.Named("Name", name))
 	var item AuthWorkspace
 	err := row.Scan(
 		&item.WorkspaceID,
@@ -76,4 +76,19 @@ func (q *Queries) GetWorkspace(ctx context.Context, name string) (AuthWorkspace,
 		&item.CreatedAt,
 	)
 	return item, err
+}
+
+const EditWorkspace = `-- name: EditWorkspace :execresult
+UPDATE auth.Workspaces
+SET Name = @Name
+WHERE WorkspaceId = @WorkspaceId;
+`
+
+type EditWorkspaceParams struct {
+	WorkspaceId mssql.UniqueIdentifier `db:"WorkspaceId"`
+	Name        string                 `db:"Name"`
+}
+
+func (q *Queries) EditWorkspace(ctx context.Context, arg EditWorkspaceParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, EditWorkspace, sql.Named("WorkspaceId", arg.WorkspaceId), sql.Named("Name", arg.Name))
 }

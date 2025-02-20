@@ -26,21 +26,15 @@ export const paths = {
       path: "",
       getHref: () => "/app",
     },
-    discussions: {
-      path: "discussions",
-      getHref: () => "/app/discussions",
-    },
-    discussion: {
-      path: "discussions/:discussionId",
-      getHref: (id: string) => `/app/discussions/${id}`,
-    },
-    users: {
-      path: "users",
-      getHref: () => "/app/users",
-    },
-    profile: {
-      path: "profile",
-      getHref: () => "/app/profile",
+    admin: {
+      root: {
+        path: "admin",
+        getHref: () => "/app/admin",
+      },
+      workspaces: {
+        path: "workspaces",
+        getHref: () => "/app/admin/workspaces",
+      },
     },
   },
 } as const;

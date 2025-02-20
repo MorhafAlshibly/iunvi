@@ -10,6 +10,7 @@ import {
 
 import { paths } from "@/config/paths";
 import { ProtectedRoute } from "@/lib/authentication";
+import { POLICIES } from "@/lib/authorization";
 
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;
@@ -40,13 +41,18 @@ export const createAppRouter = (queryClient: QueryClient) =>
       ),
       ErrorBoundary: AppRootErrorBoundary,
       children: [
-        //     {
-        //       path: paths.app.discussions.path,
-        //       lazy: () =>
-        //         import("./routes/app/discussions/discussions").then(
-        //           convert(queryClient),
-        //         ),
-        //     },
+        {
+          path: paths.app.admin.root.path,
+          children: [
+            {
+              path: paths.app.admin.workspaces.path,
+              lazy: () =>
+                import("./routes/app/admin/workspaces").then(
+                  convert(queryClient),
+                ),
+            },
+          ],
+        },
         //     {
         //       path: paths.app.discussion.path,
         //       lazy: () =>

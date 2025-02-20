@@ -29,7 +29,8 @@ const login = async (): Promise<User> => {
 };
 
 const logout = async (): Promise<void> => {
-  await instance.logoutRedirect({
+  await instance.logoutPopup({
+    account: instance.getActiveAccount(),
     postLogoutRedirectUri: paths.home.getHref(),
   });
 };

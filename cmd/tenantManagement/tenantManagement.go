@@ -11,7 +11,6 @@ import (
 
 	"github.com/MorhafAlshibly/iunvi/gen/api/apiconnect"
 	"github.com/MorhafAlshibly/iunvi/internal/tenantManagement"
-	"github.com/MorhafAlshibly/iunvi/internal/tenantManagement/model"
 	"github.com/MorhafAlshibly/iunvi/pkg/middleware"
 	_ "github.com/microsoft/go-mssqldb"
 	"github.com/microsoft/go-mssqldb/azuread"
@@ -44,17 +43,16 @@ func main() {
 		return
 	}
 	defer db.Close()
-
-	service := tenantManagement.NewService(tenantManagement.WithDatabase(model.New(db)))
+	service := tenantManagement.NewService()
 	mux := http.NewServeMux()
 	path, handler := apiconnect.NewTenantManagementServiceHandler(service)
 	cors := middleware.NewCORS(middleware.WithAllowedOrigins([]string{"http://localhost:7575"}))
 	auth := middleware.NewAuthentication(
 		middleware.WithAudience(*azureAdAudience),
 		middleware.WithAzureAdJWKS(*azureAdJWKS),
-		middleware.WithDB(db),
 	)
-	mux.Handle(path, cors.Middleware(auth.Middleware(handler)))
+	transaction := middleware.NewTransaction(middleware.WithDB(db))
+	mux.Handle(path, cors.Middleware(transaction.Middleware(auth.Middleware(handler))))
 	if err := http.ListenAndServe(
 		fmt.Sprintf(":%d", *port),
 		// Use h2c so we can serve HTTP/2 without TLS.

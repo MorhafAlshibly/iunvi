@@ -19,7 +19,6 @@ import (
 )
 
 type Authentication struct {
-	db          *sql.DB
 	audience    string
 	azureAdJWKS string
 }
@@ -33,12 +32,6 @@ func WithAudience(audience string) func(*Authentication) {
 func WithAzureAdJWKS(azureAdJWKS string) func(*Authentication) {
 	return func(input *Authentication) {
 		input.azureAdJWKS = azureAdJWKS
-	}
-}
-
-func WithDB(db *sql.DB) func(*Authentication) {
-	return func(input *Authentication) {
-		input.db = db
 	}
 }
 
@@ -144,16 +137,18 @@ func (a Authentication) Middleware(next http.Handler) http.Handler {
 		ctx = context.WithValue(ctx, "UserObjectId", userObjectId)
 		ctx = context.WithValue(ctx, "TenantRole", highestRole)
 
+		tx := GetTx(ctx)
+
 		// Set Tenant ID in SQL session context
-		_, err = a.db.ExecContext(ctx,
-			"EXEC sp_set_session_context @key = N'TenantId', @value = @TenantDirectoryId;",
+		_, err = tx.ExecContext(ctx,
+			"EXEC sp_set_session_context @key = N'TenantDirectoryId', @value = @TenantDirectoryId;",
 			sql.Named("TenantDirectoryId", tenantDirectoryId),
 		)
 		if err != nil {
 			http.Error(w, "Failed to set tenant context", http.StatusInternalServerError)
 			return
 		}
-		_, err = a.db.ExecContext(ctx,
+		_, err = tx.ExecContext(ctx,
 			"EXEC sp_set_session_context @key = N'UserObjectId', @value = @UserObjectId;",
 			sql.Named("UserObjectId", userObjectId),
 		)
@@ -161,7 +156,7 @@ func (a Authentication) Middleware(next http.Handler) http.Handler {
 			http.Error(w, "Failed to set user context", http.StatusInternalServerError)
 			return
 		}
-		_, err = a.db.ExecContext(ctx,
+		_, err = tx.ExecContext(ctx,
 			"EXEC sp_set_session_context @key = N'TenantRole', @value = @TenantRole;",
 			sql.Named("TenantRole", highestRole),
 		)

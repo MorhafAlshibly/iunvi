@@ -7,6 +7,7 @@ option go_package = "github.com/MorhafAlshibly/iunvi/gen/api";
 service TenantManagementService {
   rpc CreateWorkspace(CreateWorkspaceRequest) returns (CreateWorkspaceResponse);
   rpc GetWorkspaces(GetWorkspacesRequest) returns (GetWorkspacesResponse);
+  rpc EditWorkspace(EditWorkspaceRequest) returns (EditWorkspaceResponse);
 }
 
 message CreateWorkspaceRequest {
@@ -14,7 +15,7 @@ message CreateWorkspaceRequest {
 }
 
 message CreateWorkspaceResponse {
-  string id = 1;
+  bytes id = 1;
 }
 
 message GetWorkspacesRequest {
@@ -24,7 +25,15 @@ message GetWorkspacesResponse {
   repeated Workspace workspaces = 1;
 }
 
+message EditWorkspaceRequest {
+  bytes id = 1;
+  string name = 2;
+}
+
+message EditWorkspaceResponse {
+}
+
 message Workspace {
-  string id = 1;
+  bytes id = 1;
   string name = 2;
 }
