@@ -2,15 +2,43 @@ package tenantManagement
 
 import (
 	"context"
+	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/MorhafAlshibly/iunvi/gen/api"
 	"github.com/MorhafAlshibly/iunvi/internal/tenantManagement/model"
+	"github.com/MorhafAlshibly/iunvi/pkg/conversion"
 	"github.com/MorhafAlshibly/iunvi/pkg/middleware"
+	"github.com/google/uuid"
 	mssql "github.com/microsoft/go-mssqldb"
+	msgraphsdk "github.com/microsoftgraph/msgraph-sdk-go"
+	msgraphcore "github.com/microsoftgraph/msgraph-sdk-go-core"
+	"github.com/microsoftgraph/msgraph-sdk-go/models"
 )
 
 type Service struct {
+	tenantId     string
+	clientId     string
+	clientSecret string
+}
+
+func WithTenantId(tenantId string) func(*Service) {
+	return func(input *Service) {
+		input.tenantId = tenantId
+	}
+}
+
+func WithClientId(clientId string) func(*Service) {
+	return func(input *Service) {
+		input.clientId = clientId
+	}
+}
+
+func WithClientSecret(clientSecret string) func(*Service) {
+	return func(input *Service) {
+		input.clientSecret = clientSecret
+	}
 }
 
 func NewService(options ...func(*Service)) *Service {
@@ -31,19 +59,15 @@ func (s *Service) CreateWorkspace(ctx context.Context, req *connect.Request[api.
 	if err != nil {
 		return nil, err
 	}
-	var id [16]byte
-	copy(id[:], workspace.WorkspaceID[:])
 	res := connect.NewResponse(&api.CreateWorkspaceResponse{
-		Id: id[:],
+		Id: workspace.WorkspaceID[:],
 	})
 	return res, nil
 }
 
 func unmarshalWorkspace(workspace *model.AuthWorkspace) *api.Workspace {
-	var id [16]byte
-	copy(id[:], workspace.WorkspaceID[:])
 	return &api.Workspace{
-		Id:   id[:],
+		Id:   workspace.WorkspaceID[:],
 		Name: workspace.Name,
 	}
 }
@@ -69,11 +93,8 @@ func (s *Service) GetWorkspaces(ctx context.Context, req *connect.Request[api.Ge
 
 func (s *Service) EditWorkspace(ctx context.Context, req *connect.Request[api.EditWorkspaceRequest]) (*connect.Response[api.EditWorkspaceResponse], error) {
 	database := model.New(middleware.GetTx(ctx))
-	// Convert the workspace ID to a 16-byte slice manually
-	var id mssql.UniqueIdentifier
-	copy(id[:], req.Msg.Id)
 	_, err := database.EditWorkspace(ctx, model.EditWorkspaceParams{
-		WorkspaceId: id,
+		WorkspaceId: mssql.UniqueIdentifier(req.Msg.Id),
 		Name:        req.Msg.Name,
 	})
 	if err != nil {
@@ -81,4 +102,46 @@ func (s *Service) EditWorkspace(ctx context.Context, req *connect.Request[api.Ed
 	}
 	res := connect.NewResponse(&api.EditWorkspaceResponse{})
 	return res, nil
+}
+
+func (s *Service) GetUsers(ctx context.Context, req *connect.Request[api.GetUsersRequest]) (*connect.Response[api.GetUsersResponse], error) {
+	accessToken := ctx.Value("accessToken").(string)
+	cred, err := azidentity.NewOnBehalfOfCredentialWithSecret(s.tenantId, s.clientId, accessToken, s.clientSecret, nil)
+	if err != nil {
+		return nil, err
+	}
+	client, err := msgraphsdk.NewGraphServiceClientWithCredentials(cred, []string{"User.ReadBasic.All"})
+	if err != nil {
+		return nil, err
+	}
+	result, err := client.Users().Get(context.Background(), nil)
+	if err != nil {
+		return nil, err
+	}
+	pageIterator, err := msgraphcore.NewPageIterator[models.Userable](result, client.GetAdapter(), models.CreateUserCollectionResponseFromDiscriminatorValue)
+	var users []*api.User
+	err = pageIterator.Iterate(context.Background(), func(user models.Userable) bool {
+		guid, err := uuid.Parse(conversion.PointerToValue(user.GetId(), "00000000-0000-0000-0000-000000000000"))
+		if err != nil {
+			return false
+		}
+		id, err := guid.MarshalBinary()
+		if err != nil {
+			return false
+		}
+		apiUser := &api.User{
+			Id:          id,
+			Username:    conversion.PointerToValue(user.GetUserPrincipalName(), ""),
+			DisplayName: conversion.PointerToValue(user.GetDisplayName(), ""),
+		}
+		users = append(users, apiUser)
+		return true
+	})
+	if err != nil {
+		fmt.Printf("Error iterating through users: %v\n", err)
+		return nil, err
+	}
+	return connect.NewResponse(&api.GetUsersResponse{
+		Users: users,
+	}), nil
 }

@@ -18,3 +18,8 @@ export const getWorkspaces = TenantManagementService.method.getWorkspaces;
  * @generated from rpc api.TenantManagementService.EditWorkspace
  */
 export const editWorkspace = TenantManagementService.method.editWorkspace;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetUsers
+ */
+export const getUsers = TenantManagementService.method.getUsers;

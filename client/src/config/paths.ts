@@ -35,6 +35,10 @@ export const paths = {
         path: "workspaces",
         getHref: () => "/app/admin/workspaces",
       },
+      users: {
+        path: "users",
+        getHref: () => "/app/admin/users",
+      },
     },
   },
 } as const;

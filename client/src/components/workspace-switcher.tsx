@@ -51,7 +51,7 @@ export function WorkspaceSwitcher() {
             <DropdownMenuLabel className="text-neutral-500 text-xs dark:text-neutral-400">
               Workspaces
             </DropdownMenuLabel>
-            {workspaces.map((workspace, index) => (
+            {workspaces.map((workspace) => (
               <DropdownMenuItem
                 key={workspace.id.toString()}
                 onClick={() => changeWorkspace(workspace)}
@@ -61,7 +61,6 @@ export function WorkspaceSwitcher() {
                   <FrameIcon className="size-4 shrink-0" />
                 </div>
                 {workspace.name}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>

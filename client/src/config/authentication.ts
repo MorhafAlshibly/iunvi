@@ -16,4 +16,5 @@ export const msalConfig = {
 
 export const loginRequest = {
   scopes: [import.meta.env.VITE_AZUREADSCOPE as string],
+  prompt: "consent",
 };

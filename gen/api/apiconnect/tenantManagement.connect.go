@@ -42,6 +42,9 @@ const (
 	// TenantManagementServiceEditWorkspaceProcedure is the fully-qualified name of the
 	// TenantManagementService's EditWorkspace RPC.
 	TenantManagementServiceEditWorkspaceProcedure = "/api.TenantManagementService/EditWorkspace"
+	// TenantManagementServiceGetUsersProcedure is the fully-qualified name of the
+	// TenantManagementService's GetUsers RPC.
+	TenantManagementServiceGetUsersProcedure = "/api.TenantManagementService/GetUsers"
 )
 
 // TenantManagementServiceClient is a client for the api.TenantManagementService service.
@@ -49,6 +52,7 @@ type TenantManagementServiceClient interface {
 	CreateWorkspace(context.Context, *connect.Request[api.CreateWorkspaceRequest]) (*connect.Response[api.CreateWorkspaceResponse], error)
 	GetWorkspaces(context.Context, *connect.Request[api.GetWorkspacesRequest]) (*connect.Response[api.GetWorkspacesResponse], error)
 	EditWorkspace(context.Context, *connect.Request[api.EditWorkspaceRequest]) (*connect.Response[api.EditWorkspaceResponse], error)
+	GetUsers(context.Context, *connect.Request[api.GetUsersRequest]) (*connect.Response[api.GetUsersResponse], error)
 }
 
 // NewTenantManagementServiceClient constructs a client for the api.TenantManagementService service.
@@ -80,6 +84,12 @@ func NewTenantManagementServiceClient(httpClient connect.HTTPClient, baseURL str
 			connect.WithSchema(tenantManagementServiceMethods.ByName("EditWorkspace")),
 			connect.WithClientOptions(opts...),
 		),
+		getUsers: connect.NewClient[api.GetUsersRequest, api.GetUsersResponse](
+			httpClient,
+			baseURL+TenantManagementServiceGetUsersProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("GetUsers")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -88,6 +98,7 @@ type tenantManagementServiceClient struct {
 	createWorkspace *connect.Client[api.CreateWorkspaceRequest, api.CreateWorkspaceResponse]
 	getWorkspaces   *connect.Client[api.GetWorkspacesRequest, api.GetWorkspacesResponse]
 	editWorkspace   *connect.Client[api.EditWorkspaceRequest, api.EditWorkspaceResponse]
+	getUsers        *connect.Client[api.GetUsersRequest, api.GetUsersResponse]
 }
 
 // CreateWorkspace calls api.TenantManagementService.CreateWorkspace.
@@ -105,11 +116,17 @@ func (c *tenantManagementServiceClient) EditWorkspace(ctx context.Context, req *
 	return c.editWorkspace.CallUnary(ctx, req)
 }
 
+// GetUsers calls api.TenantManagementService.GetUsers.
+func (c *tenantManagementServiceClient) GetUsers(ctx context.Context, req *connect.Request[api.GetUsersRequest]) (*connect.Response[api.GetUsersResponse], error) {
+	return c.getUsers.CallUnary(ctx, req)
+}
+
 // TenantManagementServiceHandler is an implementation of the api.TenantManagementService service.
 type TenantManagementServiceHandler interface {
 	CreateWorkspace(context.Context, *connect.Request[api.CreateWorkspaceRequest]) (*connect.Response[api.CreateWorkspaceResponse], error)
 	GetWorkspaces(context.Context, *connect.Request[api.GetWorkspacesRequest]) (*connect.Response[api.GetWorkspacesResponse], error)
 	EditWorkspace(context.Context, *connect.Request[api.EditWorkspaceRequest]) (*connect.Response[api.EditWorkspaceResponse], error)
+	GetUsers(context.Context, *connect.Request[api.GetUsersRequest]) (*connect.Response[api.GetUsersResponse], error)
 }
 
 // NewTenantManagementServiceHandler builds an HTTP handler from the service implementation. It
@@ -137,6 +154,12 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 		connect.WithSchema(tenantManagementServiceMethods.ByName("EditWorkspace")),
 		connect.WithHandlerOptions(opts...),
 	)
+	tenantManagementServiceGetUsersHandler := connect.NewUnaryHandler(
+		TenantManagementServiceGetUsersProcedure,
+		svc.GetUsers,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("GetUsers")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/api.TenantManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case TenantManagementServiceCreateWorkspaceProcedure:
@@ -145,6 +168,8 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 			tenantManagementServiceGetWorkspacesHandler.ServeHTTP(w, r)
 		case TenantManagementServiceEditWorkspaceProcedure:
 			tenantManagementServiceEditWorkspaceHandler.ServeHTTP(w, r)
+		case TenantManagementServiceGetUsersProcedure:
+			tenantManagementServiceGetUsersHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -164,4 +189,8 @@ func (UnimplementedTenantManagementServiceHandler) GetWorkspaces(context.Context
 
 func (UnimplementedTenantManagementServiceHandler) EditWorkspace(context.Context, *connect.Request[api.EditWorkspaceRequest]) (*connect.Response[api.EditWorkspaceResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.EditWorkspace is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) GetUsers(context.Context, *connect.Request[api.GetUsersRequest]) (*connect.Response[api.GetUsersResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetUsers is not implemented"))
 }

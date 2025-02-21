@@ -131,6 +131,7 @@ func (a Authentication) Middleware(next http.Handler) http.Handler {
 		}
 
 		ctx := r.Context()
+		ctx = context.WithValue(ctx, "accessToken", tokenString)
 
 		// Set context TenantDirectoryId, UserObjectId and TenantRole
 		ctx = context.WithValue(ctx, "TenantDirectoryId", tenantDirectoryId)

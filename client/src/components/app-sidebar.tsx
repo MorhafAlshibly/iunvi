@@ -10,6 +10,7 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  User as UserIcon,
 } from "lucide-react";
 
 import { NavList } from "@/components/nav-list";
@@ -146,8 +147,8 @@ const data = {
     },
     {
       title: "Users",
-      url: "#",
-      icon: PieChart,
+      url: paths.app.admin.users.getHref(),
+      icon: UserIcon,
     },
   ],
 };

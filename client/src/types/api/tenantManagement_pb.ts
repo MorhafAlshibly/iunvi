@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file api/tenantManagement.proto.
  */
 export const file_api_tenantManagement: GenFile = /*@__PURE__*/
-  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoDCIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAwSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiJQoJV29ya3NwYWNlEgoKAmlkGAEgASgMEgwKBG5hbWUYAiABKAky9wEKF1RlbmFudE1hbmFnZW1lbnRTZXJ2aWNlEkwKD0NyZWF0ZVdvcmtzcGFjZRIbLmFwaS5DcmVhdGVXb3Jrc3BhY2VSZXF1ZXN0GhwuYXBpLkNyZWF0ZVdvcmtzcGFjZVJlc3BvbnNlEkYKDUdldFdvcmtzcGFjZXMSGS5hcGkuR2V0V29ya3NwYWNlc1JlcXVlc3QaGi5hcGkuR2V0V29ya3NwYWNlc1Jlc3BvbnNlEkYKDUVkaXRXb3Jrc3BhY2USGS5hcGkuRWRpdFdvcmtzcGFjZVJlcXVlc3QaGi5hcGkuRWRpdFdvcmtzcGFjZVJlc3BvbnNlQilaJ2dpdGh1Yi5jb20vTW9yaGFmQWxzaGlibHkvaXVudmkvZ2VuL2FwaWIGcHJvdG8z");
+  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoDCIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAwSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciIlCglXb3Jrc3BhY2USCgoCaWQYASABKAwSDAoEbmFtZRgCIAEoCSI5CgRVc2VyEgoKAmlkGAEgASgMEhAKCHVzZXJuYW1lGAIgASgJEhMKC2Rpc3BsYXlOYW1lGAMgASgJMrACChdUZW5hbnRNYW5hZ2VtZW50U2VydmljZRJMCg9DcmVhdGVXb3Jrc3BhY2USGy5hcGkuQ3JlYXRlV29ya3NwYWNlUmVxdWVzdBocLmFwaS5DcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRJGCg1HZXRXb3Jrc3BhY2VzEhkuYXBpLkdldFdvcmtzcGFjZXNSZXF1ZXN0GhouYXBpLkdldFdvcmtzcGFjZXNSZXNwb25zZRJGCg1FZGl0V29ya3NwYWNlEhkuYXBpLkVkaXRXb3Jrc3BhY2VSZXF1ZXN0GhouYXBpLkVkaXRXb3Jrc3BhY2VSZXNwb25zZRI3CghHZXRVc2VycxIULmFwaS5HZXRVc2Vyc1JlcXVlc3QaFS5hcGkuR2V0VXNlcnNSZXNwb25zZUIpWidnaXRodWIuY29tL01vcmhhZkFsc2hpYmx5L2l1bnZpL2dlbi9hcGliBnByb3RvMw");
 
 /**
  * @generated from message api.CreateWorkspaceRequest
@@ -112,6 +112,36 @@ export const EditWorkspaceResponseSchema: GenMessage<EditWorkspaceResponse> = /*
   messageDesc(file_api_tenantManagement, 5);
 
 /**
+ * @generated from message api.GetUsersRequest
+ */
+export type GetUsersRequest = Message<"api.GetUsersRequest"> & {
+};
+
+/**
+ * Describes the message api.GetUsersRequest.
+ * Use `create(GetUsersRequestSchema)` to create a new message.
+ */
+export const GetUsersRequestSchema: GenMessage<GetUsersRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 6);
+
+/**
+ * @generated from message api.GetUsersResponse
+ */
+export type GetUsersResponse = Message<"api.GetUsersResponse"> & {
+  /**
+   * @generated from field: repeated api.User users = 1;
+   */
+  users: User[];
+};
+
+/**
+ * Describes the message api.GetUsersResponse.
+ * Use `create(GetUsersResponseSchema)` to create a new message.
+ */
+export const GetUsersResponseSchema: GenMessage<GetUsersResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 7);
+
+/**
  * @generated from message api.Workspace
  */
 export type Workspace = Message<"api.Workspace"> & {
@@ -131,7 +161,34 @@ export type Workspace = Message<"api.Workspace"> & {
  * Use `create(WorkspaceSchema)` to create a new message.
  */
 export const WorkspaceSchema: GenMessage<Workspace> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 6);
+  messageDesc(file_api_tenantManagement, 8);
+
+/**
+ * @generated from message api.User
+ */
+export type User = Message<"api.User"> & {
+  /**
+   * @generated from field: bytes id = 1;
+   */
+  id: Uint8Array;
+
+  /**
+   * @generated from field: string username = 2;
+   */
+  username: string;
+
+  /**
+   * @generated from field: string displayName = 3;
+   */
+  displayName: string;
+};
+
+/**
+ * Describes the message api.User.
+ * Use `create(UserSchema)` to create a new message.
+ */
+export const UserSchema: GenMessage<User> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 9);
 
 /**
  * @generated from service api.TenantManagementService
@@ -160,6 +217,14 @@ export const TenantManagementService: GenService<{
     methodKind: "unary";
     input: typeof EditWorkspaceRequestSchema;
     output: typeof EditWorkspaceResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.GetUsers
+   */
+  getUsers: {
+    methodKind: "unary";
+    input: typeof GetUsersRequestSchema;
+    output: typeof GetUsersResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_api_tenantManagement, 0);

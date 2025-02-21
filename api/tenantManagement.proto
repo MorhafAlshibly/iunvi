@@ -8,6 +8,7 @@ service TenantManagementService {
   rpc CreateWorkspace(CreateWorkspaceRequest) returns (CreateWorkspaceResponse);
   rpc GetWorkspaces(GetWorkspacesRequest) returns (GetWorkspacesResponse);
   rpc EditWorkspace(EditWorkspaceRequest) returns (EditWorkspaceResponse);
+  rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
 }
 
 message CreateWorkspaceRequest {
@@ -33,7 +34,20 @@ message EditWorkspaceRequest {
 message EditWorkspaceResponse {
 }
 
+message GetUsersRequest {
+}
+
+message GetUsersResponse {
+  repeated User users = 1;
+}
+
 message Workspace {
   bytes id = 1;
   string name = 2;
+}
+
+message User {
+  bytes id = 1;
+  string username = 2;
+  string displayName = 3;
 }
