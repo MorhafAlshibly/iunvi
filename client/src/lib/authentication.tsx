@@ -1,6 +1,6 @@
 import { configureAuth } from "react-query-auth";
 import { Navigate, useLocation } from "react-router";
-import { User, ROLES } from "@/types/user";
+import { ActiveUser, ROLES } from "@/types/user";
 import { instance } from "@/lib/msal";
 import { paths } from "@/config/paths";
 import { loginRequest } from "@/config/authentication";
@@ -8,7 +8,7 @@ import { loginRequest } from "@/config/authentication";
 // api call definitions for auth (types, schemas, requests):
 // these are not part of features as this is a module shared across features
 
-const getUser = async (): Promise<User> => {
+const getUser = async (): Promise<ActiveUser> => {
   const user = instance.getActiveAccount()?.idTokenClaims;
   if (!user) {
     throw new Error("User not found");
@@ -23,7 +23,7 @@ const getUser = async (): Promise<User> => {
   };
 };
 
-const login = async (): Promise<User> => {
+const login = async (): Promise<ActiveUser> => {
   await instance.loginPopup(loginRequest);
   return getUser();
 };

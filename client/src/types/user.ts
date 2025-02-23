@@ -5,7 +5,7 @@ export enum ROLES {
 
 export type Role = keyof typeof ROLES;
 
-export type User = {
+export type ActiveUser = {
   objectId: string;
   tenantId: string;
   displayName: string;

@@ -53,7 +53,7 @@ export function WorkspaceSwitcher() {
             </DropdownMenuLabel>
             {workspaces.map((workspace) => (
               <DropdownMenuItem
-                key={workspace.id.toString()}
+                key={workspace.id}
                 onClick={() => changeWorkspace(workspace)}
                 className="gap-2 p-2"
               >

@@ -14,7 +14,7 @@ import { Edit } from "lucide-react";
 import { EditWorkspace } from "@/components/edit-workspace";
 
 const WorkspacesRoute = () => {
-  const { workspaces, refetch } = useWorkspace();
+  const { workspaces, workspacesRefetch } = useWorkspace();
   const createWorkspaceHandler = useMutation(createWorkspace);
   const editWorkspaceHandler = useMutation(editWorkspace);
 
@@ -22,18 +22,15 @@ const WorkspacesRoute = () => {
     await createWorkspaceHandler.mutateAsync({
       name: workspaceName,
     });
-    refetch();
+    workspacesRefetch();
   };
 
-  const editWorkspaceFn = async (
-    id: Uint8Array<ArrayBufferLike>,
-    name: string,
-  ) => {
+  const editWorkspaceFn = async (id: string, name: string) => {
     await editWorkspaceHandler.mutateAsync({
       id: id,
       name: name,
     });
-    refetch();
+    workspacesRefetch();
   };
 
   return (
@@ -45,7 +42,7 @@ const WorkspacesRoute = () => {
         <div className="p-4">
           {workspaces.map((workspace) => (
             <>
-              <div key={workspace.id.toString()} className="flex text-sm">
+              <div key={workspace.id} className="flex text-sm">
                 <span className="flex-1 content-center">{workspace.name}</span>
                 <span className="flex-1 text-right">
                   <EditWorkspace

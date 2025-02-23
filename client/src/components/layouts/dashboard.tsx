@@ -5,7 +5,7 @@ import { NavLink, useNavigate, useNavigation } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { paths } from "@/config/paths";
-import { ROLES, User } from "@/types/user";
+import { ROLES, ActiveUser } from "@/types/user";
 import { useAuthorization } from "@/lib/authorization";
 import { cn } from "@/utils/cn";
 

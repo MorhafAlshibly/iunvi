@@ -1,9 +1,31 @@
 import { ReactNode, useCallback } from "react";
 import { useUser } from "@/lib/authentication";
-import { ROLES, Role, User } from "@/types/user";
+import { ROLES, Role, ActiveUser } from "@/types/user";
+import { WorkspaceRole } from "@/types/api/tenantManagement_pb";
 
 export const POLICIES = {
-  "admin:access": (user: User) => user.role === ROLES.ADMIN,
+  "admin:access": (user: ActiveUser) => user.role === ROLES.ADMIN,
+  "developer:access": (
+    user: ActiveUser,
+    activeWorkspaceRole: WorkspaceRole | null,
+  ) =>
+    user.role === ROLES.ADMIN ||
+    activeWorkspaceRole === WorkspaceRole.DEVELOPER,
+  "user:access": (
+    user: ActiveUser,
+    activeWorkspaceRole: WorkspaceRole | null,
+  ) =>
+    user.role === ROLES.ADMIN ||
+    activeWorkspaceRole === WorkspaceRole.USER ||
+    activeWorkspaceRole === WorkspaceRole.DEVELOPER,
+  "viewer:access": (
+    user: ActiveUser,
+    activeWorkspaceRole: WorkspaceRole | null,
+  ) =>
+    user.role === ROLES.ADMIN ||
+    activeWorkspaceRole === WorkspaceRole.VIEWER ||
+    activeWorkspaceRole === WorkspaceRole.USER ||
+    activeWorkspaceRole === WorkspaceRole.DEVELOPER,
 };
 
 export const useAuthorization = () => {

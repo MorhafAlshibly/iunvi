@@ -25,11 +25,12 @@ import {
 } from "@/components/ui/sidebar";
 import { useLogout, useUser } from "@/lib/authentication";
 import { Authorization, POLICIES } from "@/lib/authorization";
-import { User } from "@/types/user";
+import { ActiveUser } from "@/types/user";
 import { getWorkspaces } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { GetWorkspacesRequest } from "@/types/api/tenantManagement_pb";
 import { useQuery } from "@connectrpc/connect-query";
 import { paths } from "@/config/paths";
+import { useWorkspace } from "@/hooks/use-workspace";
 
 // This is sample data.
 const data = {
@@ -159,17 +160,30 @@ export function AppSidebar({
 }: React.ComponentProps<typeof Sidebar> & {
   logoutFn: () => void;
 }) {
-  const user = useUser().data as User;
+  const user = useUser().data as ActiveUser;
+  const { activeWorkspaceRole } = useWorkspace();
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <WorkspaceSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavList title="Viewer" items={data.navViewer} />
-        <NavList title="User" items={data.navUser} />
-        <NavList title="Developer" items={data.navDeveloper} />
-        <Authorization policyCheck={POLICIES["admin:access"](user as User)}>
+        <Authorization
+          policyCheck={POLICIES["viewer:access"](user, activeWorkspaceRole)}
+        >
+          <NavList title="Viewer" items={data.navViewer} />
+        </Authorization>
+        <Authorization
+          policyCheck={POLICIES["user:access"](user, activeWorkspaceRole)}
+        >
+          <NavList title="User" items={data.navUser} />
+        </Authorization>
+        <Authorization
+          policyCheck={POLICIES["developer:access"](user, activeWorkspaceRole)}
+        >
+          <NavList title="Developer" items={data.navDeveloper} />
+        </Authorization>
+        <Authorization policyCheck={POLICIES["admin:access"](user)}>
           <NavList title="Admin" items={data.navAdmin} />
         </Authorization>
       </SidebarContent>

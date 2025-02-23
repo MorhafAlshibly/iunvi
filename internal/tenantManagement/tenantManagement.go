@@ -2,6 +2,7 @@ package tenantManagement
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
 	"connectrpc.com/connect"
@@ -60,14 +61,14 @@ func (s *Service) CreateWorkspace(ctx context.Context, req *connect.Request[api.
 		return nil, err
 	}
 	res := connect.NewResponse(&api.CreateWorkspaceResponse{
-		Id: workspace.WorkspaceID[:],
+		Id: workspace.WorkspaceID.String(),
 	})
 	return res, nil
 }
 
 func unmarshalWorkspace(workspace *model.AuthWorkspace) *api.Workspace {
 	return &api.Workspace{
-		Id:   workspace.WorkspaceID[:],
+		Id:   workspace.WorkspaceID.String(),
 		Name: workspace.Name,
 	}
 }
@@ -92,9 +93,20 @@ func (s *Service) GetWorkspaces(ctx context.Context, req *connect.Request[api.Ge
 }
 
 func (s *Service) EditWorkspace(ctx context.Context, req *connect.Request[api.EditWorkspaceRequest]) (*connect.Response[api.EditWorkspaceResponse], error) {
+	if req.Msg.Id == "" {
+		return nil, fmt.Errorf("id is required")
+	}
 	database := model.New(middleware.GetTx(ctx))
-	_, err := database.EditWorkspace(ctx, model.EditWorkspaceParams{
-		WorkspaceId: mssql.UniqueIdentifier(req.Msg.Id),
+	guid, err := uuid.Parse(req.Msg.Id)
+	if err != nil {
+		return nil, err
+	}
+	bytes, err := guid.MarshalBinary()
+	if err != nil {
+		return nil, err
+	}
+	_, err = database.EditWorkspace(ctx, model.EditWorkspaceParams{
+		WorkspaceId: mssql.UniqueIdentifier(bytes),
 		Name:        req.Msg.Name,
 	})
 	if err != nil {
@@ -119,18 +131,17 @@ func (s *Service) GetUsers(ctx context.Context, req *connect.Request[api.GetUser
 		return nil, err
 	}
 	pageIterator, err := msgraphcore.NewPageIterator[models.Userable](result, client.GetAdapter(), models.CreateUserCollectionResponseFromDiscriminatorValue)
+	if err != nil {
+		return nil, err
+	}
 	var users []*api.User
 	err = pageIterator.Iterate(context.Background(), func(user models.Userable) bool {
 		guid, err := uuid.Parse(conversion.PointerToValue(user.GetId(), "00000000-0000-0000-0000-000000000000"))
 		if err != nil {
 			return false
 		}
-		id, err := guid.MarshalBinary()
-		if err != nil {
-			return false
-		}
 		apiUser := &api.User{
-			Id:          id,
+			Id:          guid.String(),
 			Username:    conversion.PointerToValue(user.GetUserPrincipalName(), ""),
 			DisplayName: conversion.PointerToValue(user.GetDisplayName(), ""),
 		}
@@ -144,4 +155,102 @@ func (s *Service) GetUsers(ctx context.Context, req *connect.Request[api.GetUser
 	return connect.NewResponse(&api.GetUsersResponse{
 		Users: users,
 	}), nil
+}
+
+func (s *Service) GetUserWorkspaceAssignment(ctx context.Context, req *connect.Request[api.GetUserWorkspaceAssignmentRequest]) (*connect.Response[api.GetUserWorkspaceAssignmentResponse], error) {
+	if req.Msg.UserObjectId == "" {
+		return nil, fmt.Errorf("UserObjectId is required")
+	}
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	userObjectIdGuid, err := uuid.Parse(req.Msg.UserObjectId)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIdGuid, err := uuid.Parse(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	userObjectIdBytes, err := userObjectIdGuid.MarshalBinary()
+	if err != nil {
+		return nil, err
+	}
+	workspaceIdBytes, err := workspaceIdGuid.MarshalBinary()
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	assignment, err := database.GetUserWorkspaceAssignment(ctx, model.GetUserWorkspaceAssignmentParams{
+		UserObjectId: mssql.UniqueIdentifier(userObjectIdBytes),
+		WorkspaceId:  mssql.UniqueIdentifier(workspaceIdBytes),
+	})
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return connect.NewResponse(&api.GetUserWorkspaceAssignmentResponse{
+				Role: api.WorkspaceRole_UNASSIGNED,
+			}), nil
+		}
+		return nil, err
+	}
+	if assignment.RoleName == "Viewer" {
+		return connect.NewResponse(&api.GetUserWorkspaceAssignmentResponse{
+			Role: api.WorkspaceRole_VIEWER,
+		}), nil
+	}
+	if assignment.RoleName == "User" {
+		return connect.NewResponse(&api.GetUserWorkspaceAssignmentResponse{
+			Role: api.WorkspaceRole_USER,
+		}), nil
+	}
+	if assignment.RoleName == "Developer" {
+		return connect.NewResponse(&api.GetUserWorkspaceAssignmentResponse{
+			Role: api.WorkspaceRole_DEVELOPER,
+		}), nil
+	}
+	return nil, fmt.Errorf("unknown role: %s", assignment.RoleName)
+}
+
+func (s *Service) AssignUserToWorkspace(ctx context.Context, req *connect.Request[api.AssignUserToWorkspaceRequest]) (*connect.Response[api.AssignUserToWorkspaceResponse], error) {
+	if req.Msg.UserObjectId == "" {
+		return nil, fmt.Errorf("UserObjectId is required")
+	}
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	userObjectIdGuid, err := uuid.Parse(req.Msg.UserObjectId)
+	if err != nil {
+		return nil, err
+	}
+	workspaceIdGuid, err := uuid.Parse(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	userObjectIdBytes, err := userObjectIdGuid.MarshalBinary()
+	if err != nil {
+		return nil, err
+	}
+	workspaceIdBytes, err := workspaceIdGuid.MarshalBinary()
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	_, err = database.DeleteUserWorkspaceAssignment(ctx, model.DeleteUserWorkspaceAssignmentParams{
+		UserObjectId: mssql.UniqueIdentifier(userObjectIdBytes),
+		WorkspaceId:  mssql.UniqueIdentifier(workspaceIdBytes),
+	})
+	if err != nil {
+		return nil, err
+	}
+	if req.Msg.Role != api.WorkspaceRole_UNASSIGNED {
+		_, err = database.AssignUserToWorkspace(ctx, model.AssignUserToWorkspaceParams{
+			UserObjectId: mssql.UniqueIdentifier(userObjectIdBytes),
+			WorkspaceId:  mssql.UniqueIdentifier(workspaceIdBytes),
+			RoleName:     req.Msg.Role.String(),
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+	return connect.NewResponse(&api.AssignUserToWorkspaceResponse{}), nil
 }

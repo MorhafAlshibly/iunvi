@@ -1,4 +1,4 @@
-import { AssignWorkspace } from "@/components/assign-workspace";
+import { UserWorkspacePanel } from "@/components/user-workspace-panel";
 import { ContentLayout } from "@/components/layouts/content";
 import { Separator } from "@/components/ui/separator";
 import { getUsers } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
@@ -13,12 +13,12 @@ const UsersRoute = () => {
         <div className="p-4">
           {users.map((user) => (
             <>
-              <div key={user.id.toString()} className="flex text-sm">
+              <div key={user.id} className="flex text-sm">
                 <span className="flex-1 content-center">
                   {user.displayName}
                 </span>
                 <span className="flex-1 text-right">
-                  <AssignWorkspace onSubmit={(name) => {}} />
+                  <UserWorkspacePanel onSubmit={(name) => {}} user={user} />
                 </span>
               </div>
               <Separator className="my-2" />

@@ -2,15 +2,15 @@
 // @generated from file api/tenantManagement.proto (package api, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv1";
-import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv1";
+import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv1";
+import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv1";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file api/tenantManagement.proto.
  */
 export const file_api_tenantManagement: GenFile = /*@__PURE__*/
-  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoDCIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAwSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciIlCglXb3Jrc3BhY2USCgoCaWQYASABKAwSDAoEbmFtZRgCIAEoCSI5CgRVc2VyEgoKAmlkGAEgASgMEhAKCHVzZXJuYW1lGAIgASgJEhMKC2Rpc3BsYXlOYW1lGAMgASgJMrACChdUZW5hbnRNYW5hZ2VtZW50U2VydmljZRJMCg9DcmVhdGVXb3Jrc3BhY2USGy5hcGkuQ3JlYXRlV29ya3NwYWNlUmVxdWVzdBocLmFwaS5DcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRJGCg1HZXRXb3Jrc3BhY2VzEhkuYXBpLkdldFdvcmtzcGFjZXNSZXF1ZXN0GhouYXBpLkdldFdvcmtzcGFjZXNSZXNwb25zZRJGCg1FZGl0V29ya3NwYWNlEhkuYXBpLkVkaXRXb3Jrc3BhY2VSZXF1ZXN0GhouYXBpLkVkaXRXb3Jrc3BhY2VSZXNwb25zZRI3CghHZXRVc2VycxIULmFwaS5HZXRVc2Vyc1JlcXVlc3QaFS5hcGkuR2V0VXNlcnNSZXNwb25zZUIpWidnaXRodWIuY29tL01vcmhhZkFsc2hpYmx5L2l1bnZpL2dlbi9hcGliBnByb3RvMw");
+  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoCSIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciJOCiFHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJIkYKIkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USIAoEcm9sZRgBIAEoDjISLmFwaS5Xb3Jrc3BhY2VSb2xlImsKHEFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJEiAKBHJvbGUYAyABKA4yEi5hcGkuV29ya3NwYWNlUm9sZSIfCh1Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZSIlCglXb3Jrc3BhY2USCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSI5CgRVc2VyEgoKAmlkGAEgASgJEhAKCHVzZXJuYW1lGAIgASgJEhMKC2Rpc3BsYXlOYW1lGAMgASgJKkQKDVdvcmtzcGFjZVJvbGUSDgoKVU5BU1NJR05FRBAAEgoKBlZJRVdFUhABEggKBFVTRVIQAhINCglERVZFTE9QRVIQAzL/AwoXVGVuYW50TWFuYWdlbWVudFNlcnZpY2USTAoPQ3JlYXRlV29ya3NwYWNlEhsuYXBpLkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QaHC5hcGkuQ3JlYXRlV29ya3NwYWNlUmVzcG9uc2USRgoNR2V0V29ya3NwYWNlcxIZLmFwaS5HZXRXb3Jrc3BhY2VzUmVxdWVzdBoaLmFwaS5HZXRXb3Jrc3BhY2VzUmVzcG9uc2USRgoNRWRpdFdvcmtzcGFjZRIZLmFwaS5FZGl0V29ya3NwYWNlUmVxdWVzdBoaLmFwaS5FZGl0V29ya3NwYWNlUmVzcG9uc2USNwoIR2V0VXNlcnMSFC5hcGkuR2V0VXNlcnNSZXF1ZXN0GhUuYXBpLkdldFVzZXJzUmVzcG9uc2USbQoaR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnQSJi5hcGkuR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnRSZXF1ZXN0GicuYXBpLkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USXgoVQXNzaWduVXNlclRvV29ya3NwYWNlEiEuYXBpLkFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QaIi5hcGkuQXNzaWduVXNlclRvV29ya3NwYWNlUmVzcG9uc2VCKVonZ2l0aHViLmNvbS9Nb3JoYWZBbHNoaWJseS9pdW52aS9nZW4vYXBpYgZwcm90bzM");
 
 /**
  * @generated from message api.CreateWorkspaceRequest
@@ -34,9 +34,9 @@ export const CreateWorkspaceRequestSchema: GenMessage<CreateWorkspaceRequest> = 
  */
 export type CreateWorkspaceResponse = Message<"api.CreateWorkspaceResponse"> & {
   /**
-   * @generated from field: bytes id = 1;
+   * @generated from field: string id = 1;
    */
-  id: Uint8Array;
+  id: string;
 };
 
 /**
@@ -81,9 +81,9 @@ export const GetWorkspacesResponseSchema: GenMessage<GetWorkspacesResponse> = /*
  */
 export type EditWorkspaceRequest = Message<"api.EditWorkspaceRequest"> & {
   /**
-   * @generated from field: bytes id = 1;
+   * @generated from field: string id = 1;
    */
-  id: Uint8Array;
+  id: string;
 
   /**
    * @generated from field: string name = 2;
@@ -142,13 +142,92 @@ export const GetUsersResponseSchema: GenMessage<GetUsersResponse> = /*@__PURE__*
   messageDesc(file_api_tenantManagement, 7);
 
 /**
+ * @generated from message api.GetUserWorkspaceAssignmentRequest
+ */
+export type GetUserWorkspaceAssignmentRequest = Message<"api.GetUserWorkspaceAssignmentRequest"> & {
+  /**
+   * @generated from field: string userObjectId = 1;
+   */
+  userObjectId: string;
+
+  /**
+   * @generated from field: string workspaceId = 2;
+   */
+  workspaceId: string;
+};
+
+/**
+ * Describes the message api.GetUserWorkspaceAssignmentRequest.
+ * Use `create(GetUserWorkspaceAssignmentRequestSchema)` to create a new message.
+ */
+export const GetUserWorkspaceAssignmentRequestSchema: GenMessage<GetUserWorkspaceAssignmentRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 8);
+
+/**
+ * @generated from message api.GetUserWorkspaceAssignmentResponse
+ */
+export type GetUserWorkspaceAssignmentResponse = Message<"api.GetUserWorkspaceAssignmentResponse"> & {
+  /**
+   * @generated from field: api.WorkspaceRole role = 1;
+   */
+  role: WorkspaceRole;
+};
+
+/**
+ * Describes the message api.GetUserWorkspaceAssignmentResponse.
+ * Use `create(GetUserWorkspaceAssignmentResponseSchema)` to create a new message.
+ */
+export const GetUserWorkspaceAssignmentResponseSchema: GenMessage<GetUserWorkspaceAssignmentResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 9);
+
+/**
+ * @generated from message api.AssignUserToWorkspaceRequest
+ */
+export type AssignUserToWorkspaceRequest = Message<"api.AssignUserToWorkspaceRequest"> & {
+  /**
+   * @generated from field: string userObjectId = 1;
+   */
+  userObjectId: string;
+
+  /**
+   * @generated from field: string workspaceId = 2;
+   */
+  workspaceId: string;
+
+  /**
+   * @generated from field: api.WorkspaceRole role = 3;
+   */
+  role: WorkspaceRole;
+};
+
+/**
+ * Describes the message api.AssignUserToWorkspaceRequest.
+ * Use `create(AssignUserToWorkspaceRequestSchema)` to create a new message.
+ */
+export const AssignUserToWorkspaceRequestSchema: GenMessage<AssignUserToWorkspaceRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 10);
+
+/**
+ * @generated from message api.AssignUserToWorkspaceResponse
+ */
+export type AssignUserToWorkspaceResponse = Message<"api.AssignUserToWorkspaceResponse"> & {
+};
+
+/**
+ * Describes the message api.AssignUserToWorkspaceResponse.
+ * Use `create(AssignUserToWorkspaceResponseSchema)` to create a new message.
+ */
+export const AssignUserToWorkspaceResponseSchema: GenMessage<AssignUserToWorkspaceResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 11);
+
+/**
  * @generated from message api.Workspace
  */
 export type Workspace = Message<"api.Workspace"> & {
   /**
-   * @generated from field: bytes id = 1;
+   * @generated from field: string id = 1;
    */
-  id: Uint8Array;
+  id: string;
 
   /**
    * @generated from field: string name = 2;
@@ -161,16 +240,16 @@ export type Workspace = Message<"api.Workspace"> & {
  * Use `create(WorkspaceSchema)` to create a new message.
  */
 export const WorkspaceSchema: GenMessage<Workspace> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 8);
+  messageDesc(file_api_tenantManagement, 12);
 
 /**
  * @generated from message api.User
  */
 export type User = Message<"api.User"> & {
   /**
-   * @generated from field: bytes id = 1;
+   * @generated from field: string id = 1;
    */
-  id: Uint8Array;
+  id: string;
 
   /**
    * @generated from field: string username = 2;
@@ -188,7 +267,38 @@ export type User = Message<"api.User"> & {
  * Use `create(UserSchema)` to create a new message.
  */
 export const UserSchema: GenMessage<User> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 9);
+  messageDesc(file_api_tenantManagement, 13);
+
+/**
+ * @generated from enum api.WorkspaceRole
+ */
+export enum WorkspaceRole {
+  /**
+   * @generated from enum value: UNASSIGNED = 0;
+   */
+  UNASSIGNED = 0,
+
+  /**
+   * @generated from enum value: VIEWER = 1;
+   */
+  VIEWER = 1,
+
+  /**
+   * @generated from enum value: USER = 2;
+   */
+  USER = 2,
+
+  /**
+   * @generated from enum value: DEVELOPER = 3;
+   */
+  DEVELOPER = 3,
+}
+
+/**
+ * Describes the enum api.WorkspaceRole.
+ */
+export const WorkspaceRoleSchema: GenEnum<WorkspaceRole> = /*@__PURE__*/
+  enumDesc(file_api_tenantManagement, 0);
 
 /**
  * @generated from service api.TenantManagementService
@@ -225,6 +335,22 @@ export const TenantManagementService: GenService<{
     methodKind: "unary";
     input: typeof GetUsersRequestSchema;
     output: typeof GetUsersResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.GetUserWorkspaceAssignment
+   */
+  getUserWorkspaceAssignment: {
+    methodKind: "unary";
+    input: typeof GetUserWorkspaceAssignmentRequestSchema;
+    output: typeof GetUserWorkspaceAssignmentResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.AssignUserToWorkspace
+   */
+  assignUserToWorkspace: {
+    methodKind: "unary";
+    input: typeof AssignUserToWorkspaceRequestSchema;
+    output: typeof AssignUserToWorkspaceResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_api_tenantManagement, 0);
