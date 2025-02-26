@@ -18,7 +18,7 @@ const UsersRoute = () => {
                   {user.displayName}
                 </span>
                 <span className="flex-1 text-right">
-                  <UserWorkspacePanel onSubmit={(name) => {}} user={user} />
+                  <UserWorkspacePanel user={user} />
                 </span>
               </div>
               <Separator className="my-2" />

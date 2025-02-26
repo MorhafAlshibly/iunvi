@@ -153,3 +153,25 @@ type AssignUserToWorkspaceParams struct {
 func (q *Queries) AssignUserToWorkspace(ctx context.Context, arg AssignUserToWorkspaceParams) (sql.Result, error) {
 	return q.db.ExecContext(ctx, AssignUserToWorkspace, sql.Named("UserObjectId", arg.UserObjectId), sql.Named("WorkspaceId", arg.WorkspaceId), sql.Named("RoleName", arg.RoleName))
 }
+
+const AuthorizationCheck = `-- name: AuthorizationCheck :one
+SELECT COUNT(*)
+FROM auth.UserWorkspaceAssignments uwa
+JOIN auth.WorkspaceRoles wr ON uwa.RoleId = wr.RoleId
+WHERE uwa.UserObjectId = @UserObjectId
+  AND uwa.WorkspaceId = @WorkspaceId
+  AND wr.Name = @RoleName;
+`
+
+type AuthorizationCheckParams struct {
+	UserObjectId mssql.UniqueIdentifier `db:"UserObjectId"`
+	WorkspaceId  mssql.UniqueIdentifier `db:"WorkspaceId"`
+	RoleName     string                 `db:"RoleName"`
+}
+
+func (q *Queries) AuthorizationCheck(ctx context.Context, arg AuthorizationCheckParams) (int32, error) {
+	row := q.db.QueryRowContext(ctx, AuthorizationCheck, sql.Named("UserObjectId", arg.UserObjectId), sql.Named("WorkspaceId", arg.WorkspaceId), sql.Named("RoleName", arg.RoleName))
+	var count int32
+	err := row.Scan(&count)
+	return count, err
+}

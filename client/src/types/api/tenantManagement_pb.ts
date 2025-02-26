@@ -4,13 +4,15 @@
 
 import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv1";
 import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv1";
+import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file api/tenantManagement.proto.
  */
 export const file_api_tenantManagement: GenFile = /*@__PURE__*/
-  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoCSIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciJOCiFHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJIkYKIkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USIAoEcm9sZRgBIAEoDjISLmFwaS5Xb3Jrc3BhY2VSb2xlImsKHEFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJEiAKBHJvbGUYAyABKA4yEi5hcGkuV29ya3NwYWNlUm9sZSIfCh1Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZSIlCglXb3Jrc3BhY2USCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSI5CgRVc2VyEgoKAmlkGAEgASgJEhAKCHVzZXJuYW1lGAIgASgJEhMKC2Rpc3BsYXlOYW1lGAMgASgJKkQKDVdvcmtzcGFjZVJvbGUSDgoKVU5BU1NJR05FRBAAEgoKBlZJRVdFUhABEggKBFVTRVIQAhINCglERVZFTE9QRVIQAzL/AwoXVGVuYW50TWFuYWdlbWVudFNlcnZpY2USTAoPQ3JlYXRlV29ya3NwYWNlEhsuYXBpLkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QaHC5hcGkuQ3JlYXRlV29ya3NwYWNlUmVzcG9uc2USRgoNR2V0V29ya3NwYWNlcxIZLmFwaS5HZXRXb3Jrc3BhY2VzUmVxdWVzdBoaLmFwaS5HZXRXb3Jrc3BhY2VzUmVzcG9uc2USRgoNRWRpdFdvcmtzcGFjZRIZLmFwaS5FZGl0V29ya3NwYWNlUmVxdWVzdBoaLmFwaS5FZGl0V29ya3NwYWNlUmVzcG9uc2USNwoIR2V0VXNlcnMSFC5hcGkuR2V0VXNlcnNSZXF1ZXN0GhUuYXBpLkdldFVzZXJzUmVzcG9uc2USbQoaR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnQSJi5hcGkuR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnRSZXF1ZXN0GicuYXBpLkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USXgoVQXNzaWduVXNlclRvV29ya3NwYWNlEiEuYXBpLkFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QaIi5hcGkuQXNzaWduVXNlclRvV29ya3NwYWNlUmVzcG9uc2VCKVonZ2l0aHViLmNvbS9Nb3JoYWZBbHNoaWJseS9pdW52aS9nZW4vYXBpYgZwcm90bzM");
+  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoCSIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciJOCiFHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJIkYKIkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USIAoEcm9sZRgBIAEoDjISLmFwaS5Xb3Jrc3BhY2VSb2xlImsKHEFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJEiAKBHJvbGUYAyABKA4yEi5hcGkuV29ya3NwYWNlUm9sZSIfCh1Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZSI3CiBHZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSKnAQohR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1Jlc3BvbnNlEjIKCXBhc3N3b3JkMRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAIgBARIyCglwYXNzd29yZDIYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAGIAQFCDAoKX3Bhc3N3b3JkMUIMCgpfcGFzc3dvcmQyIkwKIkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEQoJcGFzc3dvcmQyGAIgASgIImYKI0NyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlc3BvbnNlEhAKCHBhc3N3b3JkGAEgASgJEi0KCWNyZWF0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiJwoQR2V0SW1hZ2VzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSIvChFHZXRJbWFnZXNSZXNwb25zZRIaCgZpbWFnZXMYASADKAsyCi5hcGkuSW1hZ2UiFQoFSW1hZ2USDAoEbmFtZRgBIAEoCSIlCglXb3Jrc3BhY2USCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSI5CgRVc2VyEgoKAmlkGAEgASgJEhAKCHVzZXJuYW1lGAIgASgJEhMKC2Rpc3BsYXlOYW1lGAMgASgJKkQKDVdvcmtzcGFjZVJvbGUSDgoKVU5BU1NJR05FRBAAEgoKBlZJRVdFUhABEggKBFVTRVIQAhINCglERVZFTE9QRVIQAzKZBgoXVGVuYW50TWFuYWdlbWVudFNlcnZpY2USTAoPQ3JlYXRlV29ya3NwYWNlEhsuYXBpLkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QaHC5hcGkuQ3JlYXRlV29ya3NwYWNlUmVzcG9uc2USRgoNR2V0V29ya3NwYWNlcxIZLmFwaS5HZXRXb3Jrc3BhY2VzUmVxdWVzdBoaLmFwaS5HZXRXb3Jrc3BhY2VzUmVzcG9uc2USRgoNRWRpdFdvcmtzcGFjZRIZLmFwaS5FZGl0V29ya3NwYWNlUmVxdWVzdBoaLmFwaS5FZGl0V29ya3NwYWNlUmVzcG9uc2USNwoIR2V0VXNlcnMSFC5hcGkuR2V0VXNlcnNSZXF1ZXN0GhUuYXBpLkdldFVzZXJzUmVzcG9uc2USbQoaR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnQSJi5hcGkuR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnRSZXF1ZXN0GicuYXBpLkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USXgoVQXNzaWduVXNlclRvV29ya3NwYWNlEiEuYXBpLkFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QaIi5hcGkuQXNzaWduVXNlclRvV29ya3NwYWNlUmVzcG9uc2USagoZR2V0UmVnaXN0cnlUb2tlblBhc3N3b3JkcxIlLmFwaS5HZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBomLmFwaS5HZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVzcG9uc2UScAobQ3JlYXRlUmVnaXN0cnlUb2tlblBhc3N3b3JkEicuYXBpLkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QaKC5hcGkuQ3JlYXRlUmVnaXN0cnlUb2tlblBhc3N3b3JkUmVzcG9uc2USOgoJR2V0SW1hZ2VzEhUuYXBpLkdldEltYWdlc1JlcXVlc3QaFi5hcGkuR2V0SW1hZ2VzUmVzcG9uc2VCKVonZ2l0aHViLmNvbS9Nb3JoYWZBbHNoaWJseS9pdW52aS9nZW4vYXBpYgZwcm90bzM", [file_google_protobuf_timestamp]);
 
 /**
  * @generated from message api.CreateWorkspaceRequest
@@ -221,6 +223,140 @@ export const AssignUserToWorkspaceResponseSchema: GenMessage<AssignUserToWorkspa
   messageDesc(file_api_tenantManagement, 11);
 
 /**
+ * @generated from message api.GetRegistryTokenPasswordsRequest
+ */
+export type GetRegistryTokenPasswordsRequest = Message<"api.GetRegistryTokenPasswordsRequest"> & {
+  /**
+   * @generated from field: string workspaceId = 1;
+   */
+  workspaceId: string;
+};
+
+/**
+ * Describes the message api.GetRegistryTokenPasswordsRequest.
+ * Use `create(GetRegistryTokenPasswordsRequestSchema)` to create a new message.
+ */
+export const GetRegistryTokenPasswordsRequestSchema: GenMessage<GetRegistryTokenPasswordsRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 12);
+
+/**
+ * @generated from message api.GetRegistryTokenPasswordsResponse
+ */
+export type GetRegistryTokenPasswordsResponse = Message<"api.GetRegistryTokenPasswordsResponse"> & {
+  /**
+   * @generated from field: optional google.protobuf.Timestamp password1 = 1;
+   */
+  password1?: Timestamp;
+
+  /**
+   * @generated from field: optional google.protobuf.Timestamp password2 = 2;
+   */
+  password2?: Timestamp;
+};
+
+/**
+ * Describes the message api.GetRegistryTokenPasswordsResponse.
+ * Use `create(GetRegistryTokenPasswordsResponseSchema)` to create a new message.
+ */
+export const GetRegistryTokenPasswordsResponseSchema: GenMessage<GetRegistryTokenPasswordsResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 13);
+
+/**
+ * @generated from message api.CreateRegistryTokenPasswordRequest
+ */
+export type CreateRegistryTokenPasswordRequest = Message<"api.CreateRegistryTokenPasswordRequest"> & {
+  /**
+   * @generated from field: string workspaceId = 1;
+   */
+  workspaceId: string;
+
+  /**
+   * @generated from field: bool password2 = 2;
+   */
+  password2: boolean;
+};
+
+/**
+ * Describes the message api.CreateRegistryTokenPasswordRequest.
+ * Use `create(CreateRegistryTokenPasswordRequestSchema)` to create a new message.
+ */
+export const CreateRegistryTokenPasswordRequestSchema: GenMessage<CreateRegistryTokenPasswordRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 14);
+
+/**
+ * @generated from message api.CreateRegistryTokenPasswordResponse
+ */
+export type CreateRegistryTokenPasswordResponse = Message<"api.CreateRegistryTokenPasswordResponse"> & {
+  /**
+   * @generated from field: string password = 1;
+   */
+  password: string;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp createdAt = 2;
+   */
+  createdAt?: Timestamp;
+};
+
+/**
+ * Describes the message api.CreateRegistryTokenPasswordResponse.
+ * Use `create(CreateRegistryTokenPasswordResponseSchema)` to create a new message.
+ */
+export const CreateRegistryTokenPasswordResponseSchema: GenMessage<CreateRegistryTokenPasswordResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 15);
+
+/**
+ * @generated from message api.GetImagesRequest
+ */
+export type GetImagesRequest = Message<"api.GetImagesRequest"> & {
+  /**
+   * @generated from field: string workspaceId = 1;
+   */
+  workspaceId: string;
+};
+
+/**
+ * Describes the message api.GetImagesRequest.
+ * Use `create(GetImagesRequestSchema)` to create a new message.
+ */
+export const GetImagesRequestSchema: GenMessage<GetImagesRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 16);
+
+/**
+ * @generated from message api.GetImagesResponse
+ */
+export type GetImagesResponse = Message<"api.GetImagesResponse"> & {
+  /**
+   * @generated from field: repeated api.Image images = 1;
+   */
+  images: Image[];
+};
+
+/**
+ * Describes the message api.GetImagesResponse.
+ * Use `create(GetImagesResponseSchema)` to create a new message.
+ */
+export const GetImagesResponseSchema: GenMessage<GetImagesResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 17);
+
+/**
+ * @generated from message api.Image
+ */
+export type Image = Message<"api.Image"> & {
+  /**
+   * @generated from field: string name = 1;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message api.Image.
+ * Use `create(ImageSchema)` to create a new message.
+ */
+export const ImageSchema: GenMessage<Image> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 18);
+
+/**
  * @generated from message api.Workspace
  */
 export type Workspace = Message<"api.Workspace"> & {
@@ -240,7 +376,7 @@ export type Workspace = Message<"api.Workspace"> & {
  * Use `create(WorkspaceSchema)` to create a new message.
  */
 export const WorkspaceSchema: GenMessage<Workspace> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 12);
+  messageDesc(file_api_tenantManagement, 19);
 
 /**
  * @generated from message api.User
@@ -267,7 +403,7 @@ export type User = Message<"api.User"> & {
  * Use `create(UserSchema)` to create a new message.
  */
 export const UserSchema: GenMessage<User> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 13);
+  messageDesc(file_api_tenantManagement, 20);
 
 /**
  * @generated from enum api.WorkspaceRole
@@ -351,6 +487,30 @@ export const TenantManagementService: GenService<{
     methodKind: "unary";
     input: typeof AssignUserToWorkspaceRequestSchema;
     output: typeof AssignUserToWorkspaceResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.GetRegistryTokenPasswords
+   */
+  getRegistryTokenPasswords: {
+    methodKind: "unary";
+    input: typeof GetRegistryTokenPasswordsRequestSchema;
+    output: typeof GetRegistryTokenPasswordsResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.CreateRegistryTokenPassword
+   */
+  createRegistryTokenPassword: {
+    methodKind: "unary";
+    input: typeof CreateRegistryTokenPasswordRequestSchema;
+    output: typeof CreateRegistryTokenPasswordResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.GetImages
+   */
+  getImages: {
+    methodKind: "unary";
+    input: typeof GetImagesRequestSchema;
+    output: typeof GetImagesResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_api_tenantManagement, 0);

@@ -8,6 +8,18 @@ import (
 	_ "github.com/microsoft/go-mssqldb"
 )
 
+type responseRecorder struct {
+	http.ResponseWriter
+	statusCode int
+	committed  bool
+}
+
+func (r *responseRecorder) WriteHeader(code int) {
+	r.statusCode = code
+	r.committed = true
+	r.ResponseWriter.WriteHeader(code)
+}
+
 type Transaction struct {
 	db *sql.DB
 }
@@ -33,15 +45,37 @@ func (t *Transaction) Middleware(next http.Handler) http.Handler {
 			http.Error(w, "failed to start transaction", http.StatusInternalServerError)
 			return
 		}
+
+		// Create a response recorder to track the HTTP status code
+		rec := &responseRecorder{ResponseWriter: w, statusCode: http.StatusOK}
+
+		// Inject transaction into context
 		ctx := context.WithValue(r.Context(), "tx", tx)
+		r = r.WithContext(ctx)
+
+		// Ensure rollback by default, commit only if everything is okay
 		defer func() {
-			if r := recover(); r != nil {
+			if rec.statusCode >= 400 { // If an error response was written, rollback
 				tx.Rollback()
-				panic(r)
+				return
+			}
+			if rec.committed { // If already committed, don't commit again
+				return
+			}
+			if err := tx.Commit(); err != nil {
+				http.Error(w, "failed to commit transaction", http.StatusInternalServerError)
 			}
 		}()
-		next.ServeHTTP(w, r.WithContext(ctx))
-		tx.Commit()
+
+		// Handle panic safely
+		defer func() {
+			if rec := recover(); rec != nil {
+				tx.Rollback()
+				panic(rec) // rethrow panic after rollback
+			}
+		}()
+
+		next.ServeHTTP(rec, r)
 	})
 }
 

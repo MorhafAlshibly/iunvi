@@ -31,13 +31,7 @@ import { useMutation, useQuery } from "@connectrpc/connect-query";
 import { getUserWorkspaceAssignment } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { WorkspaceRoleEditor } from "./workspace-role-editor";
 
-export function UserWorkspacePanel({
-  user,
-  onSubmit,
-}: {
-  user: User;
-  onSubmit: (workspaceName: string) => void;
-}) {
+export function UserWorkspacePanel({ user }: { user: User }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(
     null,

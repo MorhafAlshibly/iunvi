@@ -51,6 +51,15 @@ const (
 	// TenantManagementServiceAssignUserToWorkspaceProcedure is the fully-qualified name of the
 	// TenantManagementService's AssignUserToWorkspace RPC.
 	TenantManagementServiceAssignUserToWorkspaceProcedure = "/api.TenantManagementService/AssignUserToWorkspace"
+	// TenantManagementServiceGetRegistryTokenPasswordsProcedure is the fully-qualified name of the
+	// TenantManagementService's GetRegistryTokenPasswords RPC.
+	TenantManagementServiceGetRegistryTokenPasswordsProcedure = "/api.TenantManagementService/GetRegistryTokenPasswords"
+	// TenantManagementServiceCreateRegistryTokenPasswordProcedure is the fully-qualified name of the
+	// TenantManagementService's CreateRegistryTokenPassword RPC.
+	TenantManagementServiceCreateRegistryTokenPasswordProcedure = "/api.TenantManagementService/CreateRegistryTokenPassword"
+	// TenantManagementServiceGetImagesProcedure is the fully-qualified name of the
+	// TenantManagementService's GetImages RPC.
+	TenantManagementServiceGetImagesProcedure = "/api.TenantManagementService/GetImages"
 )
 
 // TenantManagementServiceClient is a client for the api.TenantManagementService service.
@@ -61,6 +70,9 @@ type TenantManagementServiceClient interface {
 	GetUsers(context.Context, *connect.Request[api.GetUsersRequest]) (*connect.Response[api.GetUsersResponse], error)
 	GetUserWorkspaceAssignment(context.Context, *connect.Request[api.GetUserWorkspaceAssignmentRequest]) (*connect.Response[api.GetUserWorkspaceAssignmentResponse], error)
 	AssignUserToWorkspace(context.Context, *connect.Request[api.AssignUserToWorkspaceRequest]) (*connect.Response[api.AssignUserToWorkspaceResponse], error)
+	GetRegistryTokenPasswords(context.Context, *connect.Request[api.GetRegistryTokenPasswordsRequest]) (*connect.Response[api.GetRegistryTokenPasswordsResponse], error)
+	CreateRegistryTokenPassword(context.Context, *connect.Request[api.CreateRegistryTokenPasswordRequest]) (*connect.Response[api.CreateRegistryTokenPasswordResponse], error)
+	GetImages(context.Context, *connect.Request[api.GetImagesRequest]) (*connect.Response[api.GetImagesResponse], error)
 }
 
 // NewTenantManagementServiceClient constructs a client for the api.TenantManagementService service.
@@ -110,17 +122,38 @@ func NewTenantManagementServiceClient(httpClient connect.HTTPClient, baseURL str
 			connect.WithSchema(tenantManagementServiceMethods.ByName("AssignUserToWorkspace")),
 			connect.WithClientOptions(opts...),
 		),
+		getRegistryTokenPasswords: connect.NewClient[api.GetRegistryTokenPasswordsRequest, api.GetRegistryTokenPasswordsResponse](
+			httpClient,
+			baseURL+TenantManagementServiceGetRegistryTokenPasswordsProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("GetRegistryTokenPasswords")),
+			connect.WithClientOptions(opts...),
+		),
+		createRegistryTokenPassword: connect.NewClient[api.CreateRegistryTokenPasswordRequest, api.CreateRegistryTokenPasswordResponse](
+			httpClient,
+			baseURL+TenantManagementServiceCreateRegistryTokenPasswordProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("CreateRegistryTokenPassword")),
+			connect.WithClientOptions(opts...),
+		),
+		getImages: connect.NewClient[api.GetImagesRequest, api.GetImagesResponse](
+			httpClient,
+			baseURL+TenantManagementServiceGetImagesProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("GetImages")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // tenantManagementServiceClient implements TenantManagementServiceClient.
 type tenantManagementServiceClient struct {
-	createWorkspace            *connect.Client[api.CreateWorkspaceRequest, api.CreateWorkspaceResponse]
-	getWorkspaces              *connect.Client[api.GetWorkspacesRequest, api.GetWorkspacesResponse]
-	editWorkspace              *connect.Client[api.EditWorkspaceRequest, api.EditWorkspaceResponse]
-	getUsers                   *connect.Client[api.GetUsersRequest, api.GetUsersResponse]
-	getUserWorkspaceAssignment *connect.Client[api.GetUserWorkspaceAssignmentRequest, api.GetUserWorkspaceAssignmentResponse]
-	assignUserToWorkspace      *connect.Client[api.AssignUserToWorkspaceRequest, api.AssignUserToWorkspaceResponse]
+	createWorkspace             *connect.Client[api.CreateWorkspaceRequest, api.CreateWorkspaceResponse]
+	getWorkspaces               *connect.Client[api.GetWorkspacesRequest, api.GetWorkspacesResponse]
+	editWorkspace               *connect.Client[api.EditWorkspaceRequest, api.EditWorkspaceResponse]
+	getUsers                    *connect.Client[api.GetUsersRequest, api.GetUsersResponse]
+	getUserWorkspaceAssignment  *connect.Client[api.GetUserWorkspaceAssignmentRequest, api.GetUserWorkspaceAssignmentResponse]
+	assignUserToWorkspace       *connect.Client[api.AssignUserToWorkspaceRequest, api.AssignUserToWorkspaceResponse]
+	getRegistryTokenPasswords   *connect.Client[api.GetRegistryTokenPasswordsRequest, api.GetRegistryTokenPasswordsResponse]
+	createRegistryTokenPassword *connect.Client[api.CreateRegistryTokenPasswordRequest, api.CreateRegistryTokenPasswordResponse]
+	getImages                   *connect.Client[api.GetImagesRequest, api.GetImagesResponse]
 }
 
 // CreateWorkspace calls api.TenantManagementService.CreateWorkspace.
@@ -153,6 +186,21 @@ func (c *tenantManagementServiceClient) AssignUserToWorkspace(ctx context.Contex
 	return c.assignUserToWorkspace.CallUnary(ctx, req)
 }
 
+// GetRegistryTokenPasswords calls api.TenantManagementService.GetRegistryTokenPasswords.
+func (c *tenantManagementServiceClient) GetRegistryTokenPasswords(ctx context.Context, req *connect.Request[api.GetRegistryTokenPasswordsRequest]) (*connect.Response[api.GetRegistryTokenPasswordsResponse], error) {
+	return c.getRegistryTokenPasswords.CallUnary(ctx, req)
+}
+
+// CreateRegistryTokenPassword calls api.TenantManagementService.CreateRegistryTokenPassword.
+func (c *tenantManagementServiceClient) CreateRegistryTokenPassword(ctx context.Context, req *connect.Request[api.CreateRegistryTokenPasswordRequest]) (*connect.Response[api.CreateRegistryTokenPasswordResponse], error) {
+	return c.createRegistryTokenPassword.CallUnary(ctx, req)
+}
+
+// GetImages calls api.TenantManagementService.GetImages.
+func (c *tenantManagementServiceClient) GetImages(ctx context.Context, req *connect.Request[api.GetImagesRequest]) (*connect.Response[api.GetImagesResponse], error) {
+	return c.getImages.CallUnary(ctx, req)
+}
+
 // TenantManagementServiceHandler is an implementation of the api.TenantManagementService service.
 type TenantManagementServiceHandler interface {
 	CreateWorkspace(context.Context, *connect.Request[api.CreateWorkspaceRequest]) (*connect.Response[api.CreateWorkspaceResponse], error)
@@ -161,6 +209,9 @@ type TenantManagementServiceHandler interface {
 	GetUsers(context.Context, *connect.Request[api.GetUsersRequest]) (*connect.Response[api.GetUsersResponse], error)
 	GetUserWorkspaceAssignment(context.Context, *connect.Request[api.GetUserWorkspaceAssignmentRequest]) (*connect.Response[api.GetUserWorkspaceAssignmentResponse], error)
 	AssignUserToWorkspace(context.Context, *connect.Request[api.AssignUserToWorkspaceRequest]) (*connect.Response[api.AssignUserToWorkspaceResponse], error)
+	GetRegistryTokenPasswords(context.Context, *connect.Request[api.GetRegistryTokenPasswordsRequest]) (*connect.Response[api.GetRegistryTokenPasswordsResponse], error)
+	CreateRegistryTokenPassword(context.Context, *connect.Request[api.CreateRegistryTokenPasswordRequest]) (*connect.Response[api.CreateRegistryTokenPasswordResponse], error)
+	GetImages(context.Context, *connect.Request[api.GetImagesRequest]) (*connect.Response[api.GetImagesResponse], error)
 }
 
 // NewTenantManagementServiceHandler builds an HTTP handler from the service implementation. It
@@ -206,6 +257,24 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 		connect.WithSchema(tenantManagementServiceMethods.ByName("AssignUserToWorkspace")),
 		connect.WithHandlerOptions(opts...),
 	)
+	tenantManagementServiceGetRegistryTokenPasswordsHandler := connect.NewUnaryHandler(
+		TenantManagementServiceGetRegistryTokenPasswordsProcedure,
+		svc.GetRegistryTokenPasswords,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("GetRegistryTokenPasswords")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenantManagementServiceCreateRegistryTokenPasswordHandler := connect.NewUnaryHandler(
+		TenantManagementServiceCreateRegistryTokenPasswordProcedure,
+		svc.CreateRegistryTokenPassword,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("CreateRegistryTokenPassword")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenantManagementServiceGetImagesHandler := connect.NewUnaryHandler(
+		TenantManagementServiceGetImagesProcedure,
+		svc.GetImages,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("GetImages")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/api.TenantManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case TenantManagementServiceCreateWorkspaceProcedure:
@@ -220,6 +289,12 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 			tenantManagementServiceGetUserWorkspaceAssignmentHandler.ServeHTTP(w, r)
 		case TenantManagementServiceAssignUserToWorkspaceProcedure:
 			tenantManagementServiceAssignUserToWorkspaceHandler.ServeHTTP(w, r)
+		case TenantManagementServiceGetRegistryTokenPasswordsProcedure:
+			tenantManagementServiceGetRegistryTokenPasswordsHandler.ServeHTTP(w, r)
+		case TenantManagementServiceCreateRegistryTokenPasswordProcedure:
+			tenantManagementServiceCreateRegistryTokenPasswordHandler.ServeHTTP(w, r)
+		case TenantManagementServiceGetImagesProcedure:
+			tenantManagementServiceGetImagesHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -251,4 +326,16 @@ func (UnimplementedTenantManagementServiceHandler) GetUserWorkspaceAssignment(co
 
 func (UnimplementedTenantManagementServiceHandler) AssignUserToWorkspace(context.Context, *connect.Request[api.AssignUserToWorkspaceRequest]) (*connect.Response[api.AssignUserToWorkspaceResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.AssignUserToWorkspace is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) GetRegistryTokenPasswords(context.Context, *connect.Request[api.GetRegistryTokenPasswordsRequest]) (*connect.Response[api.GetRegistryTokenPasswordsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetRegistryTokenPasswords is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) CreateRegistryTokenPassword(context.Context, *connect.Request[api.CreateRegistryTokenPasswordRequest]) (*connect.Response[api.CreateRegistryTokenPasswordResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.CreateRegistryTokenPassword is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) GetImages(context.Context, *connect.Request[api.GetImagesRequest]) (*connect.Response[api.GetImagesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetImages is not implemented"))
 }

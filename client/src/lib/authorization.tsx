@@ -1,31 +1,37 @@
 import { ReactNode, useCallback } from "react";
 import { useUser } from "@/lib/authentication";
 import { ROLES, Role, ActiveUser } from "@/types/user";
-import { WorkspaceRole } from "@/types/api/tenantManagement_pb";
+import { Workspace, WorkspaceRole } from "@/types/api/tenantManagement_pb";
 
 export const POLICIES = {
   "admin:access": (user: ActiveUser) => user.role === ROLES.ADMIN,
   "developer:access": (
     user: ActiveUser,
+    workspace: Workspace | null,
     activeWorkspaceRole: WorkspaceRole | null,
   ) =>
-    user.role === ROLES.ADMIN ||
-    activeWorkspaceRole === WorkspaceRole.DEVELOPER,
+    (user.role === ROLES.ADMIN ||
+      activeWorkspaceRole === WorkspaceRole.DEVELOPER) &&
+    workspace !== null,
   "user:access": (
     user: ActiveUser,
+    workspace: Workspace | null,
     activeWorkspaceRole: WorkspaceRole | null,
   ) =>
-    user.role === ROLES.ADMIN ||
-    activeWorkspaceRole === WorkspaceRole.USER ||
-    activeWorkspaceRole === WorkspaceRole.DEVELOPER,
+    (user.role === ROLES.ADMIN ||
+      activeWorkspaceRole === WorkspaceRole.USER ||
+      activeWorkspaceRole === WorkspaceRole.DEVELOPER) &&
+    workspace !== null,
   "viewer:access": (
     user: ActiveUser,
+    workspace: Workspace | null,
     activeWorkspaceRole: WorkspaceRole | null,
   ) =>
-    user.role === ROLES.ADMIN ||
-    activeWorkspaceRole === WorkspaceRole.VIEWER ||
-    activeWorkspaceRole === WorkspaceRole.USER ||
-    activeWorkspaceRole === WorkspaceRole.DEVELOPER,
+    (user.role === ROLES.ADMIN ||
+      activeWorkspaceRole === WorkspaceRole.VIEWER ||
+      activeWorkspaceRole === WorkspaceRole.USER ||
+      activeWorkspaceRole === WorkspaceRole.DEVELOPER) &&
+    workspace !== null,
 };
 
 export const useAuthorization = () => {

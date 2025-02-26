@@ -33,3 +33,18 @@ export const getUserWorkspaceAssignment = TenantManagementService.method.getUser
  * @generated from rpc api.TenantManagementService.AssignUserToWorkspace
  */
 export const assignUserToWorkspace = TenantManagementService.method.assignUserToWorkspace;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetRegistryTokenPasswords
+ */
+export const getRegistryTokenPasswords = TenantManagementService.method.getRegistryTokenPasswords;
+
+/**
+ * @generated from rpc api.TenantManagementService.CreateRegistryTokenPassword
+ */
+export const createRegistryTokenPassword = TenantManagementService.method.createRegistryTokenPassword;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetImages
+ */
+export const getImages = TenantManagementService.method.getImages;

@@ -40,5 +40,19 @@ export const paths = {
         getHref: () => "/app/admin/users",
       },
     },
+    developer: {
+      root: {
+        path: "developer",
+        getHref: () => "/app/developer",
+      },
+      registry: {
+        path: "registry",
+        getHref: () => "/app/developer/registry",
+      },
+      models: {
+        path: "models",
+        getHref: () => "/app/developer/models",
+      },
+    },
   },
 } as const;

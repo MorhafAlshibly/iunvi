@@ -6,3 +6,7 @@ func PointerToValue[T any](ptr *T, defaultValue T) T {
 	}
 	return *ptr
 }
+
+func ValueToPointer[T any](value T) *T {
+	return &value
+}

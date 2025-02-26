@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package api;
 
+import "google/protobuf/timestamp.proto";
+
 option go_package = "github.com/MorhafAlshibly/iunvi/gen/api";
 
 service TenantManagementService {
@@ -11,6 +13,9 @@ service TenantManagementService {
   rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
   rpc GetUserWorkspaceAssignment(GetUserWorkspaceAssignmentRequest) returns (GetUserWorkspaceAssignmentResponse);
   rpc AssignUserToWorkspace(AssignUserToWorkspaceRequest) returns (AssignUserToWorkspaceResponse);
+  rpc GetRegistryTokenPasswords(GetRegistryTokenPasswordsRequest) returns (GetRegistryTokenPasswordsResponse);
+  rpc CreateRegistryTokenPassword(CreateRegistryTokenPasswordRequest) returns (CreateRegistryTokenPasswordResponse);
+  rpc GetImages(GetImagesRequest) returns (GetImagesResponse);
 }
 
 message CreateWorkspaceRequest {
@@ -59,6 +64,37 @@ message AssignUserToWorkspaceRequest {
 }
 
 message AssignUserToWorkspaceResponse {
+}
+
+message GetRegistryTokenPasswordsRequest {
+  string workspaceId = 1;
+}
+
+message GetRegistryTokenPasswordsResponse {
+  optional google.protobuf.Timestamp password1 = 1;
+  optional google.protobuf.Timestamp password2 = 2;
+}
+
+message CreateRegistryTokenPasswordRequest {
+  string workspaceId = 1;
+  bool password2 = 2;
+}
+
+message CreateRegistryTokenPasswordResponse {
+  string password = 1;
+  google.protobuf.Timestamp createdAt = 2;
+}
+
+message GetImagesRequest {
+  string workspaceId = 1;
+}
+
+message GetImagesResponse {
+  repeated Image images = 1;
+}
+
+message Image {
+  string name = 1;
 }
 
 message Workspace {

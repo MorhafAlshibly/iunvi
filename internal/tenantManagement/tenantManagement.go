@@ -4,24 +4,43 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"connectrpc.com/connect"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/Azure/azure-sdk-for-go/sdk/containers/azcontainerregistry"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/containerregistry/armcontainerregistry"
 	"github.com/MorhafAlshibly/iunvi/gen/api"
 	"github.com/MorhafAlshibly/iunvi/internal/tenantManagement/model"
+	"github.com/MorhafAlshibly/iunvi/pkg/authorization"
 	"github.com/MorhafAlshibly/iunvi/pkg/conversion"
 	"github.com/MorhafAlshibly/iunvi/pkg/middleware"
-	"github.com/google/uuid"
-	mssql "github.com/microsoft/go-mssqldb"
 	msgraphsdk "github.com/microsoftgraph/msgraph-sdk-go"
 	msgraphcore "github.com/microsoftgraph/msgraph-sdk-go-core"
 	"github.com/microsoftgraph/msgraph-sdk-go/models"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type Service struct {
-	tenantId     string
-	clientId     string
-	clientSecret string
+	subscriptionId    string
+	resourceGroupName string
+	tenantId          string
+	clientId          string
+	clientSecret      string
+	registryName      string
+	registryTokenName string
+}
+
+func WithSubscriptionId(subscriptionId string) func(*Service) {
+	return func(input *Service) {
+		input.subscriptionId = subscriptionId
+	}
+}
+
+func WithResourceGroupName(resourceGroupName string) func(*Service) {
+	return func(input *Service) {
+		input.resourceGroupName = resourceGroupName
+	}
 }
 
 func WithTenantId(tenantId string) func(*Service) {
@@ -42,6 +61,18 @@ func WithClientSecret(clientSecret string) func(*Service) {
 	}
 }
 
+func WithRegistryName(registryName string) func(*Service) {
+	return func(input *Service) {
+		input.registryName = registryName
+	}
+}
+
+func WithRegistryTokenName(registryTokenName string) func(*Service) {
+	return func(input *Service) {
+		input.registryTokenName = registryTokenName
+	}
+}
+
 func NewService(options ...func(*Service)) *Service {
 	service := &Service{}
 	for _, option := range options {
@@ -57,6 +88,49 @@ func (s *Service) CreateWorkspace(ctx context.Context, req *connect.Request[api.
 		return nil, err
 	}
 	workspace, err := database.GetWorkspace(ctx, req.Msg.Name)
+	if err != nil {
+		return nil, err
+	}
+	credentials, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
+	if err != nil {
+		return nil, err
+	}
+	scopeMapClient, err := armcontainerregistry.NewScopeMapsClient(s.subscriptionId, credentials, nil)
+	if err != nil {
+		return nil, err
+	}
+	scope := getScope(workspace.WorkspaceID.String())
+	poller, err := scopeMapClient.BeginCreate(ctx, s.resourceGroupName, s.registryName, scope, armcontainerregistry.ScopeMap{
+		Properties: &armcontainerregistry.ScopeMapProperties{
+			// Only read, list and write actions are allowed
+			Actions: []*string{
+				conversion.ValueToPointer(fmt.Sprintf("repositories/%s/*/%s", scope, "content/write")),
+				conversion.ValueToPointer(fmt.Sprintf("repositories/%s/*/%s", scope, "metadata/read")),
+				conversion.ValueToPointer(fmt.Sprintf("repositories/%s/*/%s", scope, "metadata/write")),
+			},
+			// Assign the scope to the workspace
+			Description: conversion.ValueToPointer(fmt.Sprintf("Scope for workspace %s", scope)),
+		},
+	}, nil)
+	if err != nil {
+		return nil, err
+	}
+	scopeMapResult, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	tokenClient, err := armcontainerregistry.NewTokensClient(s.subscriptionId, credentials, nil)
+	if err != nil {
+		return nil, err
+	}
+	tokenName := s.getTokenName(workspace.WorkspaceID.String())
+	_, err = tokenClient.BeginCreate(ctx, s.resourceGroupName, s.registryName, tokenName, armcontainerregistry.Token{
+		Properties: &armcontainerregistry.TokenProperties{
+			Credentials: nil,
+			ScopeMapID:  scopeMapResult.ID,
+			Status:      conversion.ValueToPointer(armcontainerregistry.TokenStatusEnabled),
+		},
+	}, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -97,16 +171,12 @@ func (s *Service) EditWorkspace(ctx context.Context, req *connect.Request[api.Ed
 		return nil, fmt.Errorf("id is required")
 	}
 	database := model.New(middleware.GetTx(ctx))
-	guid, err := uuid.Parse(req.Msg.Id)
-	if err != nil {
-		return nil, err
-	}
-	bytes, err := guid.MarshalBinary()
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.Id)
 	if err != nil {
 		return nil, err
 	}
 	_, err = database.EditWorkspace(ctx, model.EditWorkspaceParams{
-		WorkspaceId: mssql.UniqueIdentifier(bytes),
+		WorkspaceId: workspaceIdBytes,
 		Name:        req.Msg.Name,
 	})
 	if err != nil {
@@ -136,12 +206,9 @@ func (s *Service) GetUsers(ctx context.Context, req *connect.Request[api.GetUser
 	}
 	var users []*api.User
 	err = pageIterator.Iterate(context.Background(), func(user models.Userable) bool {
-		guid, err := uuid.Parse(conversion.PointerToValue(user.GetId(), "00000000-0000-0000-0000-000000000000"))
-		if err != nil {
-			return false
-		}
+		id := conversion.PointerToValue(user.GetId(), "00000000-0000-0000-0000-000000000000")
 		apiUser := &api.User{
-			Id:          guid.String(),
+			Id:          id,
 			Username:    conversion.PointerToValue(user.GetUserPrincipalName(), ""),
 			DisplayName: conversion.PointerToValue(user.GetDisplayName(), ""),
 		}
@@ -164,26 +231,18 @@ func (s *Service) GetUserWorkspaceAssignment(ctx context.Context, req *connect.R
 	if req.Msg.WorkspaceId == "" {
 		return nil, fmt.Errorf("WorkspaceId is required")
 	}
-	userObjectIdGuid, err := uuid.Parse(req.Msg.UserObjectId)
+	userObjectIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.UserObjectId)
 	if err != nil {
 		return nil, err
 	}
-	workspaceIdGuid, err := uuid.Parse(req.Msg.WorkspaceId)
-	if err != nil {
-		return nil, err
-	}
-	userObjectIdBytes, err := userObjectIdGuid.MarshalBinary()
-	if err != nil {
-		return nil, err
-	}
-	workspaceIdBytes, err := workspaceIdGuid.MarshalBinary()
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
 	if err != nil {
 		return nil, err
 	}
 	database := model.New(middleware.GetTx(ctx))
 	assignment, err := database.GetUserWorkspaceAssignment(ctx, model.GetUserWorkspaceAssignmentParams{
-		UserObjectId: mssql.UniqueIdentifier(userObjectIdBytes),
-		WorkspaceId:  mssql.UniqueIdentifier(workspaceIdBytes),
+		UserObjectId: userObjectIdBytes,
+		WorkspaceId:  workspaceIdBytes,
 	})
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -218,34 +277,26 @@ func (s *Service) AssignUserToWorkspace(ctx context.Context, req *connect.Reques
 	if req.Msg.WorkspaceId == "" {
 		return nil, fmt.Errorf("WorkspaceId is required")
 	}
-	userObjectIdGuid, err := uuid.Parse(req.Msg.UserObjectId)
+	userObjectIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.UserObjectId)
 	if err != nil {
 		return nil, err
 	}
-	workspaceIdGuid, err := uuid.Parse(req.Msg.WorkspaceId)
-	if err != nil {
-		return nil, err
-	}
-	userObjectIdBytes, err := userObjectIdGuid.MarshalBinary()
-	if err != nil {
-		return nil, err
-	}
-	workspaceIdBytes, err := workspaceIdGuid.MarshalBinary()
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
 	if err != nil {
 		return nil, err
 	}
 	database := model.New(middleware.GetTx(ctx))
 	_, err = database.DeleteUserWorkspaceAssignment(ctx, model.DeleteUserWorkspaceAssignmentParams{
-		UserObjectId: mssql.UniqueIdentifier(userObjectIdBytes),
-		WorkspaceId:  mssql.UniqueIdentifier(workspaceIdBytes),
+		UserObjectId: userObjectIdBytes,
+		WorkspaceId:  workspaceIdBytes,
 	})
 	if err != nil {
 		return nil, err
 	}
 	if req.Msg.Role != api.WorkspaceRole_UNASSIGNED {
 		_, err = database.AssignUserToWorkspace(ctx, model.AssignUserToWorkspaceParams{
-			UserObjectId: mssql.UniqueIdentifier(userObjectIdBytes),
-			WorkspaceId:  mssql.UniqueIdentifier(workspaceIdBytes),
+			UserObjectId: userObjectIdBytes,
+			WorkspaceId:  workspaceIdBytes,
 			RoleName:     req.Msg.Role.String(),
 		})
 		if err != nil {
@@ -253,4 +304,177 @@ func (s *Service) AssignUserToWorkspace(ctx context.Context, req *connect.Reques
 		}
 	}
 	return connect.NewResponse(&api.AssignUserToWorkspaceResponse{}), nil
+}
+
+func (s *Service) GetRegistryTokenPasswords(ctx context.Context, req *connect.Request[api.GetRegistryTokenPasswordsRequest]) (*connect.Response[api.GetRegistryTokenPasswordsResponse], error) {
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceIdBytes), authorization.WithWorkspaceRole(api.WorkspaceRole_DEVELOPER)).IsAuthorized(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !authorization {
+		return nil, fmt.Errorf("unauthorized")
+	}
+	credentials, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
+	if err != nil {
+		return nil, err
+	}
+	tokenClient, err := armcontainerregistry.NewTokensClient(s.subscriptionId, credentials, nil)
+	if err != nil {
+		return nil, err
+	}
+	tokenName := s.getTokenName(req.Msg.WorkspaceId)
+	token, err := tokenClient.Get(ctx, s.resourceGroupName, s.registryName, tokenName, nil)
+	if err != nil {
+		return nil, err
+	}
+	var password1 *timestamppb.Timestamp
+	var password2 *timestamppb.Timestamp
+	if token.Properties.Credentials != nil {
+		if len(token.Properties.Credentials.Passwords) >= 1 {
+			password1Time := token.Properties.Credentials.Passwords[0].CreationTime
+			if password1Time != nil {
+				password1 = timestamppb.New(*password1Time)
+			}
+		}
+		if len(token.Properties.Credentials.Passwords) >= 2 {
+			password2Time := token.Properties.Credentials.Passwords[1].CreationTime
+			if password2Time != nil {
+				password2 = timestamppb.New(*password2Time)
+			}
+		}
+	}
+	return connect.NewResponse(&api.GetRegistryTokenPasswordsResponse{
+		Password1: password1,
+		Password2: password2,
+	}), nil
+}
+
+func (s *Service) CreateRegistryTokenPassword(ctx context.Context, req *connect.Request[api.CreateRegistryTokenPasswordRequest]) (*connect.Response[api.CreateRegistryTokenPasswordResponse], error) {
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceIdBytes), authorization.WithWorkspaceRole(api.WorkspaceRole_DEVELOPER)).IsAuthorized(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !authorization {
+		return nil, fmt.Errorf("unauthorized")
+	}
+	credentials, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
+	if err != nil {
+		return nil, err
+	}
+	tokenClient, err := armcontainerregistry.NewTokensClient(s.subscriptionId, credentials, nil)
+	if err != nil {
+		return nil, err
+	}
+	tokenName := s.getTokenName(req.Msg.WorkspaceId)
+	passwordName := armcontainerregistry.TokenPasswordNamePassword1
+	passwordIndex := 0
+	if req.Msg.Password2 {
+		passwordName = armcontainerregistry.TokenPasswordNamePassword2
+		passwordIndex = 1
+	}
+	token, err := tokenClient.Get(ctx, s.resourceGroupName, s.registryName, tokenName, nil)
+	if err != nil {
+		return nil, err
+	}
+	clientFactory, err := armcontainerregistry.NewClientFactory(s.subscriptionId, credentials, nil)
+	if err != nil {
+		return nil, err
+	}
+	poller, err := clientFactory.NewRegistriesClient().BeginGenerateCredentials(ctx, s.resourceGroupName, s.registryName, armcontainerregistry.GenerateCredentialsParameters{
+		TokenID: token.ID,
+		Name:    &passwordName,
+	}, nil)
+	if err != nil {
+		return nil, err
+	}
+	result, err := poller.PollUntilDone(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	if len(result.Passwords) <= passwordIndex {
+		return nil, fmt.Errorf("password not returned")
+	}
+	password := result.Passwords[passwordIndex].Value
+	if password == nil {
+		return nil, fmt.Errorf("password is nil")
+	}
+	createdAt := result.Passwords[passwordIndex].CreationTime
+	if createdAt == nil {
+		return nil, fmt.Errorf("creation time is nil")
+	}
+	createdAtTimestamp := timestamppb.New(*createdAt)
+	return connect.NewResponse(&api.CreateRegistryTokenPasswordResponse{
+		Password:  *password,
+		CreatedAt: createdAtTimestamp,
+	}), nil
+}
+
+func (s *Service) GetImages(ctx context.Context, req *connect.Request[api.GetImagesRequest]) (*connect.Response[api.GetImagesResponse], error) {
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceIdBytes), authorization.WithWorkspaceRole(api.WorkspaceRole_VIEWER)).IsAuthorized(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !authorization {
+		return nil, fmt.Errorf("unauthorized")
+	}
+	credentials, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
+	if err != nil {
+		return nil, err
+	}
+	client, err := azcontainerregistry.NewClient(fmt.Sprintf("https://%s.azurecr.io", s.registryName), credentials, nil)
+	if err != nil {
+		return nil, err
+	}
+	scope := getScope(req.Msg.WorkspaceId)
+	pager := client.NewListRepositoriesPager(nil)
+	var images []*api.Image
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, repository := range page.Repositories.Names {
+			if repository == nil {
+				continue
+			}
+			if !strings.HasPrefix(*repository, scope) {
+				continue
+			}
+			images = append(images, &api.Image{
+				Name: *repository,
+			})
+		}
+	}
+	return connect.NewResponse(&api.GetImagesResponse{
+		Images: images,
+	}), nil
+}
+
+func getScope(workspaceId string) string {
+	return fmt.Sprintf("scope-%s", strings.ToLower(workspaceId))
+}
+
+func (s *Service) getTokenName(workspaceId string) string {
+	return fmt.Sprintf("%s-%s", s.registryTokenName, strings.ToLower(workspaceId))
 }

@@ -36,23 +36,48 @@ CREATE TABLE auth.UserWorkspaceAssignments (
 GO;
 CREATE SCHEMA app;
 GO;
+-- Data Modes (e.g., Input, Output)
+CREATE TABLE app.DataModes (
+    DataModeId INT PRIMARY KEY,
+    Name NVARCHAR(255) NOT NULL,
+    CONSTRAINT UQ_appDataModes_Name UNIQUE(Name)
+);
+INSERT INTO app.DataModes (DataModeId, Name)
+VALUES (1, 'Input'),
+    (2, 'Output');
+-- File Types (e.g., CSV, JSON, Parquet)
+CREATE TABLE app.FileTypes (
+    FileTypeId INT PRIMARY KEY,
+    DataModeId INT NOT NULL,
+    Name NVARCHAR(255) NOT NULL,
+    Extension NVARCHAR(10) NOT NULL,
+    FOREIGN KEY (DataModeId) REFERENCES app.DataModes(DataModeId),
+    CONSTRAINT UQ_appFileTypes_Name UNIQUE(Name)
+);
+INSERT INTO app.FileTypes (FileTypeId, DataModeId, Name, Extension)
+VALUES (1, 1, 'CSV', 'csv'),
+    (2, 1, 'JSON', 'json'),
+    (3, 2, 'Parquet', 'parquet');
 -- Specifications (Input/Output schemas)
 CREATE TABLE app.Specifications (
     SpecificationId UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     WorkspaceId UNIQUEIDENTIFIER NOT NULL,
+    DataModeId INT NOT NULL,
     Name NVARCHAR(255) NOT NULL,
     CreatedAt DATETIME DEFAULT GETUTCDATE(),
     FOREIGN KEY (WorkspaceId) REFERENCES auth.Workspaces(WorkspaceId),
+    FOREIGN KEY (DataModeId) REFERENCES app.DataModes(DataModeId),
     CONSTRAINT UQ_authSpecifications_WorkspaceId_Name UNIQUE(WorkspaceId, Name)
 );
 -- File Schemas (Structure of input files)
 CREATE TABLE app.FileSchemas (
     FileSchemaId UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     SpecificationId UNIQUEIDENTIFIER NOT NULL,
+    FileTypeId INT NOT NULL,
     Name NVARCHAR(255) NOT NULL,
     Definition NVARCHAR(MAX) NOT NULL,
-    -- JSON schema
     FOREIGN KEY (SpecificationId) REFERENCES app.Specifications(SpecificationId),
+    FOREIGN KEY (FileTypeId) REFERENCES app.FileTypes(FileTypeId),
     CONSTRAINT UQ_appFileSchemas_SpecificationId_Name UNIQUE(SpecificationId, Name)
 );
 -- File Groups (Collections of files for a model run)
@@ -119,6 +144,25 @@ CREATE TABLE app.ModelRuns (
 -- =============================================
 -- Triggers
 -- =============================================
+-- Trigger to make sure FileSchema FileTypeId is of the same DataMode as the Specification
+GO;
+CREATE TRIGGER app.FileSchemas_DataModeCheck ON app.FileSchemas
+AFTER
+INSERT,
+    UPDATE AS BEGIN IF EXISTS (
+        SELECT 1
+        FROM inserted I
+            JOIN app.Specifications S ON I.SpecificationId = S.SpecificationId
+            JOIN app.FileTypes FT ON I.FileTypeId = FT.FileTypeId
+        WHERE S.DataModeId <> FT.DataModeId
+    ) BEGIN RAISERROR(
+        'File schema data mode must match the specification data mode',
+        16,
+        1
+    );
+ROLLBACK TRANSACTION;
+END;
+END;
 -- Trigger to make sure InputSpecificationId and OutputSpecificationId are from the same workspace
 GO;
 CREATE TRIGGER app.Models_WorkspaceCheck ON app.Models
@@ -134,6 +178,26 @@ INSERT,
         WHERE W1.WorkspaceId <> W2.WorkspaceId
     ) BEGIN RAISERROR(
         'Input and output specifications must belong to the same workspace',
+        16,
+        1
+    );
+ROLLBACK TRANSACTION;
+END;
+END;
+-- Trigger to make sure InputSpecificationId is of DataMode Input and OutputSpecificationId is of DataMode Output
+GO;
+CREATE TRIGGER app.Models_DataModeCheck ON app.Models
+AFTER
+INSERT,
+    UPDATE AS BEGIN IF EXISTS (
+        SELECT 1
+        FROM inserted I
+            JOIN app.Specifications S1 ON I.InputSpecificationId = S1.SpecificationId
+            JOIN app.Specifications S2 ON I.OutputSpecificationId = S2.SpecificationId
+        WHERE S1.DataModeId <> 1
+            OR S2.DataModeId <> 2
+    ) BEGIN RAISERROR(
+        'Input specification must be of data mode Input and output specification must be of data mode Output',
         16,
         1
     );
@@ -195,18 +259,25 @@ GRANT SELECT,
     DELETE ON auth.UserWorkspaceAssignments TO WebApp;
 DENY
 UPDATE ON auth.UserWorkspaceAssignments(UserObjectId, WorkspaceId) TO WebApp;
+GRANT SELECT ON app.DataModes TO WebApp;
+GRANT SELECT ON app.FileTypes TO WebApp;
 GRANT SELECT,
     INSERT,
     UPDATE,
     DELETE ON app.Specifications TO WebApp;
 DENY
-UPDATE ON app.Specifications(SpecificationId, WorkspaceId, CreatedAt) TO WebApp;
+UPDATE ON app.Specifications(
+        SpecificationId,
+        WorkspaceId,
+        DataModeId,
+        CreatedAt
+    ) TO WebApp;
 GRANT SELECT,
     INSERT,
     UPDATE,
     DELETE ON app.FileSchemas TO WebApp;
 DENY
-UPDATE ON app.FileSchemas(FileSchemaId, SpecificationId) TO WebApp;
+UPDATE ON app.FileSchemas(FileSchemaId, SpecificationId, FileTypeId) TO WebApp;
 GRANT SELECT,
     INSERT,
     UPDATE,

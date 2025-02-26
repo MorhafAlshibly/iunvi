@@ -1,9 +1,11 @@
 import * as React from "react";
 import {
   AudioWaveform,
+  Blocks,
   BookOpen,
   Bot,
   Command,
+  Component,
   Frame,
   GalleryVerticalEnd,
   Map,
@@ -98,23 +100,14 @@ const data = {
       ],
     },
     {
+      title: "Registry",
+      url: paths.app.developer.registry.getHref(),
+      icon: Blocks,
+    },
+    {
       title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
+      url: paths.app.developer.models.getHref(),
+      icon: Component,
     },
     {
       title: "Charts",
@@ -161,7 +154,7 @@ export function AppSidebar({
   logoutFn: () => void;
 }) {
   const user = useUser().data as ActiveUser;
-  const { activeWorkspaceRole } = useWorkspace();
+  const { activeWorkspaceRole, activeWorkspace } = useWorkspace();
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -169,17 +162,29 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <Authorization
-          policyCheck={POLICIES["viewer:access"](user, activeWorkspaceRole)}
+          policyCheck={POLICIES["viewer:access"](
+            user,
+            activeWorkspace,
+            activeWorkspaceRole,
+          )}
         >
           <NavList title="Viewer" items={data.navViewer} />
         </Authorization>
         <Authorization
-          policyCheck={POLICIES["user:access"](user, activeWorkspaceRole)}
+          policyCheck={POLICIES["user:access"](
+            user,
+            activeWorkspace,
+            activeWorkspaceRole,
+          )}
         >
           <NavList title="User" items={data.navUser} />
         </Authorization>
         <Authorization
-          policyCheck={POLICIES["developer:access"](user, activeWorkspaceRole)}
+          policyCheck={POLICIES["developer:access"](
+            user,
+            activeWorkspace,
+            activeWorkspaceRole,
+          )}
         >
           <NavList title="Developer" items={data.navDeveloper} />
         </Authorization>
