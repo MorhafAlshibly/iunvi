@@ -15,6 +15,8 @@ import (
 	"github.com/MorhafAlshibly/iunvi/pkg/authorization"
 	"github.com/MorhafAlshibly/iunvi/pkg/conversion"
 	"github.com/MorhafAlshibly/iunvi/pkg/middleware"
+	tableschema "github.com/frictionlessdata/tableschema-go/schema"
+	"github.com/kaptinlin/jsonschema"
 	msgraphsdk "github.com/microsoftgraph/msgraph-sdk-go"
 	msgraphcore "github.com/microsoftgraph/msgraph-sdk-go-core"
 	"github.com/microsoftgraph/msgraph-sdk-go/models"
@@ -468,6 +470,113 @@ func (s *Service) GetImages(ctx context.Context, req *connect.Request[api.GetIma
 	}
 	return connect.NewResponse(&api.GetImagesResponse{
 		Images: images,
+	}), nil
+}
+
+func (s *Service) CreateInputSpecification(ctx context.Context, req *connect.Request[api.CreateInputSpecificationRequest]) (*connect.Response[api.CreateInputSpecificationResponse], error) {
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	if req.Msg.ParametersSchema == "" {
+		return nil, fmt.Errorf("Definition is required")
+	}
+	compiler := jsonschema.NewCompiler()
+	parametersSchema, err := compiler.Compile([]byte(req.Msg.ParametersSchema))
+	if err != nil {
+		return nil, err
+	}
+	if parametersSchema == nil {
+		return nil, fmt.Errorf("Schema is nil")
+	}
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceIdBytes), authorization.WithWorkspaceRole(api.WorkspaceRole_USER)).IsAuthorized(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !authorization {
+		return nil, fmt.Errorf("unauthorized")
+	}
+	database := model.New(middleware.GetTx(ctx))
+	_, err = database.CreateSpecification(ctx, model.CreateSpecificationParams{
+		WorkspaceId:  workspaceIdBytes,
+		DataModeName: "Input",
+		Name:         req.Msg.Name,
+	})
+	if err != nil {
+		return nil, err
+	}
+	specification, err := database.GetSpecificationByWorkspaceIdAndName(ctx, model.GetSpecificationByWorkspaceIdAndNameParams{
+		WorkspaceId: workspaceIdBytes,
+		Name:        req.Msg.Name,
+	})
+	if err != nil {
+		return nil, err
+	}
+	_, err = database.CreateFileSchema(ctx, model.CreateFileSchemaParams{
+		SpecificationId: specification.SpecificationID,
+		FileTypeName:    "JSON",
+		Name:            req.Msg.Name,
+		Definition:      req.Msg.ParametersSchema,
+	})
+	if err != nil {
+		return nil, err
+	}
+	for _, csv := range req.Msg.Csvs {
+		if csv.Name == "" {
+			return nil, fmt.Errorf("Name is required")
+		}
+		if csv.Schema == "" {
+			return nil, fmt.Errorf("Definition is required")
+		}
+		csvSchema, err := tableschema.Read(strings.NewReader(csv.Schema))
+		if err != nil {
+			return nil, err
+		}
+		if csvSchema == nil {
+			return nil, fmt.Errorf("Schema is nil")
+		}
+		_, err = database.CreateFileSchema(ctx, model.CreateFileSchemaParams{
+			SpecificationId: specification.SpecificationID,
+			FileTypeName:    "CSV",
+			Name:            csv.Name,
+			Definition:      csv.Schema,
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+	return connect.NewResponse(&api.CreateInputSpecificationResponse{
+		Id: specification.SpecificationID.String(),
+	}), nil
+}
+
+func (s *Service) GetInputSpecifications(ctx context.Context, req *connect.Request[api.GetInputSpecificationsRequest]) (*connect.Response[api.GetInputSpecificationsResponse], error) {
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	specifications, err := database.GetInputSpecifications(ctx, model.GetInputSpecificationsParams{
+		WorkspaceId: workspaceIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	var apiSpecifications []*api.InputSpecificationName
+	for _, specification := range specifications {
+		apiSpecifications = append(apiSpecifications, &api.InputSpecificationName{
+			Id:   specification.SpecificationID.String(),
+			Name: specification.Name,
+		})
+	}
+	return connect.NewResponse(&api.GetInputSpecificationsResponse{
+		InputSpecifications: apiSpecifications,
 	}), nil
 }
 

@@ -1,5 +1,5 @@
 export const paths = {
-  home: {
+  landing: {
     path: "/",
     getHref: () => "/",
   },
@@ -22,7 +22,7 @@ export const paths = {
       path: "/app",
       getHref: () => "/app",
     },
-    dashboard: {
+    home: {
       path: "",
       getHref: () => "/app",
     },
@@ -44,6 +44,24 @@ export const paths = {
       root: {
         path: "developer",
         getHref: () => "/app/developer",
+      },
+      specifications: {
+        root: {
+          path: "specifications",
+          getHref: () => "/app/developer/specifications",
+        },
+        list: {
+          path: "",
+          getHref: () => "/app/developer/specifications",
+        },
+        view: {
+          path: ":id",
+          getHref: (id: string) => `/app/developer/specifications/${id}`,
+        },
+        create: {
+          path: "create",
+          getHref: () => "/app/developer/specifications/create",
+        },
       },
       registry: {
         path: "registry",

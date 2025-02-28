@@ -10,18 +10,15 @@ const LoginRoute = () => {
   const user = useUser();
   const login = useLogin({
     onSuccess: () => {
-      navigate(
-        `${redirectTo ? `${redirectTo}` : paths.app.dashboard.getHref()}`,
-        {
-          replace: true,
-        },
-      );
+      navigate(`${redirectTo ? `${redirectTo}` : paths.app.home.getHref()}`, {
+        replace: true,
+      });
     },
   });
 
   useEffect(() => {
     if (user.data) {
-      navigate(paths.app.dashboard.getHref(), { replace: true });
+      navigate(paths.app.home.getHref(), { replace: true });
       return;
     }
     login.mutate({});

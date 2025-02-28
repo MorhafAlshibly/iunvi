@@ -16,6 +16,8 @@ service TenantManagementService {
   rpc GetRegistryTokenPasswords(GetRegistryTokenPasswordsRequest) returns (GetRegistryTokenPasswordsResponse);
   rpc CreateRegistryTokenPassword(CreateRegistryTokenPasswordRequest) returns (CreateRegistryTokenPasswordResponse);
   rpc GetImages(GetImagesRequest) returns (GetImagesResponse);
+  rpc CreateInputSpecification(CreateInputSpecificationRequest) returns (CreateInputSpecificationResponse);
+  rpc GetInputSpecifications(GetInputSpecificationsRequest) returns (GetInputSpecificationsResponse);
 }
 
 message CreateWorkspaceRequest {
@@ -91,6 +93,42 @@ message GetImagesRequest {
 
 message GetImagesResponse {
   repeated Image images = 1;
+}
+
+message CreateInputSpecificationRequest {
+  string workspaceId = 1;
+  string name = 2;
+  string parametersSchema = 3;
+  repeated FileSchema csvs = 4;
+}
+
+message CreateInputSpecificationResponse {
+  string id = 1;
+}
+
+message GetInputSpecificationsRequest {
+  string workspaceId = 1;
+}
+
+message GetInputSpecificationsResponse {
+  repeated InputSpecificationName inputSpecifications = 1;
+}
+
+message InputSpecificationName {
+  string id = 1;
+  string name = 2;
+}
+
+message InputSpecification {
+  string id = 1;
+  string name = 2;
+  FileSchema parameters = 3;
+  repeated FileSchema csvs = 4;
+}
+
+message FileSchema {
+  string name = 1;
+  string schema = 2;
 }
 
 message Image {

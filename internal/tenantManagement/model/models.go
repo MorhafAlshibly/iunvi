@@ -13,7 +13,7 @@ type AppFile struct {
 	Name         string                 `db:"name"`
 }
 
-type AppFilegroup struct {
+type AppFileGroup struct {
 	FileGroupID        mssql.UniqueIdentifier `db:"file_group_id"`
 	SpecificationID    mssql.UniqueIdentifier `db:"specification_id"`
 	CreatedBy          mssql.UniqueIdentifier `db:"created_by"`
@@ -22,9 +22,10 @@ type AppFilegroup struct {
 	CreatedAt          time.Time              `db:"created_at"`
 }
 
-type AppFileschema struct {
+type AppFileSchema struct {
 	FileSchemaID    mssql.UniqueIdentifier `db:"file_schema_id"`
 	SpecificationID mssql.UniqueIdentifier `db:"specification_id"`
+	FileTypeID      int32                  `db:"file_type_id"`
 	Name            string                 `db:"name"`
 	Definition      mssql.NVarCharMax      `db:"definition"`
 }
@@ -37,7 +38,7 @@ type AppModel struct {
 	ImageID               string                 `db:"image_id"`
 }
 
-type AppModelrun struct {
+type AppModelRun struct {
 	RunID             mssql.UniqueIdentifier `db:"run_id"`
 	ModelID           mssql.UniqueIdentifier `db:"model_id"`
 	StatusID          int32                  `db:"status_id"`
@@ -47,7 +48,7 @@ type AppModelrun struct {
 	CreatedAt         mssql.UniqueIdentifier `db:"created_at"`
 }
 
-type AppModelrunstatus struct {
+type AppModelRunStatus struct {
 	ModelRunStatusID int32  `db:"model_run_status_id"`
 	Name             string `db:"name"`
 }
@@ -55,11 +56,12 @@ type AppModelrunstatus struct {
 type AppSpecification struct {
 	SpecificationID mssql.UniqueIdentifier `db:"specification_id"`
 	WorkspaceID     mssql.UniqueIdentifier `db:"workspace_id"`
+	DataModeID      int32                  `db:"data_mode_id"`
 	Name            string                 `db:"name"`
 	CreatedAt       time.Time              `db:"created_at"`
 }
 
-type AuthUserworkspaceassignment struct {
+type AuthUserWorkspaceAssignment struct {
 	UserObjectID mssql.UniqueIdentifier `db:"user_object_id"`
 	WorkspaceID  mssql.UniqueIdentifier `db:"workspace_id"`
 	RoleID       int32                  `db:"role_id"`
@@ -72,7 +74,7 @@ type AuthWorkspace struct {
 	CreatedAt         time.Time              `db:"created_at"`
 }
 
-type AuthWorkspacerole struct {
+type AuthWorkspaceRole struct {
 	RoleID int32  `db:"role_id"`
 	Name   string `db:"name"`
 }

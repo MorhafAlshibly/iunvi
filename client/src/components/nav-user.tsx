@@ -25,20 +25,20 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useLogout } from "@/lib/authentication";
+import { useLogout, useUser } from "@/lib/authentication";
+import { ActiveUser } from "@/types/user";
+import { useNavigate } from "react-router";
+import { paths } from "@/config/paths";
 
-export function NavUser({
-  user,
-  logoutFn,
-}: {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-  logoutFn: () => void;
-}) {
+export function NavUser() {
   const { isMobile } = useSidebar();
+  const navigate = useNavigate();
+  const user = useUser().data as ActiveUser;
+  const logoutFn = useLogout({
+    onSuccess: () => navigate(paths.landing.getHref()),
+  });
+
+  const avatar = "";
 
   return (
     <SidebarMenu>
@@ -50,12 +50,14 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={avatar} alt={user.displayName} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-semibold">
+                  {user.displayName}
+                </span>
+                <span className="truncate text-xs">{user.username}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -69,17 +71,19 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={avatar} alt={user.displayName} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-semibold">
+                    {user.displayName}
+                  </span>
+                  <span className="truncate text-xs">{user.username}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logoutFn}>
+            <DropdownMenuItem onClick={() => logoutFn.mutate({})}>
               <LogOut />
               Log out
             </DropdownMenuItem>

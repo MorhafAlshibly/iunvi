@@ -3,14 +3,27 @@ import { useMemo } from "react";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
+import { paths } from "@/config/paths";
+
 import {
   default as AppRoot,
   ErrorBoundary as AppRootErrorBoundary,
 } from "./routes/app/root";
 
-import { paths } from "@/config/paths";
-import { ProtectedRoute } from "@/lib/authentication";
-import { POLICIES } from "@/lib/authorization";
+import {
+  default as AppDeveloperRoot,
+  ErrorBoundary as AppDeveloperRootErrorBoundary,
+} from "./routes/app/developer/root";
+
+import {
+  default as AppDeveloperSpecificationsRoot,
+  ErrorBoundary as AppDeveloperSpecificationsRootErrorBoundary,
+} from "./routes/app/developer/specifications/root";
+
+import {
+  default as AppAdminRoot,
+  ErrorBoundary as AppAdminRootErrorBoundary,
+} from "./routes/app/admin/root";
 
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;
@@ -25,7 +38,7 @@ const convert = (queryClient: QueryClient) => (m: any) => {
 export const createAppRouter = (queryClient: QueryClient) =>
   createBrowserRouter([
     {
-      path: paths.home.path,
+      path: paths.landing.path,
       lazy: () => import("./routes/landing").then(convert(queryClient)),
     },
     {
@@ -34,15 +47,17 @@ export const createAppRouter = (queryClient: QueryClient) =>
     },
     {
       path: paths.app.root.path,
-      element: (
-        <ProtectedRoute>
-          <AppRoot />
-        </ProtectedRoute>
-      ),
+      element: <AppRoot />,
       ErrorBoundary: AppRootErrorBoundary,
       children: [
         {
+          path: paths.app.home.path,
+          lazy: () => import("./routes/app/home").then(convert(queryClient)),
+        },
+        {
           path: paths.app.admin.root.path,
+          element: <AppAdminRoot />,
+          ErrorBoundary: AppAdminRootErrorBoundary,
           children: [
             {
               path: paths.app.admin.workspaces.path,
@@ -60,7 +75,37 @@ export const createAppRouter = (queryClient: QueryClient) =>
         },
         {
           path: paths.app.developer.root.path,
+          element: <AppDeveloperRoot />,
+          ErrorBoundary: AppDeveloperRootErrorBoundary,
           children: [
+            {
+              path: paths.app.developer.specifications.root.path,
+              element: <AppDeveloperSpecificationsRoot />,
+              ErrorBoundary: AppDeveloperSpecificationsRootErrorBoundary,
+              children: [
+                {
+                  path: paths.app.developer.specifications.list.path,
+                  lazy: () =>
+                    import("./routes/app/developer/specifications/list").then(
+                      convert(queryClient),
+                    ),
+                },
+                {
+                  path: paths.app.developer.specifications.view.path,
+                  lazy: () =>
+                    import("./routes/app/developer/specifications/view").then(
+                      convert(queryClient),
+                    ),
+                },
+                {
+                  path: paths.app.developer.specifications.create.path,
+                  lazy: () =>
+                    import("./routes/app/developer/specifications/create").then(
+                      convert(queryClient),
+                    ),
+                },
+              ],
+            },
             {
               path: paths.app.developer.registry.path,
               lazy: () =>
@@ -76,11 +121,6 @@ export const createAppRouter = (queryClient: QueryClient) =>
                 ),
             },
           ],
-        },
-        {
-          path: paths.app.dashboard.path,
-          lazy: () =>
-            import("./routes/app/dashboard").then(convert(queryClient)),
         },
       ],
     },

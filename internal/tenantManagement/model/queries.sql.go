@@ -175,3 +175,155 @@ func (q *Queries) AuthorizationCheck(ctx context.Context, arg AuthorizationCheck
 	err := row.Scan(&count)
 	return count, err
 }
+
+const CreateSpecification = `-- name: CreateSpecification :execresult
+INSERT INTO auth.Specifications (WorkspaceId, DataModeId, Name)
+SELECT @WorkspaceId, dm.DataModeId, @Name
+FROM auth.DataModes dm
+WHERE dm.Name = @DataModeName;
+`
+
+type CreateSpecificationParams struct {
+	WorkspaceId  mssql.UniqueIdentifier `db:"WorkspaceId"`
+	DataModeName string                 `db:"DataModeName"`
+	Name         string                 `db:"Name"`
+}
+
+func (q *Queries) CreateSpecification(ctx context.Context, arg CreateSpecificationParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, CreateSpecification, sql.Named("WorkspaceId", arg.WorkspaceId), sql.Named("DataModeName", arg.DataModeName), sql.Named("Name", arg.Name))
+}
+
+const CreateFileSchema = `-- name: CreateFileSchema :execresult
+INSERT INTO auth.FileSchemas (SpecificationId, FileTypeId, Name, Definition)
+SELECT @SpecificationId, ft.FileTypeId, @Name, @Definition
+FROM auth.FileTypes ft
+WHERE ft.Name = @FileTypeName;
+`
+
+type CreateFileSchemaParams struct {
+	SpecificationId mssql.UniqueIdentifier `db:"SpecificationId"`
+	FileTypeName    string                 `db:"FileTypeName"`
+	Name            string                 `db:"Name"`
+	Definition      string                 `db:"Definition"`
+}
+
+func (q *Queries) CreateFileSchema(ctx context.Context, arg CreateFileSchemaParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, CreateFileSchema, sql.Named("SpecificationId", arg.SpecificationId), sql.Named("FileTypeName", arg.FileTypeName), sql.Named("Name", arg.Name), sql.Named("Definition", arg.Definition))
+}
+
+const GetSpecifications = `-- name: GetSpecifications :many
+SELECT SpecificationId,
+	   WorkspaceId,
+	   DataModeId,
+	   Name,
+	   CreatedAt
+FROM auth.Specifications
+WHERE WorkspaceId = @WorkspaceId;
+`
+
+type GetSpecificationsParams struct {
+	WorkspaceId mssql.UniqueIdentifier `db:"WorkspaceId"`
+}
+
+func (q *Queries) GetSpecifications(ctx context.Context, arg GetSpecificationsParams) ([]AppSpecification, error) {
+	rows, err := q.db.QueryContext(ctx, GetSpecifications, sql.Named("WorkspaceId", arg.WorkspaceId))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []AppSpecification
+	for rows.Next() {
+		var i AppSpecification
+		if err := rows.Scan(
+			&i.SpecificationID,
+			&i.WorkspaceID,
+			&i.DataModeID,
+			&i.Name,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const GetSpecificationByWorkspaceIdAndName = `-- name: GetSpecificationByWorkspaceIdAndName :one
+SELECT SpecificationId,
+	   WorkspaceId,
+	   DataModeId,
+	   Name,
+	   CreatedAt
+FROM auth.Specifications
+WHERE WorkspaceId = @WorkspaceId
+  AND Name = @Name;
+`
+
+type GetSpecificationByWorkspaceIdAndNameParams struct {
+	WorkspaceId mssql.UniqueIdentifier `db:"WorkspaceId"`
+	Name        string                 `db:"Name"`
+}
+
+func (q *Queries) GetSpecificationByWorkspaceIdAndName(ctx context.Context, arg GetSpecificationByWorkspaceIdAndNameParams) (AppSpecification, error) {
+	row := q.db.QueryRowContext(ctx, GetSpecificationByWorkspaceIdAndName, sql.Named("WorkspaceId", arg.WorkspaceId), sql.Named("Name", arg.Name))
+	var item AppSpecification
+	err := row.Scan(
+		&item.SpecificationID,
+		&item.WorkspaceID,
+		&item.DataModeID,
+		&item.Name,
+		&item.CreatedAt,
+	)
+	return item, err
+}
+
+const GetInputSpecifications = `-- name: GetInputSpecifications :many
+SELECT s.SpecificationId,
+	   s.WorkspaceId,
+	   s.DataModeId,
+	   s.Name,
+	   s.CreatedAt
+FROM auth.Specifications s
+JOIN auth.DataModes dm ON s.DataModeId = dm.DataModeId
+WHERE WorkspaceId = @WorkspaceId
+  AND dm.Name = 'Input';
+`
+
+type GetInputSpecificationsParams struct {
+	WorkspaceId mssql.UniqueIdentifier `db:"WorkspaceId"`
+}
+
+func (q *Queries) GetInputSpecifications(ctx context.Context, arg GetInputSpecificationsParams) ([]AppSpecification, error) {
+	rows, err := q.db.QueryContext(ctx, GetInputSpecifications, sql.Named("WorkspaceId", arg.WorkspaceId))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []AppSpecification
+	for rows.Next() {
+		var i AppSpecification
+		if err := rows.Scan(
+			&i.SpecificationID,
+			&i.WorkspaceID,
+			&i.DataModeID,
+			&i.Name,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

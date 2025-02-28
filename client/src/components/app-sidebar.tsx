@@ -8,7 +8,9 @@ import {
   Component,
   Frame,
   GalleryVerticalEnd,
+  Home,
   Map,
+  Newspaper,
   PieChart,
   Settings2,
   SquareTerminal,
@@ -33,132 +35,109 @@ import { GetWorkspacesRequest } from "@/types/api/tenantManagement_pb";
 import { useQuery } from "@connectrpc/connect-query";
 import { paths } from "@/config/paths";
 import { useWorkspace } from "@/hooks/use-workspace";
+import { Button } from "./ui/button";
+import { useNavigate } from "react-router";
 
-// This is sample data.
-const data = {
-  workspaces: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-  navViewer: [
-    {
-      title: "Run history",
-      url: "#",
-      icon: Map,
-      isActive: true,
-    },
-    {
-      title: "Dashboard",
-      url: "#",
-      icon: BookOpen,
-    },
-  ],
-  navUser: [
-    {
-      title: "Upload files",
-      url: "#",
-      icon: Settings2,
-    },
-    {
-      title: "Run models",
-      url: "#",
-      icon: PieChart,
-    },
-  ],
-  navDeveloper: [
-    {
-      title: "Specifications",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Registry",
-      url: paths.app.developer.registry.getHref(),
-      icon: Blocks,
-    },
-    {
-      title: "Models",
-      url: paths.app.developer.models.getHref(),
-      icon: Component,
-    },
-    {
-      title: "Charts",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navAdmin: [
-    {
-      title: "Workspaces",
-      url: paths.app.admin.workspaces.getHref(),
-      icon: Settings2,
-    },
-    {
-      title: "Users",
-      url: paths.app.admin.users.getHref(),
-      icon: UserIcon,
-    },
-  ],
-};
+const navViewer = [
+  {
+    title: "Run history",
+    url: "#",
+    icon: Map,
+    isActive: true,
+  },
+  {
+    title: "Results",
+    url: "#",
+    icon: BookOpen,
+  },
+];
+const navUser = [
+  {
+    title: "Upload files",
+    url: "#",
+    icon: Settings2,
+  },
+  {
+    title: "Run models",
+    url: "#",
+    icon: PieChart,
+  },
+];
 
-export function AppSidebar({
-  logoutFn,
-  ...props
-}: React.ComponentProps<typeof Sidebar> & {
-  logoutFn: () => void;
-}) {
+const navDeveloper = [
+  {
+    title: "Specifications",
+    url: paths.app.developer.specifications.list.getHref(),
+    icon: Newspaper,
+  },
+  {
+    title: "Registry",
+    url: paths.app.developer.registry.getHref(),
+    icon: Blocks,
+  },
+  {
+    title: "Models",
+    url: paths.app.developer.models.getHref(),
+    icon: Component,
+  },
+  {
+    title: "Charts",
+    url: "#",
+    icon: BookOpen,
+    items: [
+      {
+        title: "Introduction",
+        url: "#",
+      },
+      {
+        title: "Get Started",
+        url: "#",
+      },
+      {
+        title: "Tutorials",
+        url: "#",
+      },
+      {
+        title: "Changelog",
+        url: "#",
+      },
+    ],
+  },
+];
+const navAdmin = [
+  {
+    title: "Workspaces",
+    url: paths.app.admin.workspaces.getHref(),
+    icon: Settings2,
+  },
+  {
+    title: "Users",
+    url: paths.app.admin.users.getHref(),
+    icon: UserIcon,
+  },
+];
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const navigate = useNavigate();
   const user = useUser().data as ActiveUser;
   const { activeWorkspaceRole, activeWorkspace } = useWorkspace();
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <WorkspaceSwitcher />
+        <div className="flex items-center">
+          <div>
+            <Button
+              size="lg"
+              variant="ghost"
+              onClick={() => navigate(paths.app.home.getHref())}
+            >
+              <Home />
+            </Button>
+          </div>
+          <div className="flex-1">
+            <WorkspaceSwitcher />
+          </div>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <Authorization
@@ -168,7 +147,7 @@ export function AppSidebar({
             activeWorkspaceRole,
           )}
         >
-          <NavList title="Viewer" items={data.navViewer} />
+          <NavList title="Viewer" items={navViewer} />
         </Authorization>
         <Authorization
           policyCheck={POLICIES["user:access"](
@@ -177,7 +156,7 @@ export function AppSidebar({
             activeWorkspaceRole,
           )}
         >
-          <NavList title="User" items={data.navUser} />
+          <NavList title="User" items={navUser} />
         </Authorization>
         <Authorization
           policyCheck={POLICIES["developer:access"](
@@ -186,21 +165,14 @@ export function AppSidebar({
             activeWorkspaceRole,
           )}
         >
-          <NavList title="Developer" items={data.navDeveloper} />
+          <NavList title="Developer" items={navDeveloper} />
         </Authorization>
         <Authorization policyCheck={POLICIES["admin:access"](user)}>
-          <NavList title="Admin" items={data.navAdmin} />
+          <NavList title="Admin" items={navAdmin} />
         </Authorization>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser
-          user={{
-            name: user.displayName,
-            email: user.username,
-            avatar: "",
-          }}
-          logoutFn={logoutFn}
-        />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

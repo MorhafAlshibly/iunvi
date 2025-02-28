@@ -2,10 +2,10 @@ import { ContentLayout } from "@/components/layouts/content";
 import { useUser } from "@/lib/authentication";
 import { ROLES } from "@/types/user";
 
-const DashboardRoute = () => {
+const HomeRoute = () => {
   const user = useUser();
   return (
-    <ContentLayout title="Dashboard">
+    <ContentLayout title="Home">
       <h1 className="text-xl">
         Welcome <b>{`${user.data?.displayName}`}</b>
       </h1>
@@ -32,4 +32,4 @@ const DashboardRoute = () => {
   );
 };
 
-export default DashboardRoute;
+export default HomeRoute;

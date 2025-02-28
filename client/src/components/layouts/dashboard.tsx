@@ -31,14 +31,9 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from "../ui/sidebar";
 import { Separator } from "../ui/separator";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate();
-  const logout = useLogout({
-    onSuccess: () => navigate(paths.home.getHref()),
-  });
-
   return (
     <SidebarProvider>
-      <AppSidebar logoutFn={() => logout.mutate({})} />
+      <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">

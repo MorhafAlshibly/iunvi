@@ -7,6 +7,7 @@ import checkFile from "eslint-plugin-check-file";
 import importPlugin from "eslint-plugin-import";
 import prettier from "eslint-plugin-prettier";
 import tseslint from "typescript-eslint";
+import tailwind from "eslint-plugin-tailwindcss";
 
 export default tseslint.config({
   settings: { react: { version: "18.3" } },
@@ -15,6 +16,7 @@ export default tseslint.config({
     ...tseslint.configs.recommendedTypeChecked,
     ...tseslint.configs.stylisticTypeChecked,
     prettier,
+    "plugin:tailwindcss/recommended",
   ],
   files: ["**/*.{ts,tsx}"],
   languageOptions: {
@@ -26,6 +28,7 @@ export default tseslint.config({
     },
   },
   plugins: {
+    tailwind,
     "react-hooks": reactHooks,
     "react-refresh": reactRefresh,
     react,
@@ -155,5 +158,34 @@ export default tseslint.config({
         "src/**/!(__tests__)": "KEBAB_CASE",
       },
     ],
+    "no-tailwind-flexbox": {
+      meta: {
+        type: "problem",
+        docs: {
+          description: "Disallow Tailwind flexbox classes, enforce grid only",
+        },
+        schema: [],
+        messages: {
+          noFlex: "Avoid using Tailwind flexbox classes. Use CSS Grid instead.",
+        },
+      },
+      create(context) {
+        return {
+          Literal(node) {
+            if (
+              typeof node.value === "string" &&
+              /\bflex\b|\bflex-row\b|\bflex-col\b|\bjustify-between\b|\bjustify-center\b|\bitems-center\b/.test(
+                node.value,
+              )
+            ) {
+              context.report({
+                node,
+                messageId: "noFlex",
+              });
+            }
+          },
+        };
+      },
+    },
   },
 });

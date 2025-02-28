@@ -10,7 +10,7 @@ const LandingRoute = () => {
 
   const handleStart = () => {
     if (isAuthenticated) {
-      navigate(paths.app.dashboard.getHref());
+      navigate(paths.app.home.getHref());
     } else {
       navigate(paths.auth.login.getHref());
     }

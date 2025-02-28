@@ -48,3 +48,13 @@ export const createRegistryTokenPassword = TenantManagementService.method.create
  * @generated from rpc api.TenantManagementService.GetImages
  */
 export const getImages = TenantManagementService.method.getImages;
+
+/**
+ * @generated from rpc api.TenantManagementService.CreateInputSpecification
+ */
+export const createInputSpecification = TenantManagementService.method.createInputSpecification;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetInputSpecifications
+ */
+export const getInputSpecifications = TenantManagementService.method.getInputSpecifications;

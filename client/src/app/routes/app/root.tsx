@@ -1,6 +1,7 @@
 import { Outlet } from "react-router";
 
 import { DashboardLayout } from "@/components/layouts/dashboard";
+import { ProtectedRoute } from "@/lib/authentication";
 
 export const ErrorBoundary = () => {
   return <div>Something went wrong!</div>;
@@ -8,9 +9,11 @@ export const ErrorBoundary = () => {
 
 const AppRoot = () => {
   return (
-    <DashboardLayout>
-      <Outlet />
-    </DashboardLayout>
+    <ProtectedRoute>
+      <DashboardLayout>
+        <Outlet />
+      </DashboardLayout>
+    </ProtectedRoute>
   );
 };
 

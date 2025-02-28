@@ -10,12 +10,22 @@ require (
 	github.com/AzureAD/microsoft-authentication-library-for-go v1.2.2 // indirect
 	github.com/cjlapao/common-go v0.0.39 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/fatih/color v1.18.0 // indirect
+	github.com/frictionlessdata/tableschema-go v1.5.2 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/goccy/go-json v0.10.3 // indirect
+	github.com/goccy/go-yaml v1.13.4 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
+	github.com/gotnospirit/makeplural v0.0.0-20180622080156-a5f48d94d976 // indirect
+	github.com/gotnospirit/messageformat v0.0.0-20221001023931-dfe49f1eb092 // indirect
+	github.com/kaptinlin/go-i18n v0.1.3 // indirect
+	github.com/kaptinlin/jsonschema v0.2.2 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/microsoft/kiota-abstractions-go v1.8.1 // indirect
 	github.com/microsoft/kiota-authentication-azure-go v1.1.0 // indirect
 	github.com/microsoft/kiota-http-go v1.4.4 // indirect
@@ -25,6 +35,7 @@ require (
 	github.com/microsoft/kiota-serialization-text-go v1.0.0 // indirect
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/satori/go.uuid v1.1.0 // indirect
 	github.com/std-uritemplate/std-uritemplate/go/v2 v2.0.1 // indirect
 	github.com/stretchr/testify v1.10.0 // indirect
 	go.opentelemetry.io/otel v1.24.0 // indirect
