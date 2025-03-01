@@ -108,6 +108,8 @@ const SpecificationsCreateRoute = () => {
     return true;
   };
 
+  console.log(specification);
+
   return (
     <div className="grid grid-cols-1 gap-4">
       <span className="col-span-1 text-md mb-4">

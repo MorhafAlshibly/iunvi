@@ -27,14 +27,14 @@ const SpecificationsViewRoute = () => {
 
   const specification = specificationData?.input
     ? specificationData.input
-    : (specificationData?.output as OutputSpecification);
+    : specificationData?.output;
 
   return (
     <div className="grid grid-cols-1 gap-4">
       <div className="grid grid-cols-2 col-span-1 justify-items-between">
         <div className="grid grid-cols-1 col-span-1 justify-items-start">
           <Label className="col-span-1 content-center text-lg">
-            {specification.name}
+            {specification?.name}
           </Label>
         </div>
         <div className="grid grid-cols-1 col-span-1 justify-items-end">
@@ -52,7 +52,7 @@ const SpecificationsViewRoute = () => {
       </div>
       {specification == specificationData?.input ? (
         <CodeMirror
-          value={specificationData?.input.parameters?.schema}
+          value={specificationData?.input?.parameters?.schema}
           height="auto"
           extensions={[json()]}
           editable={false}
@@ -63,7 +63,7 @@ const SpecificationsViewRoute = () => {
         Data tables -{" "}
         {specification == specificationData?.input ? "CSV" : "Parquet"}
       </Label>
-      {specification.tables.map((table, index) => (
+      {specification?.tables.map((table, index) => (
         <div
           key={index}
           className="grid grid-cols-1 col-span-1 border p-4 gap-4"
