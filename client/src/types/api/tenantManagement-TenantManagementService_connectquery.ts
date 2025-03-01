@@ -55,6 +55,16 @@ export const getImages = TenantManagementService.method.getImages;
 export const createInputSpecification = TenantManagementService.method.createInputSpecification;
 
 /**
- * @generated from rpc api.TenantManagementService.GetInputSpecifications
+ * @generated from rpc api.TenantManagementService.CreateOutputSpecification
  */
-export const getInputSpecifications = TenantManagementService.method.getInputSpecifications;
+export const createOutputSpecification = TenantManagementService.method.createOutputSpecification;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetSpecifications
+ */
+export const getSpecifications = TenantManagementService.method.getSpecifications;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetSpecification
+ */
+export const getSpecification = TenantManagementService.method.getSpecification;

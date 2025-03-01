@@ -524,25 +524,25 @@ func (s *Service) CreateInputSpecification(ctx context.Context, req *connect.Req
 	if err != nil {
 		return nil, err
 	}
-	for _, csv := range req.Msg.Csvs {
-		if csv.Name == "" {
+	for _, table := range req.Msg.Tables {
+		if table.Name == "" {
 			return nil, fmt.Errorf("Name is required")
 		}
-		if csv.Schema == "" {
+		if table.Schema == "" {
 			return nil, fmt.Errorf("Definition is required")
 		}
-		csvSchema, err := tableschema.Read(strings.NewReader(csv.Schema))
+		schema, err := tableschema.Read(strings.NewReader(table.Schema))
 		if err != nil {
 			return nil, err
 		}
-		if csvSchema == nil {
+		if schema == nil {
 			return nil, fmt.Errorf("Schema is nil")
 		}
 		_, err = database.CreateFileSchema(ctx, model.CreateFileSchemaParams{
 			SpecificationId: specification.SpecificationID,
 			FileTypeName:    "CSV",
-			Name:            csv.Name,
-			Definition:      csv.Schema,
+			Name:            table.Name,
+			Definition:      table.Schema,
 		})
 		if err != nil {
 			return nil, err
@@ -553,7 +553,67 @@ func (s *Service) CreateInputSpecification(ctx context.Context, req *connect.Req
 	}), nil
 }
 
-func (s *Service) GetInputSpecifications(ctx context.Context, req *connect.Request[api.GetInputSpecificationsRequest]) (*connect.Response[api.GetInputSpecificationsResponse], error) {
+func (s *Service) CreateOutputSpecification(ctx context.Context, req *connect.Request[api.CreateOutputSpecificationRequest]) (*connect.Response[api.CreateOutputSpecificationResponse], error) {
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceIdBytes), authorization.WithWorkspaceRole(api.WorkspaceRole_USER)).IsAuthorized(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !authorization {
+		return nil, fmt.Errorf("unauthorized")
+	}
+	database := model.New(middleware.GetTx(ctx))
+	_, err = database.CreateSpecification(ctx, model.CreateSpecificationParams{
+		WorkspaceId:  workspaceIdBytes,
+		DataModeName: "Output",
+		Name:         req.Msg.Name,
+	})
+	if err != nil {
+		return nil, err
+	}
+	specification, err := database.GetSpecificationByWorkspaceIdAndName(ctx, model.GetSpecificationByWorkspaceIdAndNameParams{
+		WorkspaceId: workspaceIdBytes,
+		Name:        req.Msg.Name,
+	})
+	if err != nil {
+		return nil, err
+	}
+	for _, table := range req.Msg.Tables {
+		if table.Name == "" {
+			return nil, fmt.Errorf("Name is required")
+		}
+		if table.Schema == "" {
+			return nil, fmt.Errorf("Definition is required")
+		}
+		schema, err := tableschema.Read(strings.NewReader(table.Schema))
+		if err != nil {
+			return nil, err
+		}
+		if schema == nil {
+			return nil, fmt.Errorf("Schema is nil")
+		}
+		_, err = database.CreateFileSchema(ctx, model.CreateFileSchemaParams{
+			SpecificationId: specification.SpecificationID,
+			FileTypeName:    "Parquet",
+			Name:            table.Name,
+			Definition:      table.Schema,
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+	return connect.NewResponse(&api.CreateOutputSpecificationResponse{
+		Id: specification.SpecificationID.String(),
+	}), nil
+}
+
+func (s *Service) GetSpecifications(ctx context.Context, req *connect.Request[api.GetSpecificationsRequest]) (*connect.Response[api.GetSpecificationsResponse], error) {
 	if req.Msg.WorkspaceId == "" {
 		return nil, fmt.Errorf("WorkspaceId is required")
 	}
@@ -562,22 +622,106 @@ func (s *Service) GetInputSpecifications(ctx context.Context, req *connect.Reque
 		return nil, err
 	}
 	database := model.New(middleware.GetTx(ctx))
-	specifications, err := database.GetInputSpecifications(ctx, model.GetInputSpecificationsParams{
+	specifications, err := database.GetSpecifications(ctx, model.GetSpecificationsParams{
 		WorkspaceId: workspaceIdBytes,
 	})
 	if err != nil {
 		return nil, err
 	}
-	var apiSpecifications []*api.InputSpecificationName
+	var apiSpecifications []*api.SpecificationName
 	for _, specification := range specifications {
-		apiSpecifications = append(apiSpecifications, &api.InputSpecificationName{
+		apiSpecifications = append(apiSpecifications, &api.SpecificationName{
 			Id:   specification.SpecificationID.String(),
 			Name: specification.Name,
 		})
 	}
-	return connect.NewResponse(&api.GetInputSpecificationsResponse{
-		InputSpecifications: apiSpecifications,
+	return connect.NewResponse(&api.GetSpecificationsResponse{
+		Specifications: apiSpecifications,
 	}), nil
+}
+
+func (s *Service) GetSpecification(ctx context.Context, req *connect.Request[api.GetSpecificationRequest]) (*connect.Response[api.GetSpecificationResponse], error) {
+	if req.Msg.Id == "" {
+		return nil, fmt.Errorf("SpecificationId is required")
+	}
+	specificationIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.Id)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	specification, err := database.GetSpecification(ctx, model.GetSpecificationParams{
+		SpecificationId: specificationIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if specification.DataModeName == "Input" {
+		parametersSchema, err := database.GetFileSchemasBySpecificationIdAndDataTypeName(ctx, model.GetFileSchemasBySpecificationIdAndDataTypeNameParams{
+			SpecificationId: specificationIdBytes,
+			FileTypeName:    "JSON",
+		})
+		if err != nil {
+			return nil, err
+		}
+		if len(parametersSchema) == 0 {
+			return nil, fmt.Errorf("parameters schema not found")
+		}
+		var tables []*api.FileSchema
+		tableSchemas, err := database.GetFileSchemasBySpecificationIdAndDataTypeName(ctx, model.GetFileSchemasBySpecificationIdAndDataTypeNameParams{
+			SpecificationId: specificationIdBytes,
+			FileTypeName:    "CSV",
+		})
+		if err != nil {
+			return nil, err
+		}
+		if len(tableSchemas) == 0 {
+			return nil, fmt.Errorf("table schemas not found")
+		}
+		for _, tableSchema := range tableSchemas {
+			table := &api.FileSchema{
+				Name:   tableSchema.Name,
+				Schema: tableSchema.Definition,
+			}
+			tables = append(tables, table)
+		}
+		return connect.NewResponse(&api.GetSpecificationResponse{
+			Input: &api.InputSpecification{
+				Id:   specification.SpecificationID.String(),
+				Name: specification.Name,
+				Parameters: &api.FileSchema{
+					Name:   parametersSchema[0].Name,
+					Schema: parametersSchema[0].Definition,
+				},
+				Tables: tables,
+			},
+		}), nil
+	} else {
+		var tables []*api.FileSchema
+		tableSchemas, err := database.GetFileSchemasBySpecificationIdAndDataTypeName(ctx, model.GetFileSchemasBySpecificationIdAndDataTypeNameParams{
+			SpecificationId: specificationIdBytes,
+			FileTypeName:    "Parquet",
+		})
+		if err != nil {
+			return nil, err
+		}
+		if len(tableSchemas) == 0 {
+			return nil, fmt.Errorf("table schemas not found")
+		}
+		for _, tableSchema := range tableSchemas {
+			table := &api.FileSchema{
+				Name:   tableSchema.Name,
+				Schema: tableSchema.Definition,
+			}
+			tables = append(tables, table)
+		}
+		return connect.NewResponse(&api.GetSpecificationResponse{
+			Output: &api.OutputSpecification{
+				Id:     specification.SpecificationID.String(),
+				Name:   specification.Name,
+				Tables: tables,
+			},
+		}), nil
+	}
 }
 
 func getScope(workspaceId string) string {

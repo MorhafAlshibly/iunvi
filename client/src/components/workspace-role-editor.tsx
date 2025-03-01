@@ -26,6 +26,14 @@ import {
 } from "@/types/api/tenantManagement_pb";
 import { assignUserToWorkspace } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { useMutation } from "@connectrpc/connect-query";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 export function WorkspaceRoleEditor({
   user,
@@ -36,8 +44,7 @@ export function WorkspaceRoleEditor({
   workspace: Workspace | null;
   currentRole: WorkspaceRole;
 }) {
-  const [open, setOpen] = React.useState(false);
-  const [comboboxEnabled, setComboboxEnabled] = React.useState(false);
+  const [selectEnabled, setSelectEnabled] = React.useState(false);
   const [selectedWorkspaceRole, setSelectedWorkspaceRole] =
     React.useState(currentRole);
 
@@ -55,7 +62,7 @@ export function WorkspaceRoleEditor({
         role: selectedWorkspaceRole,
       });
     }
-    setComboboxEnabled(false);
+    setSelectEnabled(false);
   };
 
   const workspaceRoleList = Object.keys(WorkspaceRole).filter(
@@ -64,57 +71,33 @@ export function WorkspaceRoleEditor({
 
   return (
     <>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-between"
-            disabled={!comboboxEnabled}
-          >
-            {selectedWorkspaceRole
-              ? WorkspaceRole[selectedWorkspaceRole]
-              : WorkspaceRole[WorkspaceRole.UNASSIGNED]}
-            <ChevronsUpDown className="opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="p-0">
-          <Command>
-            <CommandInput placeholder="Search role..." className="h-9" />
-            <CommandList>
-              <CommandEmpty>No role found.</CommandEmpty>
-              <CommandGroup>
-                {workspaceRoleList.map((workspaceRole) => (
-                  <CommandItem
-                    key={workspaceRole}
-                    value={workspaceRole}
-                    onSelect={() => {
-                      setSelectedWorkspaceRole(
-                        WorkspaceRole[
-                          workspaceRole as keyof typeof WorkspaceRole
-                        ],
-                      );
-                      setOpen(false);
-                    }}
-                  >
-                    {workspaceRole}
-                    <Check
-                      className={cn(
-                        "ml-auto",
-                        WorkspaceRole[selectedWorkspaceRole] === workspaceRole
-                          ? "opacity-100"
-                          : "opacity-0",
-                      )}
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-      {comboboxEnabled ? (
+      <Select
+        onValueChange={(value) => {
+          setSelectedWorkspaceRole(
+            WorkspaceRole[value as keyof typeof WorkspaceRole],
+          );
+        }}
+        defaultValue={
+          selectedWorkspaceRole
+            ? WorkspaceRole[selectedWorkspaceRole]
+            : WorkspaceRole[WorkspaceRole.UNASSIGNED]
+        }
+        disabled={!selectEnabled}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Select a role" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {workspaceRoleList.map((workspaceRole) => (
+              <SelectItem key={workspaceRole} value={workspaceRole}>
+                {workspaceRole}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+      {selectEnabled ? (
         <Button variant="ghost" size="sm" onClick={handleAssignUserToWorkspace}>
           <Check />
         </Button>
@@ -122,7 +105,7 @@ export function WorkspaceRoleEditor({
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => setComboboxEnabled(true)}
+          onClick={() => setSelectEnabled(true)}
         >
           <Edit />
         </Button>

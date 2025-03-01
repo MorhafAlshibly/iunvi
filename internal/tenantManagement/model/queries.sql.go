@@ -3,6 +3,7 @@ package model
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	mssql "github.com/microsoft/go-mssqldb"
 )
@@ -177,9 +178,9 @@ func (q *Queries) AuthorizationCheck(ctx context.Context, arg AuthorizationCheck
 }
 
 const CreateSpecification = `-- name: CreateSpecification :execresult
-INSERT INTO auth.Specifications (WorkspaceId, DataModeId, Name)
+INSERT INTO app.Specifications (WorkspaceId, DataModeId, Name)
 SELECT @WorkspaceId, dm.DataModeId, @Name
-FROM auth.DataModes dm
+FROM app.DataModes dm
 WHERE dm.Name = @DataModeName;
 `
 
@@ -194,9 +195,9 @@ func (q *Queries) CreateSpecification(ctx context.Context, arg CreateSpecificati
 }
 
 const CreateFileSchema = `-- name: CreateFileSchema :execresult
-INSERT INTO auth.FileSchemas (SpecificationId, FileTypeId, Name, Definition)
+INSERT INTO app.FileSchemas (SpecificationId, FileTypeId, Name, Definition)
 SELECT @SpecificationId, ft.FileTypeId, @Name, @Definition
-FROM auth.FileTypes ft
+FROM app.FileTypes ft
 WHERE ft.Name = @FileTypeName;
 `
 
@@ -211,56 +212,13 @@ func (q *Queries) CreateFileSchema(ctx context.Context, arg CreateFileSchemaPara
 	return q.db.ExecContext(ctx, CreateFileSchema, sql.Named("SpecificationId", arg.SpecificationId), sql.Named("FileTypeName", arg.FileTypeName), sql.Named("Name", arg.Name), sql.Named("Definition", arg.Definition))
 }
 
-const GetSpecifications = `-- name: GetSpecifications :many
-SELECT SpecificationId,
-	   WorkspaceId,
-	   DataModeId,
-	   Name,
-	   CreatedAt
-FROM auth.Specifications
-WHERE WorkspaceId = @WorkspaceId;
-`
-
-type GetSpecificationsParams struct {
-	WorkspaceId mssql.UniqueIdentifier `db:"WorkspaceId"`
-}
-
-func (q *Queries) GetSpecifications(ctx context.Context, arg GetSpecificationsParams) ([]AppSpecification, error) {
-	rows, err := q.db.QueryContext(ctx, GetSpecifications, sql.Named("WorkspaceId", arg.WorkspaceId))
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []AppSpecification
-	for rows.Next() {
-		var i AppSpecification
-		if err := rows.Scan(
-			&i.SpecificationID,
-			&i.WorkspaceID,
-			&i.DataModeID,
-			&i.Name,
-			&i.CreatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const GetSpecificationByWorkspaceIdAndName = `-- name: GetSpecificationByWorkspaceIdAndName :one
 SELECT SpecificationId,
 	   WorkspaceId,
 	   DataModeId,
 	   Name,
 	   CreatedAt
-FROM auth.Specifications
+FROM app.Specifications
 WHERE WorkspaceId = @WorkspaceId
   AND Name = @Name;
 `
@@ -283,37 +241,134 @@ func (q *Queries) GetSpecificationByWorkspaceIdAndName(ctx context.Context, arg 
 	return item, err
 }
 
-const GetInputSpecifications = `-- name: GetInputSpecifications :many
+const GetSpecifications = `-- name: GetSpecifications :many
 SELECT s.SpecificationId,
 	   s.WorkspaceId,
 	   s.DataModeId,
 	   s.Name,
-	   s.CreatedAt
-FROM auth.Specifications s
-JOIN auth.DataModes dm ON s.DataModeId = dm.DataModeId
-WHERE WorkspaceId = @WorkspaceId
-  AND dm.Name = 'Input';
+	   s.CreatedAt,
+	   dm.Name AS DataModeName
+FROM app.Specifications s
+JOIN app.DataModes dm ON s.DataModeId = dm.DataModeId
+WHERE WorkspaceId = @WorkspaceId;
 `
 
-type GetInputSpecificationsParams struct {
+type GetSpecificationsParams struct {
 	WorkspaceId mssql.UniqueIdentifier `db:"WorkspaceId"`
 }
 
-func (q *Queries) GetInputSpecifications(ctx context.Context, arg GetInputSpecificationsParams) ([]AppSpecification, error) {
-	rows, err := q.db.QueryContext(ctx, GetInputSpecifications, sql.Named("WorkspaceId", arg.WorkspaceId))
+type GetSpecificationRow struct {
+	SpecificationID mssql.UniqueIdentifier `db:"SpecificationId"`
+	WorkspaceID     mssql.UniqueIdentifier `db:"WorkspaceId"`
+	DataModeID      int32                  `db:"DataModeId"`
+	Name            string                 `db:"Name"`
+	CreatedAt       time.Time              `db:"CreatedAt"`
+	DataModeName    string                 `db:"DataModeName"`
+}
+
+func (q *Queries) GetSpecifications(ctx context.Context, arg GetSpecificationsParams) ([]GetSpecificationRow, error) {
+	rows, err := q.db.QueryContext(ctx, GetSpecifications, sql.Named("WorkspaceId", arg.WorkspaceId))
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []AppSpecification
+	var items []GetSpecificationRow
 	for rows.Next() {
-		var i AppSpecification
+		var i GetSpecificationRow
 		if err := rows.Scan(
 			&i.SpecificationID,
 			&i.WorkspaceID,
 			&i.DataModeID,
 			&i.Name,
 			&i.CreatedAt,
+			&i.DataModeName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const GetSpecification = `-- name: GetSpecification :one
+SELECT s.SpecificationId,
+	   s.WorkspaceId,
+	   s.DataModeId,
+	   s.Name,
+	   s.CreatedAt,
+	   dm.Name AS DataModeName
+FROM app.Specifications s
+JOIN app.DataModes dm ON s.DataModeId = dm.DataModeId
+WHERE SpecificationId = @SpecificationId;
+`
+
+type GetSpecificationParams struct {
+	SpecificationId mssql.UniqueIdentifier `db:"SpecificationId"`
+}
+
+func (q *Queries) GetSpecification(ctx context.Context, arg GetSpecificationParams) (GetSpecificationRow, error) {
+	row := q.db.QueryRowContext(ctx, GetSpecification, sql.Named("SpecificationId", arg.SpecificationId))
+	var item GetSpecificationRow
+	err := row.Scan(
+		&item.SpecificationID,
+		&item.WorkspaceID,
+		&item.DataModeID,
+		&item.Name,
+		&item.CreatedAt,
+		&item.DataModeName,
+	)
+	return item, err
+}
+
+const GetFileSchemasBySpecificationIdAndDataTypeName = `-- name: GetFileSchemaBySpecificationIdAndDataTypeName :one
+SELECT fs.FileSchemaId,
+	   fs.SpecificationId,
+	   fs.FileTypeId,
+	   fs.Name,
+	   fs.Definition,
+	   ft.Name AS FileTypeName
+FROM app.FileSchemas fs
+JOIN app.FileTypes ft ON fs.FileTypeId = ft.FileTypeId
+WHERE SpecificationId = @SpecificationId
+  AND ft.Name = @FileTypeName;
+`
+
+type GetFileSchemasBySpecificationIdAndDataTypeNameParams struct {
+	SpecificationId mssql.UniqueIdentifier `db:"SpecificationId"`
+	FileTypeName    string                 `db:"DataTypeName"`
+}
+
+type GetFileSchemaBySpecificationIdAndDataTypeNameRow struct {
+	FileSchemaID    mssql.UniqueIdentifier `db:"FileSchemaId"`
+	SpecificationID mssql.UniqueIdentifier `db:"SpecificationId"`
+	FileTypeID      int32                  `db:"FileTypeId"`
+	Name            string                 `db:"Name"`
+	Definition      string                 `db:"Definition"`
+	FileTypeName    string                 `db:"FileTypeName"`
+}
+
+func (q *Queries) GetFileSchemasBySpecificationIdAndDataTypeName(ctx context.Context, arg GetFileSchemasBySpecificationIdAndDataTypeNameParams) ([]GetFileSchemaBySpecificationIdAndDataTypeNameRow, error) {
+	rows, err := q.db.QueryContext(ctx, GetFileSchemasBySpecificationIdAndDataTypeName, sql.Named("SpecificationId", arg.SpecificationId), sql.Named("FileTypeName", arg.FileTypeName))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetFileSchemaBySpecificationIdAndDataTypeNameRow
+	for rows.Next() {
+		var i GetFileSchemaBySpecificationIdAndDataTypeNameRow
+		if err := rows.Scan(
+			&i.FileSchemaID,
+			&i.SpecificationID,
+			&i.FileTypeID,
+			&i.Name,
+			&i.Definition,
+			&i.FileTypeName,
 		); err != nil {
 			return nil, err
 		}

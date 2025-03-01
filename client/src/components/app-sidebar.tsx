@@ -124,20 +124,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="flex items-center">
-          <div>
-            <Button
-              size="lg"
-              variant="ghost"
-              onClick={() => navigate(paths.app.home.getHref())}
-            >
-              <Home />
-            </Button>
-          </div>
-          <div className="flex-1">
-            <WorkspaceSwitcher />
-          </div>
-        </div>
+        <WorkspaceSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <Authorization

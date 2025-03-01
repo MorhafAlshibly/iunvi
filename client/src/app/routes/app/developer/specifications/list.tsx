@@ -1,33 +1,66 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "@/components/ui/link";
 import { paths } from "@/config/paths";
+import { useWorkspace } from "@/hooks/use-workspace";
+import { getSpecifications } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
+import { useQuery } from "@connectrpc/connect-query";
+import { Info } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const SpecificationsListRoute = () => {
+  const navigate = useNavigate();
+  const { activeWorkspace } = useWorkspace();
+  const { data: specificationsData } = useQuery(
+    getSpecifications,
+    {
+      workspaceId: activeWorkspace?.id || "",
+    },
+    {
+      enabled: !!activeWorkspace,
+    },
+  );
+
   return (
-    <>
-      <div className="flex justify-end">
-        <Link to={paths.app.developer.specifications.create.getHref()}>
+    <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 col-span-1 justify-items-end">
+        <Button
+          size="lg"
+          variant="default"
+          className="mb-4"
+          onClick={() => {
+            navigate(paths.app.developer.specifications.create.getHref());
+          }}
+        >
           Create Specification
-        </Link>
+        </Button>
       </div>
-      <div>
-        <div className="p-4">
-          {/* {workspaces.map((workspace) => (
-            <>
-              <div key={workspace.id} className="flex text-sm">
-                <span className="flex-1 content-center">{workspace.name}</span>
-                <span className="flex-1 text-right">
-                  <EditWorkspace
-                    onSubmit={(name) => editWorkspaceFn(workspace.id, name)}
-                  />
-                </span>
-              </div>
-              <Separator className="my-2" />
-            </>
-          ))} */}
-        </div>
+      <div className="grid grid-cols-1 col-span-1 gap-4">
+        {specificationsData?.specifications.map((specification, index) => (
+          <div
+            key={index}
+            className="grid grid-cols-2 col-span-1 justify-items-between border p-4"
+          >
+            <span className="grid grid-cols-1 col-span-1 justify-items-start content-center">
+              {specification.name}
+            </span>
+            <span className="grid grid-cols-1 col-span-1 justify-items-end">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  navigate(
+                    paths.app.developer.specifications.view.getHref(
+                      specification.id,
+                    ),
+                  );
+                }}
+              >
+                <Info />
+              </Button>
+            </span>
+          </div>
+        ))}
       </div>
-    </>
+    </div>
   );
 };
 
