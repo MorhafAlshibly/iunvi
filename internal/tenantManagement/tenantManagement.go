@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
 
 	"connectrpc.com/connect"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
@@ -21,16 +22,21 @@ import (
 	msgraphcore "github.com/microsoftgraph/msgraph-sdk-go-core"
 	"github.com/microsoftgraph/msgraph-sdk-go/models"
 	"google.golang.org/protobuf/types/known/timestamppb"
+
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/service"
 )
 
 type Service struct {
-	subscriptionId    string
-	resourceGroupName string
-	tenantId          string
-	clientId          string
-	clientSecret      string
-	registryName      string
-	registryTokenName string
+	subscriptionId       string
+	resourceGroupName    string
+	tenantId             string
+	clientId             string
+	clientSecret         string
+	registryName         string
+	registryTokenName    string
+	storageAccountName   string
+	storageContainerName string
 }
 
 func WithSubscriptionId(subscriptionId string) func(*Service) {
@@ -72,6 +78,18 @@ func WithRegistryName(registryName string) func(*Service) {
 func WithRegistryTokenName(registryTokenName string) func(*Service) {
 	return func(input *Service) {
 		input.registryTokenName = registryTokenName
+	}
+}
+
+func WithStorageAccountName(storageAccountName string) func(*Service) {
+	return func(input *Service) {
+		input.storageAccountName = storageAccountName
+	}
+}
+
+func WithStorageContainerName(storageContainerName string) func(*Service) {
+	return func(input *Service) {
+		input.storageContainerName = storageContainerName
 	}
 }
 
@@ -433,7 +451,7 @@ func (s *Service) GetImages(ctx context.Context, req *connect.Request[api.GetIma
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceIdBytes), authorization.WithWorkspaceRole(api.WorkspaceRole_VIEWER)).IsAuthorized(ctx)
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceIdBytes), authorization.WithWorkspaceRole(api.WorkspaceRole_DEVELOPER)).IsAuthorized(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -492,7 +510,7 @@ func (s *Service) CreateInputSpecification(ctx context.Context, req *connect.Req
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceIdBytes), authorization.WithWorkspaceRole(api.WorkspaceRole_USER)).IsAuthorized(ctx)
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceIdBytes), authorization.WithWorkspaceRole(api.WorkspaceRole_DEVELOPER)).IsAuthorized(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -561,7 +579,7 @@ func (s *Service) CreateOutputSpecification(ctx context.Context, req *connect.Re
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceIdBytes), authorization.WithWorkspaceRole(api.WorkspaceRole_USER)).IsAuthorized(ctx)
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceIdBytes), authorization.WithWorkspaceRole(api.WorkspaceRole_DEVELOPER)).IsAuthorized(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -722,6 +740,112 @@ func (s *Service) GetSpecification(ctx context.Context, req *connect.Request[api
 			},
 		}), nil
 	}
+}
+
+func (s *Service) CreateLandingZoneSharedAccessSignature(ctx context.Context, req *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error) {
+	// if req.Msg.SpecificationID == "" {
+	// 	return nil, fmt.Errorf("SpecificationId is required")
+	// }
+	// if req.Msg.Files == nil || len(req.Msg.Files) == 0 {
+	// 	return nil, fmt.Errorf("Files are required")
+	// }
+	// // check for duplicate file names
+	// fileNames := make(map[string]struct{})
+	// fileSchemaIds := make(map[string]struct{})
+	// for _, file := range req.Msg.Files {
+	// 	fileSchemaIdBytes, err := conversion.StringToUniqueIdentifier(file.Id)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// 	if _, ok := fileSchemaIds[file.Id]; ok {
+	// 		return nil, fmt.Errorf("duplicate file schema id: %s", file.Id)
+	// 	}
+	// 	fileSchemaIds[file.Id] = struct{}{}
+
+	// 	if _, ok := fileNames[file.Name]; ok {
+	// 		return nil, fmt.Errorf("duplicate file name: %s", file.Name)
+	// 	}
+	// 	fileNames[file.Name] = struct{}{}
+	// }
+	// specificationIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.SpecificationID)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// database := model.New(middleware.GetTx(ctx))
+	// tableSchemas, err := database.GetFileSchemasBySpecificationIdAndDataTypeName(ctx, model.GetFileSchemasBySpecificationIdAndDataTypeNameParams{
+	// 	SpecificationId: specificationIdBytes,
+	// 	FileTypeName:    "CSV",
+	// })
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// if len(tableSchemas) == 0 {
+	// 	return nil, fmt.Errorf("table schemas not found")
+	// }
+	// // make sure every table schema has been requested
+	// for _, tableSchema := range tableSchemas {
+	// 	if _, ok := fileSchemaIds[tableSchema.FileSchemaID.String()]; !ok {
+	// 		return nil, fmt.Errorf("missing table schema: %s", tableSchema.Name)
+	// 	}
+	// }
+	// // make sure every requested file schema is a table schema
+	// if len(tableSchemas) != len(fileSchemaIds) {
+	// 	return nil, fmt.Errorf("invalid schema")
+	// }
+	// workspaceId, err := database.GetWorkspaceIdBySpecificationId(ctx, model.GetWorkspaceIdBySpecificationIdParams{
+	// 	SpecificationId: specificationIdBytes,
+	// })
+	// if err != nil {
+	// 	return nil, err
+	// }
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	workspaceId, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceId), authorization.WithWorkspaceRole(api.WorkspaceRole_USER)).IsAuthorized(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !authorization {
+		return nil, fmt.Errorf("unauthorized")
+	}
+	cred, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
+	if err != nil {
+		return nil, err
+	}
+	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
+	if err != nil {
+		return nil, err
+	}
+	info := service.KeyInfo{
+		Start:  conversion.ValueToPointer(time.Now().UTC().Add(-10 * time.Second).Format(sas.TimeFormat)),
+		Expiry: conversion.ValueToPointer(time.Now().UTC().Add(48 * time.Hour).Format(sas.TimeFormat)),
+	}
+	udc, err := svcClient.GetUserDelegationCredential(ctx, info, nil)
+	if err != nil {
+		return nil, err
+	}
+	tenantId := ctx.Value("TenantDirectoryId").(string)
+	directory := tenantId + "/" + workspaceId.String()
+	// Create Blob Signature Values with desired permissions and sign with user delegation credential
+	sasQueryParams, err := sas.BlobSignatureValues{
+		Protocol:      sas.ProtocolHTTPS,
+		StartTime:     time.Now().UTC().Add(-10 * time.Second),
+		ExpiryTime:    time.Now().UTC().Add(1 * time.Hour),
+		Permissions:   (&sas.ContainerPermissions{Read: true, List: true, Write: true, Delete: true, Add: true, Create: true}).String(),
+		ContainerName: s.storageContainerName,
+		Directory:     directory,
+	}.SignWithUserDelegation(udc)
+	if err != nil {
+		return nil, err
+	}
+	sasUrl := fmt.Sprintf("https://%s.blob.core.windows.net/%s/%s?%s", s.storageAccountName, s.storageContainerName, directory, sasQueryParams.Encode())
+	return connect.NewResponse(&api.CreateLandingZoneSharedAccessSignatureResponse{
+		Url: sasUrl,
+	}), nil
 }
 
 func getScope(workspaceId string) string {

@@ -68,3 +68,8 @@ export const getSpecifications = TenantManagementService.method.getSpecification
  * @generated from rpc api.TenantManagementService.GetSpecification
  */
 export const getSpecification = TenantManagementService.method.getSpecification;
+
+/**
+ * @generated from rpc api.TenantManagementService.CreateLandingZoneSharedAccessSignature
+ */
+export const createLandingZoneSharedAccessSignature = TenantManagementService.method.createLandingZoneSharedAccessSignature;

@@ -33,6 +33,8 @@ var (
 	sqlDatabase            = fs.StringLong("sqlDatabase", "", "SQL Database")
 	registryName           = fs.StringLong("registryName", "criunvideveastus001", "Azure Container Registry URL")
 	registryTokenName      = fs.StringLong("registryTokenName", "webapp", "Azure Container Registry Token Name")
+	storageAccountName     = fs.StringLong("storageAccountName", "saiunvideveastus001", "Azure Storage Account Name")
+	storageContainerName   = fs.StringLong("storageContainerName", "landing-zone", "Azure Storage Container Name")
 )
 
 func main() {
@@ -56,6 +58,8 @@ func main() {
 		tenantManagement.WithClientSecret(*azureAdClientSecret),
 		tenantManagement.WithRegistryName(*registryName),
 		tenantManagement.WithRegistryTokenName(*registryTokenName),
+		tenantManagement.WithStorageAccountName(*storageAccountName),
+		tenantManagement.WithStorageContainerName(*storageContainerName),
 	)
 	mux := http.NewServeMux()
 	path, handler := apiconnect.NewTenantManagementServiceHandler(service)

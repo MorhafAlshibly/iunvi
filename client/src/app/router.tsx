@@ -25,6 +25,11 @@ import {
   ErrorBoundary as AppAdminRootErrorBoundary,
 } from "./routes/app/admin/root";
 
+import {
+  default as AppUserRoot,
+  ErrorBoundary as AppUserRootErrorBoundary,
+} from "./routes/app/user/root";
+
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;
   return {
@@ -119,6 +124,18 @@ export const createAppRouter = (queryClient: QueryClient) =>
                 import("./routes/app/developer/models").then(
                   convert(queryClient),
                 ),
+            },
+          ],
+        },
+        {
+          path: paths.app.user.root.path,
+          element: <AppUserRoot />,
+          ErrorBoundary: AppUserRootErrorBoundary,
+          children: [
+            {
+              path: paths.app.user.upload.path,
+              lazy: () =>
+                import("./routes/app/user/upload").then(convert(queryClient)),
             },
           ],
         },

@@ -72,5 +72,15 @@ export const paths = {
         getHref: () => "/app/developer/models",
       },
     },
+    user: {
+      root: {
+        path: "user",
+        getHref: () => "/app/user",
+      },
+      upload: {
+        path: "upload",
+        getHref: () => "/app/user/upload",
+      },
+    },
   },
 } as const;

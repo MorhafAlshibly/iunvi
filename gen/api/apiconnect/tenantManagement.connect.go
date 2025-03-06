@@ -72,6 +72,9 @@ const (
 	// TenantManagementServiceGetSpecificationProcedure is the fully-qualified name of the
 	// TenantManagementService's GetSpecification RPC.
 	TenantManagementServiceGetSpecificationProcedure = "/api.TenantManagementService/GetSpecification"
+	// TenantManagementServiceCreateLandingZoneSharedAccessSignatureProcedure is the fully-qualified
+	// name of the TenantManagementService's CreateLandingZoneSharedAccessSignature RPC.
+	TenantManagementServiceCreateLandingZoneSharedAccessSignatureProcedure = "/api.TenantManagementService/CreateLandingZoneSharedAccessSignature"
 )
 
 // TenantManagementServiceClient is a client for the api.TenantManagementService service.
@@ -89,6 +92,7 @@ type TenantManagementServiceClient interface {
 	CreateOutputSpecification(context.Context, *connect.Request[api.CreateOutputSpecificationRequest]) (*connect.Response[api.CreateOutputSpecificationResponse], error)
 	GetSpecifications(context.Context, *connect.Request[api.GetSpecificationsRequest]) (*connect.Response[api.GetSpecificationsResponse], error)
 	GetSpecification(context.Context, *connect.Request[api.GetSpecificationRequest]) (*connect.Response[api.GetSpecificationResponse], error)
+	CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error)
 }
 
 // NewTenantManagementServiceClient constructs a client for the api.TenantManagementService service.
@@ -180,24 +184,31 @@ func NewTenantManagementServiceClient(httpClient connect.HTTPClient, baseURL str
 			connect.WithSchema(tenantManagementServiceMethods.ByName("GetSpecification")),
 			connect.WithClientOptions(opts...),
 		),
+		createLandingZoneSharedAccessSignature: connect.NewClient[api.CreateLandingZoneSharedAccessSignatureRequest, api.CreateLandingZoneSharedAccessSignatureResponse](
+			httpClient,
+			baseURL+TenantManagementServiceCreateLandingZoneSharedAccessSignatureProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("CreateLandingZoneSharedAccessSignature")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // tenantManagementServiceClient implements TenantManagementServiceClient.
 type tenantManagementServiceClient struct {
-	createWorkspace             *connect.Client[api.CreateWorkspaceRequest, api.CreateWorkspaceResponse]
-	getWorkspaces               *connect.Client[api.GetWorkspacesRequest, api.GetWorkspacesResponse]
-	editWorkspace               *connect.Client[api.EditWorkspaceRequest, api.EditWorkspaceResponse]
-	getUsers                    *connect.Client[api.GetUsersRequest, api.GetUsersResponse]
-	getUserWorkspaceAssignment  *connect.Client[api.GetUserWorkspaceAssignmentRequest, api.GetUserWorkspaceAssignmentResponse]
-	assignUserToWorkspace       *connect.Client[api.AssignUserToWorkspaceRequest, api.AssignUserToWorkspaceResponse]
-	getRegistryTokenPasswords   *connect.Client[api.GetRegistryTokenPasswordsRequest, api.GetRegistryTokenPasswordsResponse]
-	createRegistryTokenPassword *connect.Client[api.CreateRegistryTokenPasswordRequest, api.CreateRegistryTokenPasswordResponse]
-	getImages                   *connect.Client[api.GetImagesRequest, api.GetImagesResponse]
-	createInputSpecification    *connect.Client[api.CreateInputSpecificationRequest, api.CreateInputSpecificationResponse]
-	createOutputSpecification   *connect.Client[api.CreateOutputSpecificationRequest, api.CreateOutputSpecificationResponse]
-	getSpecifications           *connect.Client[api.GetSpecificationsRequest, api.GetSpecificationsResponse]
-	getSpecification            *connect.Client[api.GetSpecificationRequest, api.GetSpecificationResponse]
+	createWorkspace                        *connect.Client[api.CreateWorkspaceRequest, api.CreateWorkspaceResponse]
+	getWorkspaces                          *connect.Client[api.GetWorkspacesRequest, api.GetWorkspacesResponse]
+	editWorkspace                          *connect.Client[api.EditWorkspaceRequest, api.EditWorkspaceResponse]
+	getUsers                               *connect.Client[api.GetUsersRequest, api.GetUsersResponse]
+	getUserWorkspaceAssignment             *connect.Client[api.GetUserWorkspaceAssignmentRequest, api.GetUserWorkspaceAssignmentResponse]
+	assignUserToWorkspace                  *connect.Client[api.AssignUserToWorkspaceRequest, api.AssignUserToWorkspaceResponse]
+	getRegistryTokenPasswords              *connect.Client[api.GetRegistryTokenPasswordsRequest, api.GetRegistryTokenPasswordsResponse]
+	createRegistryTokenPassword            *connect.Client[api.CreateRegistryTokenPasswordRequest, api.CreateRegistryTokenPasswordResponse]
+	getImages                              *connect.Client[api.GetImagesRequest, api.GetImagesResponse]
+	createInputSpecification               *connect.Client[api.CreateInputSpecificationRequest, api.CreateInputSpecificationResponse]
+	createOutputSpecification              *connect.Client[api.CreateOutputSpecificationRequest, api.CreateOutputSpecificationResponse]
+	getSpecifications                      *connect.Client[api.GetSpecificationsRequest, api.GetSpecificationsResponse]
+	getSpecification                       *connect.Client[api.GetSpecificationRequest, api.GetSpecificationResponse]
+	createLandingZoneSharedAccessSignature *connect.Client[api.CreateLandingZoneSharedAccessSignatureRequest, api.CreateLandingZoneSharedAccessSignatureResponse]
 }
 
 // CreateWorkspace calls api.TenantManagementService.CreateWorkspace.
@@ -265,6 +276,12 @@ func (c *tenantManagementServiceClient) GetSpecification(ctx context.Context, re
 	return c.getSpecification.CallUnary(ctx, req)
 }
 
+// CreateLandingZoneSharedAccessSignature calls
+// api.TenantManagementService.CreateLandingZoneSharedAccessSignature.
+func (c *tenantManagementServiceClient) CreateLandingZoneSharedAccessSignature(ctx context.Context, req *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error) {
+	return c.createLandingZoneSharedAccessSignature.CallUnary(ctx, req)
+}
+
 // TenantManagementServiceHandler is an implementation of the api.TenantManagementService service.
 type TenantManagementServiceHandler interface {
 	CreateWorkspace(context.Context, *connect.Request[api.CreateWorkspaceRequest]) (*connect.Response[api.CreateWorkspaceResponse], error)
@@ -280,6 +297,7 @@ type TenantManagementServiceHandler interface {
 	CreateOutputSpecification(context.Context, *connect.Request[api.CreateOutputSpecificationRequest]) (*connect.Response[api.CreateOutputSpecificationResponse], error)
 	GetSpecifications(context.Context, *connect.Request[api.GetSpecificationsRequest]) (*connect.Response[api.GetSpecificationsResponse], error)
 	GetSpecification(context.Context, *connect.Request[api.GetSpecificationRequest]) (*connect.Response[api.GetSpecificationResponse], error)
+	CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error)
 }
 
 // NewTenantManagementServiceHandler builds an HTTP handler from the service implementation. It
@@ -367,6 +385,12 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 		connect.WithSchema(tenantManagementServiceMethods.ByName("GetSpecification")),
 		connect.WithHandlerOptions(opts...),
 	)
+	tenantManagementServiceCreateLandingZoneSharedAccessSignatureHandler := connect.NewUnaryHandler(
+		TenantManagementServiceCreateLandingZoneSharedAccessSignatureProcedure,
+		svc.CreateLandingZoneSharedAccessSignature,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("CreateLandingZoneSharedAccessSignature")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/api.TenantManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case TenantManagementServiceCreateWorkspaceProcedure:
@@ -395,6 +419,8 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 			tenantManagementServiceGetSpecificationsHandler.ServeHTTP(w, r)
 		case TenantManagementServiceGetSpecificationProcedure:
 			tenantManagementServiceGetSpecificationHandler.ServeHTTP(w, r)
+		case TenantManagementServiceCreateLandingZoneSharedAccessSignatureProcedure:
+			tenantManagementServiceCreateLandingZoneSharedAccessSignatureHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -454,4 +480,8 @@ func (UnimplementedTenantManagementServiceHandler) GetSpecifications(context.Con
 
 func (UnimplementedTenantManagementServiceHandler) GetSpecification(context.Context, *connect.Request[api.GetSpecificationRequest]) (*connect.Response[api.GetSpecificationResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetSpecification is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.CreateLandingZoneSharedAccessSignature is not implemented"))
 }

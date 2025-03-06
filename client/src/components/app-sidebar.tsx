@@ -14,6 +14,7 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  UploadCloud,
   User as UserIcon,
 } from "lucide-react";
 
@@ -53,9 +54,9 @@ const navViewer = [
 ];
 const navUser = [
   {
-    title: "Upload files",
-    url: "#",
-    icon: Settings2,
+    title: "Upload",
+    url: paths.app.user.upload.getHref(),
+    icon: UploadCloud,
   },
   {
     title: "Run models",

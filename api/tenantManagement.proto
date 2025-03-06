@@ -20,6 +20,7 @@ service TenantManagementService {
   rpc CreateOutputSpecification(CreateOutputSpecificationRequest) returns (CreateOutputSpecificationResponse);
   rpc GetSpecifications(GetSpecificationsRequest) returns (GetSpecificationsResponse);
   rpc GetSpecification(GetSpecificationRequest) returns (GetSpecificationResponse);
+  rpc CreateLandingZoneSharedAccessSignature(CreateLandingZoneSharedAccessSignatureRequest) returns (CreateLandingZoneSharedAccessSignatureResponse);
 }
 
 message CreateWorkspaceRequest {
@@ -133,6 +134,19 @@ message GetSpecificationRequest {
 message GetSpecificationResponse {
   optional InputSpecification input = 1;
   optional OutputSpecification output = 2;
+}
+
+message CreateLandingZoneSharedAccessSignatureRequest {
+  string workspaceId = 1;
+}
+
+message CreateLandingZoneSharedAccessSignatureResponse {
+  string url = 1;
+}
+
+message File {
+  string name = 1;
+  string fileSchemaId = 2;
 }
 
 message SpecificationName {

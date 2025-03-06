@@ -382,3 +382,20 @@ func (q *Queries) GetFileSchemasBySpecificationIdAndDataTypeName(ctx context.Con
 	}
 	return items, nil
 }
+
+const GetWorkspaceIdBySpecificationId = `-- name: GetWorkspaceIdBySpecificationId :one
+SELECT WorkspaceId
+FROM app.Specifications
+WHERE SpecificationId = @SpecificationId;
+`
+
+type GetWorkspaceIdBySpecificationIdParams struct {
+	SpecificationId mssql.UniqueIdentifier `db:"SpecificationId"`
+}
+
+func (q *Queries) GetWorkspaceIdBySpecificationId(ctx context.Context, arg GetWorkspaceIdBySpecificationIdParams) (mssql.UniqueIdentifier, error) {
+	row := q.db.QueryRowContext(ctx, GetWorkspaceIdBySpecificationId, sql.Named("SpecificationId", arg.SpecificationId))
+	var item mssql.UniqueIdentifier
+	err := row.Scan(&item)
+	return item, err
+}
