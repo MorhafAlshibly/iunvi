@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file api/tenantManagement.proto.
  */
 export const file_api_tenantManagement: GenFile = /*@__PURE__*/
-  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoCSIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciJOCiFHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJIkYKIkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USIAoEcm9sZRgBIAEoDjISLmFwaS5Xb3Jrc3BhY2VSb2xlImsKHEFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJEiAKBHJvbGUYAyABKA4yEi5hcGkuV29ya3NwYWNlUm9sZSIfCh1Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZSI3CiBHZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSKnAQohR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1Jlc3BvbnNlEjIKCXBhc3N3b3JkMRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAIgBARIyCglwYXNzd29yZDIYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAGIAQFCDAoKX3Bhc3N3b3JkMUIMCgpfcGFzc3dvcmQyIkwKIkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEQoJcGFzc3dvcmQyGAIgASgIImYKI0NyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlc3BvbnNlEhAKCHBhc3N3b3JkGAEgASgJEi0KCWNyZWF0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiJwoQR2V0SW1hZ2VzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSIvChFHZXRJbWFnZXNSZXNwb25zZRIaCgZpbWFnZXMYASADKAsyCi5hcGkuSW1hZ2UifwofQ3JlYXRlSW5wdXRTcGVjaWZpY2F0aW9uUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCRIMCgRuYW1lGAIgASgJEhgKEHBhcmFtZXRlcnNTY2hlbWEYAyABKAkSHwoGdGFibGVzGAQgAygLMg8uYXBpLkZpbGVTY2hlbWEiLgogQ3JlYXRlSW5wdXRTcGVjaWZpY2F0aW9uUmVzcG9uc2USCgoCaWQYASABKAkiZgogQ3JlYXRlT3V0cHV0U3BlY2lmaWNhdGlvblJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDAoEbmFtZRgCIAEoCRIfCgZ0YWJsZXMYAyADKAsyDy5hcGkuRmlsZVNjaGVtYSIvCiFDcmVhdGVPdXRwdXRTcGVjaWZpY2F0aW9uUmVzcG9uc2USCgoCaWQYASABKAkiLwoYR2V0U3BlY2lmaWNhdGlvbnNSZXF1ZXN0EhMKC3dvcmtzcGFjZUlkGAEgASgJIksKGUdldFNwZWNpZmljYXRpb25zUmVzcG9uc2USLgoOc3BlY2lmaWNhdGlvbnMYASADKAsyFi5hcGkuU3BlY2lmaWNhdGlvbk5hbWUiJQoXR2V0U3BlY2lmaWNhdGlvblJlcXVlc3QSCgoCaWQYASABKAkiiwEKGEdldFNwZWNpZmljYXRpb25SZXNwb25zZRIrCgVpbnB1dBgBIAEoCzIXLmFwaS5JbnB1dFNwZWNpZmljYXRpb25IAIgBARItCgZvdXRwdXQYAiABKAsyGC5hcGkuT3V0cHV0U3BlY2lmaWNhdGlvbkgBiAEBQggKBl9pbnB1dEIJCgdfb3V0cHV0IkQKLUNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSI9Ci5DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlc3BvbnNlEgsKA3VybBgBIAEoCSIqCgRGaWxlEgwKBG5hbWUYASABKAkSFAoMZmlsZVNjaGVtYUlkGAIgASgJIkoKEVNwZWNpZmljYXRpb25OYW1lEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSGwoEbW9kZRgDIAEoDjINLmFwaS5EYXRhTW9kZSJ0ChJJbnB1dFNwZWNpZmljYXRpb24SCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIjCgpwYXJhbWV0ZXJzGAMgASgLMg8uYXBpLkZpbGVTY2hlbWESHwoGdGFibGVzGAQgAygLMg8uYXBpLkZpbGVTY2hlbWEiUAoTT3V0cHV0U3BlY2lmaWNhdGlvbhIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEh8KBnRhYmxlcxgDIAMoCzIPLmFwaS5GaWxlU2NoZW1hIioKCkZpbGVTY2hlbWESDAoEbmFtZRgBIAEoCRIOCgZzY2hlbWEYAiABKAkiFQoFSW1hZ2USDAoEbmFtZRgBIAEoCSIlCglXb3Jrc3BhY2USCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSI5CgRVc2VyEgoKAmlkGAEgASgJEhAKCHVzZXJuYW1lGAIgASgJEhMKC2Rpc3BsYXlOYW1lGAMgASgJKkQKDVdvcmtzcGFjZVJvbGUSDgoKVU5BU1NJR05FRBAAEgoKBlZJRVdFUhABEggKBFVTRVIQAhINCglERVZFTE9QRVIQAyohCghEYXRhTW9kZRIJCgVJTlBVVBAAEgoKBk9VVFBVVBABMqcKChdUZW5hbnRNYW5hZ2VtZW50U2VydmljZRJMCg9DcmVhdGVXb3Jrc3BhY2USGy5hcGkuQ3JlYXRlV29ya3NwYWNlUmVxdWVzdBocLmFwaS5DcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRJGCg1HZXRXb3Jrc3BhY2VzEhkuYXBpLkdldFdvcmtzcGFjZXNSZXF1ZXN0GhouYXBpLkdldFdvcmtzcGFjZXNSZXNwb25zZRJGCg1FZGl0V29ya3NwYWNlEhkuYXBpLkVkaXRXb3Jrc3BhY2VSZXF1ZXN0GhouYXBpLkVkaXRXb3Jrc3BhY2VSZXNwb25zZRI3CghHZXRVc2VycxIULmFwaS5HZXRVc2Vyc1JlcXVlc3QaFS5hcGkuR2V0VXNlcnNSZXNwb25zZRJtChpHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudBImLmFwaS5HZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QaJy5hcGkuR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnRSZXNwb25zZRJeChVBc3NpZ25Vc2VyVG9Xb3Jrc3BhY2USIS5hcGkuQXNzaWduVXNlclRvV29ya3NwYWNlUmVxdWVzdBoiLmFwaS5Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZRJqChlHZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzEiUuYXBpLkdldFJlZ2lzdHJ5VG9rZW5QYXNzd29yZHNSZXF1ZXN0GiYuYXBpLkdldFJlZ2lzdHJ5VG9rZW5QYXNzd29yZHNSZXNwb25zZRJwChtDcmVhdGVSZWdpc3RyeVRva2VuUGFzc3dvcmQSJy5hcGkuQ3JlYXRlUmVnaXN0cnlUb2tlblBhc3N3b3JkUmVxdWVzdBooLmFwaS5DcmVhdGVSZWdpc3RyeVRva2VuUGFzc3dvcmRSZXNwb25zZRI6CglHZXRJbWFnZXMSFS5hcGkuR2V0SW1hZ2VzUmVxdWVzdBoWLmFwaS5HZXRJbWFnZXNSZXNwb25zZRJnChhDcmVhdGVJbnB1dFNwZWNpZmljYXRpb24SJC5hcGkuQ3JlYXRlSW5wdXRTcGVjaWZpY2F0aW9uUmVxdWVzdBolLmFwaS5DcmVhdGVJbnB1dFNwZWNpZmljYXRpb25SZXNwb25zZRJqChlDcmVhdGVPdXRwdXRTcGVjaWZpY2F0aW9uEiUuYXBpLkNyZWF0ZU91dHB1dFNwZWNpZmljYXRpb25SZXF1ZXN0GiYuYXBpLkNyZWF0ZU91dHB1dFNwZWNpZmljYXRpb25SZXNwb25zZRJSChFHZXRTcGVjaWZpY2F0aW9ucxIdLmFwaS5HZXRTcGVjaWZpY2F0aW9uc1JlcXVlc3QaHi5hcGkuR2V0U3BlY2lmaWNhdGlvbnNSZXNwb25zZRJPChBHZXRTcGVjaWZpY2F0aW9uEhwuYXBpLkdldFNwZWNpZmljYXRpb25SZXF1ZXN0Gh0uYXBpLkdldFNwZWNpZmljYXRpb25SZXNwb25zZRKRAQomQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmUSMi5hcGkuQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXF1ZXN0GjMuYXBpLkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlUmVzcG9uc2VCKVonZ2l0aHViLmNvbS9Nb3JoYWZBbHNoaWJseS9pdW52aS9nZW4vYXBpYgZwcm90bzM", [file_google_protobuf_timestamp]);
+  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoCSIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciJOCiFHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJIkYKIkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USIAoEcm9sZRgBIAEoDjISLmFwaS5Xb3Jrc3BhY2VSb2xlImsKHEFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJEiAKBHJvbGUYAyABKA4yEi5hcGkuV29ya3NwYWNlUm9sZSIfCh1Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZSI3CiBHZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSKnAQohR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1Jlc3BvbnNlEjIKCXBhc3N3b3JkMRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAIgBARIyCglwYXNzd29yZDIYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAGIAQFCDAoKX3Bhc3N3b3JkMUIMCgpfcGFzc3dvcmQyIkwKIkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEQoJcGFzc3dvcmQyGAIgASgIImYKI0NyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlc3BvbnNlEhAKCHBhc3N3b3JkGAEgASgJEi0KCWNyZWF0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiJwoQR2V0SW1hZ2VzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSIvChFHZXRJbWFnZXNSZXNwb25zZRIaCgZpbWFnZXMYASADKAsyCi5hcGkuSW1hZ2UifQoaQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDAoEbmFtZRgCIAEoCRIbCgRtb2RlGAMgASgOMg0uYXBpLkRhdGFNb2RlEh8KBnRhYmxlcxgEIAMoCzIPLmFwaS5GaWxlU2NoZW1hIikKG0NyZWF0ZVNwZWNpZmljYXRpb25SZXNwb25zZRIKCgJpZBgBIAEoCSIvChhHZXRTcGVjaWZpY2F0aW9uc1JlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkiSwoZR2V0U3BlY2lmaWNhdGlvbnNSZXNwb25zZRIuCg5zcGVjaWZpY2F0aW9ucxgBIAMoCzIWLmFwaS5TcGVjaWZpY2F0aW9uTmFtZSIlChdHZXRTcGVjaWZpY2F0aW9uUmVxdWVzdBIKCgJpZBgBIAEoCSJiChhHZXRTcGVjaWZpY2F0aW9uUmVzcG9uc2USKQoNc3BlY2lmaWNhdGlvbhgBIAEoCzISLmFwaS5TcGVjaWZpY2F0aW9uEhsKBG1vZGUYAiABKA4yDS5hcGkuRGF0YU1vZGUiVgotQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXF1ZXN0EhMKC3dvcmtzcGFjZUlkGAEgASgJEhAKCGZpbGVOYW1lGAIgASgJIj0KLkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlUmVzcG9uc2USCwoDdXJsGAEgASgJIioKBEZpbGUSDAoEbmFtZRgBIAEoCRIUCgxmaWxlU2NoZW1hSWQYAiABKAkiSgoRU3BlY2lmaWNhdGlvbk5hbWUSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIbCgRtb2RlGAMgASgOMg0uYXBpLkRhdGFNb2RlIkoKDVNwZWNpZmljYXRpb24SCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIfCgZ0YWJsZXMYAyADKAsyDy5hcGkuRmlsZVNjaGVtYSIqCgpGaWxlU2NoZW1hEgwKBG5hbWUYASABKAkSDgoGc2NoZW1hGAIgASgJIhUKBUltYWdlEgwKBG5hbWUYASABKAkiJQoJV29ya3NwYWNlEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkiOQoEVXNlchIKCgJpZBgBIAEoCRIQCgh1c2VybmFtZRgCIAEoCRITCgtkaXNwbGF5TmFtZRgDIAEoCSpECg1Xb3Jrc3BhY2VSb2xlEg4KClVOQVNTSUdORUQQABIKCgZWSUVXRVIQARIICgRVU0VSEAISDQoJREVWRUxPUEVSEAMqIQoIRGF0YU1vZGUSCQoFSU5QVVQQABIKCgZPVVRQVVQQATKsCQoXVGVuYW50TWFuYWdlbWVudFNlcnZpY2USTAoPQ3JlYXRlV29ya3NwYWNlEhsuYXBpLkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QaHC5hcGkuQ3JlYXRlV29ya3NwYWNlUmVzcG9uc2USRgoNR2V0V29ya3NwYWNlcxIZLmFwaS5HZXRXb3Jrc3BhY2VzUmVxdWVzdBoaLmFwaS5HZXRXb3Jrc3BhY2VzUmVzcG9uc2USRgoNRWRpdFdvcmtzcGFjZRIZLmFwaS5FZGl0V29ya3NwYWNlUmVxdWVzdBoaLmFwaS5FZGl0V29ya3NwYWNlUmVzcG9uc2USNwoIR2V0VXNlcnMSFC5hcGkuR2V0VXNlcnNSZXF1ZXN0GhUuYXBpLkdldFVzZXJzUmVzcG9uc2USbQoaR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnQSJi5hcGkuR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnRSZXF1ZXN0GicuYXBpLkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USXgoVQXNzaWduVXNlclRvV29ya3NwYWNlEiEuYXBpLkFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QaIi5hcGkuQXNzaWduVXNlclRvV29ya3NwYWNlUmVzcG9uc2USagoZR2V0UmVnaXN0cnlUb2tlblBhc3N3b3JkcxIlLmFwaS5HZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBomLmFwaS5HZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVzcG9uc2UScAobQ3JlYXRlUmVnaXN0cnlUb2tlblBhc3N3b3JkEicuYXBpLkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QaKC5hcGkuQ3JlYXRlUmVnaXN0cnlUb2tlblBhc3N3b3JkUmVzcG9uc2USOgoJR2V0SW1hZ2VzEhUuYXBpLkdldEltYWdlc1JlcXVlc3QaFi5hcGkuR2V0SW1hZ2VzUmVzcG9uc2USWAoTQ3JlYXRlU3BlY2lmaWNhdGlvbhIfLmFwaS5DcmVhdGVTcGVjaWZpY2F0aW9uUmVxdWVzdBogLmFwaS5DcmVhdGVTcGVjaWZpY2F0aW9uUmVzcG9uc2USUgoRR2V0U3BlY2lmaWNhdGlvbnMSHS5hcGkuR2V0U3BlY2lmaWNhdGlvbnNSZXF1ZXN0Gh4uYXBpLkdldFNwZWNpZmljYXRpb25zUmVzcG9uc2USTwoQR2V0U3BlY2lmaWNhdGlvbhIcLmFwaS5HZXRTcGVjaWZpY2F0aW9uUmVxdWVzdBodLmFwaS5HZXRTcGVjaWZpY2F0aW9uUmVzcG9uc2USkQEKJkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlEjIuYXBpLkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlUmVxdWVzdBozLmFwaS5DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlc3BvbnNlQilaJ2dpdGh1Yi5jb20vTW9yaGFmQWxzaGlibHkvaXVudmkvZ2VuL2FwaWIGcHJvdG8z", [file_google_protobuf_timestamp]);
 
 /**
  * @generated from message api.CreateWorkspaceRequest
@@ -340,9 +340,9 @@ export const GetImagesResponseSchema: GenMessage<GetImagesResponse> = /*@__PURE_
   messageDesc(file_api_tenantManagement, 17);
 
 /**
- * @generated from message api.CreateInputSpecificationRequest
+ * @generated from message api.CreateSpecificationRequest
  */
-export type CreateInputSpecificationRequest = Message<"api.CreateInputSpecificationRequest"> & {
+export type CreateSpecificationRequest = Message<"api.CreateSpecificationRequest"> & {
   /**
    * @generated from field: string workspaceId = 1;
    */
@@ -354,9 +354,9 @@ export type CreateInputSpecificationRequest = Message<"api.CreateInputSpecificat
   name: string;
 
   /**
-   * @generated from field: string parametersSchema = 3;
+   * @generated from field: api.DataMode mode = 3;
    */
-  parametersSchema: string;
+  mode: DataMode;
 
   /**
    * @generated from field: repeated api.FileSchema tables = 4;
@@ -365,16 +365,16 @@ export type CreateInputSpecificationRequest = Message<"api.CreateInputSpecificat
 };
 
 /**
- * Describes the message api.CreateInputSpecificationRequest.
- * Use `create(CreateInputSpecificationRequestSchema)` to create a new message.
+ * Describes the message api.CreateSpecificationRequest.
+ * Use `create(CreateSpecificationRequestSchema)` to create a new message.
  */
-export const CreateInputSpecificationRequestSchema: GenMessage<CreateInputSpecificationRequest> = /*@__PURE__*/
+export const CreateSpecificationRequestSchema: GenMessage<CreateSpecificationRequest> = /*@__PURE__*/
   messageDesc(file_api_tenantManagement, 18);
 
 /**
- * @generated from message api.CreateInputSpecificationResponse
+ * @generated from message api.CreateSpecificationResponse
  */
-export type CreateInputSpecificationResponse = Message<"api.CreateInputSpecificationResponse"> & {
+export type CreateSpecificationResponse = Message<"api.CreateSpecificationResponse"> & {
   /**
    * @generated from field: string id = 1;
    */
@@ -382,55 +382,11 @@ export type CreateInputSpecificationResponse = Message<"api.CreateInputSpecifica
 };
 
 /**
- * Describes the message api.CreateInputSpecificationResponse.
- * Use `create(CreateInputSpecificationResponseSchema)` to create a new message.
+ * Describes the message api.CreateSpecificationResponse.
+ * Use `create(CreateSpecificationResponseSchema)` to create a new message.
  */
-export const CreateInputSpecificationResponseSchema: GenMessage<CreateInputSpecificationResponse> = /*@__PURE__*/
+export const CreateSpecificationResponseSchema: GenMessage<CreateSpecificationResponse> = /*@__PURE__*/
   messageDesc(file_api_tenantManagement, 19);
-
-/**
- * @generated from message api.CreateOutputSpecificationRequest
- */
-export type CreateOutputSpecificationRequest = Message<"api.CreateOutputSpecificationRequest"> & {
-  /**
-   * @generated from field: string workspaceId = 1;
-   */
-  workspaceId: string;
-
-  /**
-   * @generated from field: string name = 2;
-   */
-  name: string;
-
-  /**
-   * @generated from field: repeated api.FileSchema tables = 3;
-   */
-  tables: FileSchema[];
-};
-
-/**
- * Describes the message api.CreateOutputSpecificationRequest.
- * Use `create(CreateOutputSpecificationRequestSchema)` to create a new message.
- */
-export const CreateOutputSpecificationRequestSchema: GenMessage<CreateOutputSpecificationRequest> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 20);
-
-/**
- * @generated from message api.CreateOutputSpecificationResponse
- */
-export type CreateOutputSpecificationResponse = Message<"api.CreateOutputSpecificationResponse"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-};
-
-/**
- * Describes the message api.CreateOutputSpecificationResponse.
- * Use `create(CreateOutputSpecificationResponseSchema)` to create a new message.
- */
-export const CreateOutputSpecificationResponseSchema: GenMessage<CreateOutputSpecificationResponse> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 21);
 
 /**
  * @generated from message api.GetSpecificationsRequest
@@ -447,7 +403,7 @@ export type GetSpecificationsRequest = Message<"api.GetSpecificationsRequest"> &
  * Use `create(GetSpecificationsRequestSchema)` to create a new message.
  */
 export const GetSpecificationsRequestSchema: GenMessage<GetSpecificationsRequest> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 22);
+  messageDesc(file_api_tenantManagement, 20);
 
 /**
  * @generated from message api.GetSpecificationsResponse
@@ -464,7 +420,7 @@ export type GetSpecificationsResponse = Message<"api.GetSpecificationsResponse">
  * Use `create(GetSpecificationsResponseSchema)` to create a new message.
  */
 export const GetSpecificationsResponseSchema: GenMessage<GetSpecificationsResponse> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 23);
+  messageDesc(file_api_tenantManagement, 21);
 
 /**
  * @generated from message api.GetSpecificationRequest
@@ -481,21 +437,21 @@ export type GetSpecificationRequest = Message<"api.GetSpecificationRequest"> & {
  * Use `create(GetSpecificationRequestSchema)` to create a new message.
  */
 export const GetSpecificationRequestSchema: GenMessage<GetSpecificationRequest> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 24);
+  messageDesc(file_api_tenantManagement, 22);
 
 /**
  * @generated from message api.GetSpecificationResponse
  */
 export type GetSpecificationResponse = Message<"api.GetSpecificationResponse"> & {
   /**
-   * @generated from field: optional api.InputSpecification input = 1;
+   * @generated from field: api.Specification specification = 1;
    */
-  input?: InputSpecification;
+  specification?: Specification;
 
   /**
-   * @generated from field: optional api.OutputSpecification output = 2;
+   * @generated from field: api.DataMode mode = 2;
    */
-  output?: OutputSpecification;
+  mode: DataMode;
 };
 
 /**
@@ -503,7 +459,7 @@ export type GetSpecificationResponse = Message<"api.GetSpecificationResponse"> &
  * Use `create(GetSpecificationResponseSchema)` to create a new message.
  */
 export const GetSpecificationResponseSchema: GenMessage<GetSpecificationResponse> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 25);
+  messageDesc(file_api_tenantManagement, 23);
 
 /**
  * @generated from message api.CreateLandingZoneSharedAccessSignatureRequest
@@ -513,6 +469,11 @@ export type CreateLandingZoneSharedAccessSignatureRequest = Message<"api.CreateL
    * @generated from field: string workspaceId = 1;
    */
   workspaceId: string;
+
+  /**
+   * @generated from field: string fileName = 2;
+   */
+  fileName: string;
 };
 
 /**
@@ -520,7 +481,7 @@ export type CreateLandingZoneSharedAccessSignatureRequest = Message<"api.CreateL
  * Use `create(CreateLandingZoneSharedAccessSignatureRequestSchema)` to create a new message.
  */
 export const CreateLandingZoneSharedAccessSignatureRequestSchema: GenMessage<CreateLandingZoneSharedAccessSignatureRequest> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 26);
+  messageDesc(file_api_tenantManagement, 24);
 
 /**
  * @generated from message api.CreateLandingZoneSharedAccessSignatureResponse
@@ -537,7 +498,7 @@ export type CreateLandingZoneSharedAccessSignatureResponse = Message<"api.Create
  * Use `create(CreateLandingZoneSharedAccessSignatureResponseSchema)` to create a new message.
  */
 export const CreateLandingZoneSharedAccessSignatureResponseSchema: GenMessage<CreateLandingZoneSharedAccessSignatureResponse> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 27);
+  messageDesc(file_api_tenantManagement, 25);
 
 /**
  * @generated from message api.File
@@ -559,7 +520,7 @@ export type File = Message<"api.File"> & {
  * Use `create(FileSchema$)` to create a new message.
  */
 export const FileSchema$: GenMessage<File> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 28);
+  messageDesc(file_api_tenantManagement, 26);
 
 /**
  * @generated from message api.SpecificationName
@@ -586,44 +547,12 @@ export type SpecificationName = Message<"api.SpecificationName"> & {
  * Use `create(SpecificationNameSchema)` to create a new message.
  */
 export const SpecificationNameSchema: GenMessage<SpecificationName> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 29);
+  messageDesc(file_api_tenantManagement, 27);
 
 /**
- * @generated from message api.InputSpecification
+ * @generated from message api.Specification
  */
-export type InputSpecification = Message<"api.InputSpecification"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-
-  /**
-   * @generated from field: string name = 2;
-   */
-  name: string;
-
-  /**
-   * @generated from field: api.FileSchema parameters = 3;
-   */
-  parameters?: FileSchema;
-
-  /**
-   * @generated from field: repeated api.FileSchema tables = 4;
-   */
-  tables: FileSchema[];
-};
-
-/**
- * Describes the message api.InputSpecification.
- * Use `create(InputSpecificationSchema)` to create a new message.
- */
-export const InputSpecificationSchema: GenMessage<InputSpecification> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 30);
-
-/**
- * @generated from message api.OutputSpecification
- */
-export type OutputSpecification = Message<"api.OutputSpecification"> & {
+export type Specification = Message<"api.Specification"> & {
   /**
    * @generated from field: string id = 1;
    */
@@ -641,11 +570,11 @@ export type OutputSpecification = Message<"api.OutputSpecification"> & {
 };
 
 /**
- * Describes the message api.OutputSpecification.
- * Use `create(OutputSpecificationSchema)` to create a new message.
+ * Describes the message api.Specification.
+ * Use `create(SpecificationSchema)` to create a new message.
  */
-export const OutputSpecificationSchema: GenMessage<OutputSpecification> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 31);
+export const SpecificationSchema: GenMessage<Specification> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 28);
 
 /**
  * @generated from message api.FileSchema
@@ -667,7 +596,7 @@ export type FileSchema = Message<"api.FileSchema"> & {
  * Use `create(FileSchemaSchema)` to create a new message.
  */
 export const FileSchemaSchema: GenMessage<FileSchema> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 32);
+  messageDesc(file_api_tenantManagement, 29);
 
 /**
  * @generated from message api.Image
@@ -684,7 +613,7 @@ export type Image = Message<"api.Image"> & {
  * Use `create(ImageSchema)` to create a new message.
  */
 export const ImageSchema: GenMessage<Image> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 33);
+  messageDesc(file_api_tenantManagement, 30);
 
 /**
  * @generated from message api.Workspace
@@ -706,7 +635,7 @@ export type Workspace = Message<"api.Workspace"> & {
  * Use `create(WorkspaceSchema)` to create a new message.
  */
 export const WorkspaceSchema: GenMessage<Workspace> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 34);
+  messageDesc(file_api_tenantManagement, 31);
 
 /**
  * @generated from message api.User
@@ -733,7 +662,7 @@ export type User = Message<"api.User"> & {
  * Use `create(UserSchema)` to create a new message.
  */
 export const UserSchema: GenMessage<User> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 35);
+  messageDesc(file_api_tenantManagement, 32);
 
 /**
  * @generated from enum api.WorkspaceRole
@@ -864,20 +793,12 @@ export const TenantManagementService: GenService<{
     output: typeof GetImagesResponseSchema;
   },
   /**
-   * @generated from rpc api.TenantManagementService.CreateInputSpecification
+   * @generated from rpc api.TenantManagementService.CreateSpecification
    */
-  createInputSpecification: {
+  createSpecification: {
     methodKind: "unary";
-    input: typeof CreateInputSpecificationRequestSchema;
-    output: typeof CreateInputSpecificationResponseSchema;
-  },
-  /**
-   * @generated from rpc api.TenantManagementService.CreateOutputSpecification
-   */
-  createOutputSpecification: {
-    methodKind: "unary";
-    input: typeof CreateOutputSpecificationRequestSchema;
-    output: typeof CreateOutputSpecificationResponseSchema;
+    input: typeof CreateSpecificationRequestSchema;
+    output: typeof CreateSpecificationResponseSchema;
   },
   /**
    * @generated from rpc api.TenantManagementService.GetSpecifications

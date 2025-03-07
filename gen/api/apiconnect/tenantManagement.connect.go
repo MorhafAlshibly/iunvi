@@ -60,12 +60,9 @@ const (
 	// TenantManagementServiceGetImagesProcedure is the fully-qualified name of the
 	// TenantManagementService's GetImages RPC.
 	TenantManagementServiceGetImagesProcedure = "/api.TenantManagementService/GetImages"
-	// TenantManagementServiceCreateInputSpecificationProcedure is the fully-qualified name of the
-	// TenantManagementService's CreateInputSpecification RPC.
-	TenantManagementServiceCreateInputSpecificationProcedure = "/api.TenantManagementService/CreateInputSpecification"
-	// TenantManagementServiceCreateOutputSpecificationProcedure is the fully-qualified name of the
-	// TenantManagementService's CreateOutputSpecification RPC.
-	TenantManagementServiceCreateOutputSpecificationProcedure = "/api.TenantManagementService/CreateOutputSpecification"
+	// TenantManagementServiceCreateSpecificationProcedure is the fully-qualified name of the
+	// TenantManagementService's CreateSpecification RPC.
+	TenantManagementServiceCreateSpecificationProcedure = "/api.TenantManagementService/CreateSpecification"
 	// TenantManagementServiceGetSpecificationsProcedure is the fully-qualified name of the
 	// TenantManagementService's GetSpecifications RPC.
 	TenantManagementServiceGetSpecificationsProcedure = "/api.TenantManagementService/GetSpecifications"
@@ -88,8 +85,7 @@ type TenantManagementServiceClient interface {
 	GetRegistryTokenPasswords(context.Context, *connect.Request[api.GetRegistryTokenPasswordsRequest]) (*connect.Response[api.GetRegistryTokenPasswordsResponse], error)
 	CreateRegistryTokenPassword(context.Context, *connect.Request[api.CreateRegistryTokenPasswordRequest]) (*connect.Response[api.CreateRegistryTokenPasswordResponse], error)
 	GetImages(context.Context, *connect.Request[api.GetImagesRequest]) (*connect.Response[api.GetImagesResponse], error)
-	CreateInputSpecification(context.Context, *connect.Request[api.CreateInputSpecificationRequest]) (*connect.Response[api.CreateInputSpecificationResponse], error)
-	CreateOutputSpecification(context.Context, *connect.Request[api.CreateOutputSpecificationRequest]) (*connect.Response[api.CreateOutputSpecificationResponse], error)
+	CreateSpecification(context.Context, *connect.Request[api.CreateSpecificationRequest]) (*connect.Response[api.CreateSpecificationResponse], error)
 	GetSpecifications(context.Context, *connect.Request[api.GetSpecificationsRequest]) (*connect.Response[api.GetSpecificationsResponse], error)
 	GetSpecification(context.Context, *connect.Request[api.GetSpecificationRequest]) (*connect.Response[api.GetSpecificationResponse], error)
 	CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error)
@@ -160,16 +156,10 @@ func NewTenantManagementServiceClient(httpClient connect.HTTPClient, baseURL str
 			connect.WithSchema(tenantManagementServiceMethods.ByName("GetImages")),
 			connect.WithClientOptions(opts...),
 		),
-		createInputSpecification: connect.NewClient[api.CreateInputSpecificationRequest, api.CreateInputSpecificationResponse](
+		createSpecification: connect.NewClient[api.CreateSpecificationRequest, api.CreateSpecificationResponse](
 			httpClient,
-			baseURL+TenantManagementServiceCreateInputSpecificationProcedure,
-			connect.WithSchema(tenantManagementServiceMethods.ByName("CreateInputSpecification")),
-			connect.WithClientOptions(opts...),
-		),
-		createOutputSpecification: connect.NewClient[api.CreateOutputSpecificationRequest, api.CreateOutputSpecificationResponse](
-			httpClient,
-			baseURL+TenantManagementServiceCreateOutputSpecificationProcedure,
-			connect.WithSchema(tenantManagementServiceMethods.ByName("CreateOutputSpecification")),
+			baseURL+TenantManagementServiceCreateSpecificationProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("CreateSpecification")),
 			connect.WithClientOptions(opts...),
 		),
 		getSpecifications: connect.NewClient[api.GetSpecificationsRequest, api.GetSpecificationsResponse](
@@ -204,8 +194,7 @@ type tenantManagementServiceClient struct {
 	getRegistryTokenPasswords              *connect.Client[api.GetRegistryTokenPasswordsRequest, api.GetRegistryTokenPasswordsResponse]
 	createRegistryTokenPassword            *connect.Client[api.CreateRegistryTokenPasswordRequest, api.CreateRegistryTokenPasswordResponse]
 	getImages                              *connect.Client[api.GetImagesRequest, api.GetImagesResponse]
-	createInputSpecification               *connect.Client[api.CreateInputSpecificationRequest, api.CreateInputSpecificationResponse]
-	createOutputSpecification              *connect.Client[api.CreateOutputSpecificationRequest, api.CreateOutputSpecificationResponse]
+	createSpecification                    *connect.Client[api.CreateSpecificationRequest, api.CreateSpecificationResponse]
 	getSpecifications                      *connect.Client[api.GetSpecificationsRequest, api.GetSpecificationsResponse]
 	getSpecification                       *connect.Client[api.GetSpecificationRequest, api.GetSpecificationResponse]
 	createLandingZoneSharedAccessSignature *connect.Client[api.CreateLandingZoneSharedAccessSignatureRequest, api.CreateLandingZoneSharedAccessSignatureResponse]
@@ -256,14 +245,9 @@ func (c *tenantManagementServiceClient) GetImages(ctx context.Context, req *conn
 	return c.getImages.CallUnary(ctx, req)
 }
 
-// CreateInputSpecification calls api.TenantManagementService.CreateInputSpecification.
-func (c *tenantManagementServiceClient) CreateInputSpecification(ctx context.Context, req *connect.Request[api.CreateInputSpecificationRequest]) (*connect.Response[api.CreateInputSpecificationResponse], error) {
-	return c.createInputSpecification.CallUnary(ctx, req)
-}
-
-// CreateOutputSpecification calls api.TenantManagementService.CreateOutputSpecification.
-func (c *tenantManagementServiceClient) CreateOutputSpecification(ctx context.Context, req *connect.Request[api.CreateOutputSpecificationRequest]) (*connect.Response[api.CreateOutputSpecificationResponse], error) {
-	return c.createOutputSpecification.CallUnary(ctx, req)
+// CreateSpecification calls api.TenantManagementService.CreateSpecification.
+func (c *tenantManagementServiceClient) CreateSpecification(ctx context.Context, req *connect.Request[api.CreateSpecificationRequest]) (*connect.Response[api.CreateSpecificationResponse], error) {
+	return c.createSpecification.CallUnary(ctx, req)
 }
 
 // GetSpecifications calls api.TenantManagementService.GetSpecifications.
@@ -293,8 +277,7 @@ type TenantManagementServiceHandler interface {
 	GetRegistryTokenPasswords(context.Context, *connect.Request[api.GetRegistryTokenPasswordsRequest]) (*connect.Response[api.GetRegistryTokenPasswordsResponse], error)
 	CreateRegistryTokenPassword(context.Context, *connect.Request[api.CreateRegistryTokenPasswordRequest]) (*connect.Response[api.CreateRegistryTokenPasswordResponse], error)
 	GetImages(context.Context, *connect.Request[api.GetImagesRequest]) (*connect.Response[api.GetImagesResponse], error)
-	CreateInputSpecification(context.Context, *connect.Request[api.CreateInputSpecificationRequest]) (*connect.Response[api.CreateInputSpecificationResponse], error)
-	CreateOutputSpecification(context.Context, *connect.Request[api.CreateOutputSpecificationRequest]) (*connect.Response[api.CreateOutputSpecificationResponse], error)
+	CreateSpecification(context.Context, *connect.Request[api.CreateSpecificationRequest]) (*connect.Response[api.CreateSpecificationResponse], error)
 	GetSpecifications(context.Context, *connect.Request[api.GetSpecificationsRequest]) (*connect.Response[api.GetSpecificationsResponse], error)
 	GetSpecification(context.Context, *connect.Request[api.GetSpecificationRequest]) (*connect.Response[api.GetSpecificationResponse], error)
 	CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error)
@@ -361,16 +344,10 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 		connect.WithSchema(tenantManagementServiceMethods.ByName("GetImages")),
 		connect.WithHandlerOptions(opts...),
 	)
-	tenantManagementServiceCreateInputSpecificationHandler := connect.NewUnaryHandler(
-		TenantManagementServiceCreateInputSpecificationProcedure,
-		svc.CreateInputSpecification,
-		connect.WithSchema(tenantManagementServiceMethods.ByName("CreateInputSpecification")),
-		connect.WithHandlerOptions(opts...),
-	)
-	tenantManagementServiceCreateOutputSpecificationHandler := connect.NewUnaryHandler(
-		TenantManagementServiceCreateOutputSpecificationProcedure,
-		svc.CreateOutputSpecification,
-		connect.WithSchema(tenantManagementServiceMethods.ByName("CreateOutputSpecification")),
+	tenantManagementServiceCreateSpecificationHandler := connect.NewUnaryHandler(
+		TenantManagementServiceCreateSpecificationProcedure,
+		svc.CreateSpecification,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("CreateSpecification")),
 		connect.WithHandlerOptions(opts...),
 	)
 	tenantManagementServiceGetSpecificationsHandler := connect.NewUnaryHandler(
@@ -411,10 +388,8 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 			tenantManagementServiceCreateRegistryTokenPasswordHandler.ServeHTTP(w, r)
 		case TenantManagementServiceGetImagesProcedure:
 			tenantManagementServiceGetImagesHandler.ServeHTTP(w, r)
-		case TenantManagementServiceCreateInputSpecificationProcedure:
-			tenantManagementServiceCreateInputSpecificationHandler.ServeHTTP(w, r)
-		case TenantManagementServiceCreateOutputSpecificationProcedure:
-			tenantManagementServiceCreateOutputSpecificationHandler.ServeHTTP(w, r)
+		case TenantManagementServiceCreateSpecificationProcedure:
+			tenantManagementServiceCreateSpecificationHandler.ServeHTTP(w, r)
 		case TenantManagementServiceGetSpecificationsProcedure:
 			tenantManagementServiceGetSpecificationsHandler.ServeHTTP(w, r)
 		case TenantManagementServiceGetSpecificationProcedure:
@@ -466,12 +441,8 @@ func (UnimplementedTenantManagementServiceHandler) GetImages(context.Context, *c
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetImages is not implemented"))
 }
 
-func (UnimplementedTenantManagementServiceHandler) CreateInputSpecification(context.Context, *connect.Request[api.CreateInputSpecificationRequest]) (*connect.Response[api.CreateInputSpecificationResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.CreateInputSpecification is not implemented"))
-}
-
-func (UnimplementedTenantManagementServiceHandler) CreateOutputSpecification(context.Context, *connect.Request[api.CreateOutputSpecificationRequest]) (*connect.Response[api.CreateOutputSpecificationResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.CreateOutputSpecification is not implemented"))
+func (UnimplementedTenantManagementServiceHandler) CreateSpecification(context.Context, *connect.Request[api.CreateSpecificationRequest]) (*connect.Response[api.CreateSpecificationResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.CreateSpecification is not implemented"))
 }
 
 func (UnimplementedTenantManagementServiceHandler) GetSpecifications(context.Context, *connect.Request[api.GetSpecificationsRequest]) (*connect.Response[api.GetSpecificationsResponse], error) {

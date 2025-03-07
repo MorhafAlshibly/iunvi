@@ -50,14 +50,9 @@ export const createRegistryTokenPassword = TenantManagementService.method.create
 export const getImages = TenantManagementService.method.getImages;
 
 /**
- * @generated from rpc api.TenantManagementService.CreateInputSpecification
+ * @generated from rpc api.TenantManagementService.CreateSpecification
  */
-export const createInputSpecification = TenantManagementService.method.createInputSpecification;
-
-/**
- * @generated from rpc api.TenantManagementService.CreateOutputSpecification
- */
-export const createOutputSpecification = TenantManagementService.method.createOutputSpecification;
+export const createSpecification = TenantManagementService.method.createSpecification;
 
 /**
  * @generated from rpc api.TenantManagementService.GetSpecifications

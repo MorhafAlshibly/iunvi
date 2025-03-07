@@ -16,8 +16,7 @@ service TenantManagementService {
   rpc GetRegistryTokenPasswords(GetRegistryTokenPasswordsRequest) returns (GetRegistryTokenPasswordsResponse);
   rpc CreateRegistryTokenPassword(CreateRegistryTokenPasswordRequest) returns (CreateRegistryTokenPasswordResponse);
   rpc GetImages(GetImagesRequest) returns (GetImagesResponse);
-  rpc CreateInputSpecification(CreateInputSpecificationRequest) returns (CreateInputSpecificationResponse);
-  rpc CreateOutputSpecification(CreateOutputSpecificationRequest) returns (CreateOutputSpecificationResponse);
+  rpc CreateSpecification(CreateSpecificationRequest) returns (CreateSpecificationResponse);
   rpc GetSpecifications(GetSpecificationsRequest) returns (GetSpecificationsResponse);
   rpc GetSpecification(GetSpecificationRequest) returns (GetSpecificationResponse);
   rpc CreateLandingZoneSharedAccessSignature(CreateLandingZoneSharedAccessSignatureRequest) returns (CreateLandingZoneSharedAccessSignatureResponse);
@@ -98,24 +97,14 @@ message GetImagesResponse {
   repeated Image images = 1;
 }
 
-message CreateInputSpecificationRequest {
+message CreateSpecificationRequest {
   string workspaceId = 1;
   string name = 2;
-  string parametersSchema = 3;
+  DataMode mode = 3;
   repeated FileSchema tables = 4;
 }
 
-message CreateInputSpecificationResponse {
-  string id = 1;
-}
-
-message CreateOutputSpecificationRequest {
-  string workspaceId = 1;
-  string name = 2;
-  repeated FileSchema tables = 3;
-}
-
-message CreateOutputSpecificationResponse {
+message CreateSpecificationResponse {
   string id = 1;
 }
 
@@ -132,12 +121,13 @@ message GetSpecificationRequest {
 }
 
 message GetSpecificationResponse {
-  optional InputSpecification input = 1;
-  optional OutputSpecification output = 2;
+  Specification specification = 1;
+  DataMode mode = 2;
 }
 
 message CreateLandingZoneSharedAccessSignatureRequest {
   string workspaceId = 1;
+  string fileName = 2;
 }
 
 message CreateLandingZoneSharedAccessSignatureResponse {
@@ -155,14 +145,7 @@ message SpecificationName {
   DataMode mode = 3;
 }
 
-message InputSpecification {
-  string id = 1;
-  string name = 2;
-  FileSchema parameters = 3;
-  repeated FileSchema tables = 4;
-}
-
-message OutputSpecification {
+message Specification {
   string id = 1;
   string name = 2;
   repeated FileSchema tables = 3;

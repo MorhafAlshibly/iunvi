@@ -2,14 +2,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
+import { createSpecification } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import {
-  createInputSpecification,
-  createOutputSpecification,
-} from "@/types/api/tenantManagement-TenantManagementService_connectquery";
-import {
-  CreateInputSpecificationRequest,
-  CreateInputSpecificationRequestSchema,
-  CreateOutputSpecificationRequest,
+  CreateSpecificationRequest,
+  CreateSpecificationRequestSchema,
+  DataMode,
   FileSchema,
 } from "@/types/api/tenantManagement_pb";
 import { useMutation } from "@connectrpc/connect-query";
@@ -32,26 +29,14 @@ import {
 const SpecificationsCreateRoute = () => {
   const navigate = useNavigate();
   const { activeWorkspace } = useWorkspace();
-  const [dataMode, setDataMode] = useState<"Input" | "Output">("Input");
 
-  const createInputSpecificationMutation = useMutation(
-    createInputSpecification,
-  );
-  const createOutputSpecificationMutation = useMutation(
-    createOutputSpecification,
-  );
-
-  const createSpecificationMutation =
-    dataMode === "Input"
-      ? createInputSpecificationMutation
-      : createOutputSpecificationMutation;
-
-  const [inputSpecification, setInputSpecification] =
-    useState<CreateInputSpecificationRequest>({
-      $typeName: "api.CreateInputSpecificationRequest",
+  const createSpecificationMutation = useMutation(createSpecification);
+  const [specification, setSpecification] =
+    useState<CreateSpecificationRequest>({
+      $typeName: "api.CreateSpecificationRequest",
       workspaceId: activeWorkspace?.id || "",
       name: "",
-      parametersSchema: "",
+      mode: DataMode.INPUT,
       tables: [
         {
           $typeName: "api.FileSchema",
@@ -60,35 +45,8 @@ const SpecificationsCreateRoute = () => {
         },
       ],
     });
-
-  const [outputSpecification, setOutputSpecification] =
-    useState<CreateOutputSpecificationRequest>({
-      $typeName: "api.CreateOutputSpecificationRequest",
-      workspaceId: activeWorkspace?.id || "",
-      name: "",
-      tables: [
-        {
-          $typeName: "api.FileSchema",
-          name: "",
-          schema: "",
-        },
-      ],
-    });
-
-  const specification =
-    dataMode === "Input" ? inputSpecification : outputSpecification;
-  const setSpecification =
-    dataMode === "Input" ? setInputSpecification : setOutputSpecification;
 
   const validateSpecification = () => {
-    if (dataMode === "Input") {
-      // check if paramertersSchema is valid JSON
-      try {
-        JSON.parse(inputSpecification.parametersSchema);
-      } catch (e) {
-        return false;
-      }
-    }
     // check if tables are valid JSON
     try {
       specification.tables.forEach((table) => {
@@ -108,26 +66,29 @@ const SpecificationsCreateRoute = () => {
     return true;
   };
 
-  console.log(specification);
-
   return (
     <div className="grid grid-cols-1 gap-4">
       <span className="col-span-1 text-md mb-4">
-        Use this page to create specifications using JSON Schema 2020-12 for the
-        Parameters and the Frictionless Table Schema for the Data tables.
+        Use this page to create specifications using the Frictionless Table
+        Schema for the Data tables.
       </span>
       <div className="grid grid-cols-2 col-span-1 gap-4 justify-items-between mb-4">
         <div className="col-span-1">
           <Select
-            defaultValue={dataMode}
-            onValueChange={(value) => setDataMode(value as any)}
+            defaultValue={DataMode[DataMode.INPUT]}
+            onValueChange={(value) => {
+              setSpecification({
+                ...specification,
+                mode: DataMode[value as keyof typeof DataMode],
+              });
+            }}
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Mode" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Input">Input</SelectItem>
-              <SelectItem value="Output">Output</SelectItem>
+              <SelectItem value={DataMode[DataMode.INPUT]}>Input</SelectItem>
+              <SelectItem value={DataMode[DataMode.OUTPUT]}>Output</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -137,7 +98,7 @@ const SpecificationsCreateRoute = () => {
             variant="default"
             disabled={!validateSpecification()}
             onClick={() => {
-              createSpecificationMutation.mutate(specification as any);
+              createSpecificationMutation.mutate(specification);
               navigate(paths.app.developer.specifications.list.getHref());
             }}
           >
@@ -150,34 +111,19 @@ const SpecificationsCreateRoute = () => {
         className="col-span-1"
         onChange={(e) => {
           setSpecification({
-            ...(specification as any),
+            ...specification,
             name: e.target.value,
           });
         }}
       />
-      {specification == inputSpecification ? (
-        <CodeMirror
-          value={inputSpecification.parametersSchema}
-          height="auto"
-          extensions={[json()]}
-          placeholder={"Parameters"}
-          onChange={(value) => {
-            setInputSpecification({
-              ...inputSpecification,
-              parametersSchema: value,
-            });
-          }}
-          className="col-span-1 border"
-        />
-      ) : null}
       <Label className="col-span-1 content-center mt-4 text-lg">
-        Data tables - {specification == inputSpecification ? "CSV" : "Parquet"}
+        Data tables - {specification.mode == DataMode.INPUT ? "CSV" : "Parquet"}
       </Label>
       <CreateDataTable
         dataTables={specification.tables}
         setDataTables={(action) => {
           setSpecification({
-            ...(specification as any),
+            ...specification,
             tables: Array.isArray(action)
               ? action
               : action(specification.tables),

@@ -3,7 +3,7 @@ import { useMatch } from "react-router-dom";
 import { useQuery } from "@connectrpc/connect-query";
 import { getSpecification } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { paths } from "@/config/paths";
-import { OutputSpecification } from "@/types/api/tenantManagement_pb";
+import { DataMode } from "@/types/api/tenantManagement_pb";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import { Button } from "@/components/ui/button";
@@ -25,9 +25,7 @@ const SpecificationsViewRoute = () => {
     },
   );
 
-  const specification = specificationData?.input
-    ? specificationData.input
-    : specificationData?.output;
+  const specification = specificationData?.specification;
 
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -50,18 +48,9 @@ const SpecificationsViewRoute = () => {
           </Button>
         </div>
       </div>
-      {specification == specificationData?.input ? (
-        <CodeMirror
-          value={specificationData?.input?.parameters?.schema}
-          height="auto"
-          extensions={[json()]}
-          editable={false}
-          className="col-span-1 border"
-        />
-      ) : null}
       <Label className="col-span-1 content-center mt-4 text-lg">
         Data tables -{" "}
-        {specification == specificationData?.input ? "CSV" : "Parquet"}
+        {specificationData?.mode == DataMode.INPUT ? "CSV" : "Parquet"}
       </Label>
       {specification?.tables.map((table, index) => (
         <div

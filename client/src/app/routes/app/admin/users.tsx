@@ -12,17 +12,12 @@ const UsersRoute = () => {
       <div>
         <div className="p-4">
           {users.map((user) => (
-            <>
-              <div key={user.id} className="flex text-sm">
-                <span className="flex-1 content-center">
-                  {user.displayName}
-                </span>
-                <span className="flex-1 text-right">
-                  <UserWorkspacePanel user={user} />
-                </span>
-              </div>
-              <Separator className="my-2" />
-            </>
+            <div key={user.id} className="flex text-sm border p-2 mb-4">
+              <span className="flex-1 content-center">{user.displayName}</span>
+              <span className="flex-1 text-right">
+                <UserWorkspacePanel user={user} />
+              </span>
+            </div>
           ))}
         </div>
       </div>

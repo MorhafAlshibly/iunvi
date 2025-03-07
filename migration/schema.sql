@@ -56,8 +56,7 @@ CREATE TABLE app.FileTypes (
 );
 INSERT INTO app.FileTypes (FileTypeId, DataModeId, Name, Extension)
 VALUES (1, 1, 'CSV', 'csv'),
-    (2, 1, 'JSON', 'json'),
-    (3, 2, 'Parquet', 'parquet');
+    (2, 2, 'Parquet', 'parquet');
 -- Specifications (Input/Output schemas)
 CREATE TABLE app.Specifications (
     SpecificationId UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
@@ -108,6 +107,7 @@ CREATE TABLE app.Models (
     InputSpecificationId UNIQUEIDENTIFIER NOT NULL,
     OutputSpecificationId UNIQUEIDENTIFIER NOT NULL,
     Name NVARCHAR(255) NOT NULL,
+    ParametersSchema NVARCHAR(MAX) NOT NULL,
     ImageId NVARCHAR(255) NOT NULL,
     FOREIGN KEY (InputSpecificationId) REFERENCES app.Specifications(SpecificationId),
     FOREIGN KEY (OutputSpecificationId) REFERENCES app.Specifications(SpecificationId),
@@ -135,6 +135,7 @@ CREATE TABLE app.ModelRuns (
     InputFileGroupId UNIQUEIDENTIFIER NOT NULL,
     OutputFileGroupId UNIQUEIDENTIFIER NOT NULL,
     ContainerId NVARCHAR(255) NOT NULL,
+    Parameters NVARCHAR(MAX) NOT NULL,
     CreatedAt DATETIME DEFAULT GETUTCDATE(),
     FOREIGN KEY (ModelId) REFERENCES app.Models(ModelId),
     FOREIGN KEY (StatusId) REFERENCES app.ModelRunStatuses(ModelRunStatusId),
