@@ -12,7 +12,7 @@ import Tus from "@uppy/tus";
 
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
-import AzureBlobPlugin from "@/lib/azure-blob-plugin";
+import AzureBlobPlugin from "@/lib/uppy-data-lake";
 
 const UploadRoute = () => {
   const { activeWorkspace } = useWorkspace();
@@ -48,8 +48,6 @@ const UploadRoute = () => {
       maxRetries: 3,
     }),
   );
-
-  const [results, clearResults] = useUppyEvent(uppy, "upload-progress");
 
   // const [uppy] = useState(() =>
   //   new Uppy({
@@ -154,7 +152,6 @@ const UploadRoute = () => {
       <div className="grid grid-cols-1 gap-4">
         <div className="grid grid-cols-1 col-span-1 justify-items-start">
           <Dashboard uppy={uppy} />
-          Progress: {results[1]?.percentage} %
         </div>
       </div>
     </ContentLayout>

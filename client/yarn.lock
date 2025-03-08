@@ -17,14 +17,7 @@
   dependencies:
     tslib "^2.2.0"
 
-"@azure/abort-controller@^2.0.0":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@azure/abort-controller/-/abort-controller-2.1.2.tgz#42fe0ccab23841d9905812c58f1082d27784566d"
-  integrity sha512-nBrLsEWm4J2u5LpAPjxADTlq3trDgVZZXHNKabeXZtpq3d3AbN/KGO82R87rdDz5/lYB024rtEf10/q0urNgsA==
-  dependencies:
-    tslib "^2.6.2"
-
-"@azure/abort-controller@^2.1.2":
+"@azure/abort-controller@^2.0.0", "@azure/abort-controller@^2.1.2":
   version "2.1.2"
   resolved "https://registry.npmjs.org/@azure/abort-controller/-/abort-controller-2.1.2.tgz#42fe0ccab23841d9905812c58f1082d27784566d"
   integrity sha512-nBrLsEWm4J2u5LpAPjxADTlq3trDgVZZXHNKabeXZtpq3d3AbN/KGO82R87rdDz5/lYB024rtEf10/q0urNgsA==
@@ -100,7 +93,7 @@
   dependencies:
     tslib "^2.6.2"
 
-"@azure/core-util@^1.11.0", "@azure/core-util@^1.2.0", "@azure/core-util@^1.6.1":
+"@azure/core-util@^1.1.1", "@azure/core-util@^1.11.0", "@azure/core-util@^1.2.0", "@azure/core-util@^1.6.1":
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/@azure/core-util/-/core-util-1.11.0.tgz#f530fc67e738aea872fbdd1cc8416e70219fada7"
   integrity sha512-DxOSLua+NdpWoSqULhjDyAZTXFdP/LKkqtYuxxz1SCN289zk3OG8UOpnCQAz/tygyACBtWp/BoO72ptK7msY8g==
@@ -156,6 +149,25 @@
     "@azure/core-util" "^1.6.1"
     "@azure/core-xml" "^1.4.3"
     "@azure/logger" "^1.0.0"
+    events "^3.0.0"
+    tslib "^2.2.0"
+
+"@azure/storage-file-datalake@^12.25.0":
+  version "12.25.0"
+  resolved "https://registry.npmjs.org/@azure/storage-file-datalake/-/storage-file-datalake-12.25.0.tgz#3e0606653612efbc95e99a3101dce9414aa2951c"
+  integrity sha512-HwRPTmnjds68P8rn0pK4v4bC9ih1rS20pEdpe/syNtj2YW6YEewYLh1FYAIiiC0YhkABxmeqNulYaMkYGLwXtw==
+  dependencies:
+    "@azure/abort-controller" "^2.1.2"
+    "@azure/core-auth" "^1.4.0"
+    "@azure/core-client" "^1.6.2"
+    "@azure/core-http-compat" "^2.0.0"
+    "@azure/core-paging" "^1.1.1"
+    "@azure/core-rest-pipeline" "^1.10.1"
+    "@azure/core-tracing" "^1.1.2"
+    "@azure/core-util" "^1.1.1"
+    "@azure/core-xml" "^1.4.3"
+    "@azure/logger" "^1.0.0"
+    "@azure/storage-blob" "^12.26.0"
     events "^3.0.0"
     tslib "^2.2.0"
 

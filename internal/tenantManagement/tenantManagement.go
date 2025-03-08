@@ -22,8 +22,8 @@ import (
 	"github.com/microsoftgraph/msgraph-sdk-go/models"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/service"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/sas"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/service"
 )
 
 type Service struct {
@@ -535,17 +535,17 @@ func (s *Service) CreateSpecification(ctx context.Context, req *connect.Request[
 	}
 	for _, table := range req.Msg.Tables {
 		if table.Name == "" {
-			return nil, fmt.Errorf("Name is required")
+			return nil, fmt.Errorf("name is required")
 		}
 		if table.Schema == "" {
-			return nil, fmt.Errorf("Definition is required")
+			return nil, fmt.Errorf("definition is required")
 		}
 		schema, err := tableschema.Read(strings.NewReader(table.Schema))
 		if err != nil {
 			return nil, err
 		}
 		if schema == nil {
-			return nil, fmt.Errorf("Schema is nil")
+			return nil, fmt.Errorf("schema is nil")
 		}
 		fileTypeName := "CSV"
 		if req.Msg.Mode == api.DataMode_OUTPUT {
@@ -723,7 +723,7 @@ func (s *Service) CreateLandingZoneSharedAccessSignature(ctx context.Context, re
 	if err != nil {
 		return nil, err
 	}
-	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
+	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.dfs.core.windows.net", s.storageAccountName), cred, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -737,20 +737,18 @@ func (s *Service) CreateLandingZoneSharedAccessSignature(ctx context.Context, re
 	}
 	tenantId := ctx.Value("TenantDirectoryId").(string)
 	directory := tenantId + "/" + workspaceId.String()
-	// Create Blob Signature Values with desired permissions and sign with user delegation credential
-	sasQueryParams, err := sas.BlobSignatureValues{
-		Protocol:      sas.ProtocolHTTPS,
-		StartTime:     time.Now().UTC().Add(-10 * time.Second),
-		ExpiryTime:    time.Now().UTC().Add(1 * time.Hour),
-		Permissions:   (&sas.ContainerPermissions{Write: true}).String(),
-		ContainerName: s.storageContainerName,
-		Directory:     directory,
-		BlobName:      req.Msg.FileName,
+	sasQueryParams, err := sas.DatalakeSignatureValues{
+		Protocol:       sas.ProtocolHTTPS,
+		StartTime:      time.Now().UTC().Add(-10 * time.Second),
+		ExpiryTime:     time.Now().UTC().Add(1 * time.Hour),
+		Permissions:    (&sas.FilePermissions{Create: true}).String(),
+		FileSystemName: s.storageAccountName,
+		FilePath:       fmt.Sprintf("%s/%s", directory, req.Msg.FileName),
 	}.SignWithUserDelegation(udc)
 	if err != nil {
 		return nil, err
 	}
-	sasUrl := fmt.Sprintf("https://%s.blob.core.windows.net/%s/%s/%s?%s", s.storageAccountName, s.storageContainerName, directory, req.Msg.FileName, sasQueryParams.Encode())
+	sasUrl := fmt.Sprintf("https://%s.dfs.core.windows.net/%s/%s/%s?%s", s.storageAccountName, s.storageContainerName, directory, req.Msg.FileName, sasQueryParams.Encode())
 	return connect.NewResponse(&api.CreateLandingZoneSharedAccessSignatureResponse{
 		Url: sasUrl,
 	}), nil
