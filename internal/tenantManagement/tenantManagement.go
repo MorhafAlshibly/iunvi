@@ -704,6 +704,10 @@ func (s *Service) CreateLandingZoneSharedAccessSignature(ctx context.Context, re
 	if req.Msg.FileName == "" {
 		return nil, fmt.Errorf("FileName is required")
 	}
+	fileExtension := strings.ToLower(req.Msg.FileName[strings.LastIndex(req.Msg.FileName, ".")+1:])
+	if fileExtension != "csv" {
+		return nil, fmt.Errorf("invalid file extension")
+	}
 	workspaceId, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
 	if err != nil {
 		return nil, err
@@ -738,7 +742,7 @@ func (s *Service) CreateLandingZoneSharedAccessSignature(ctx context.Context, re
 		Protocol:      sas.ProtocolHTTPS,
 		StartTime:     time.Now().UTC().Add(-10 * time.Second),
 		ExpiryTime:    time.Now().UTC().Add(1 * time.Hour),
-		Permissions:   (&sas.ContainerPermissions{Read: true, List: true, Write: true, Delete: true, Add: true, Create: true}).String(),
+		Permissions:   (&sas.ContainerPermissions{Write: true}).String(),
 		ContainerName: s.storageContainerName,
 		Directory:     directory,
 		BlobName:      req.Msg.FileName,

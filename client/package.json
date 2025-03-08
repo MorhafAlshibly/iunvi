@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@azure/abort-controller": "^2.1.2",
     "@azure/msal-browser": "^4.0.1",
     "@azure/msal-react": "^3.0.1",
+    "@azure/storage-blob": "^12.26.0",
     "@bufbuild/protobuf": "^2.2.3",
     "@codemirror/lang-json": "^6.0.1",
     "@connectrpc/connect": "^2.0.1",
@@ -39,6 +41,7 @@
     "@uppy/progress-bar": "^4.2.1",
     "@uppy/react": "^4.2.1",
     "@uppy/status-bar": "^4.1.2",
+    "@uppy/tus": "^4.2.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",

@@ -5,11 +5,14 @@ import { createLandingZoneSharedAccessSignature } from "@/types/api/tenantManage
 import { useMutation } from "@connectrpc/connect-query";
 import Uppy, { Meta, UppyFile, Body } from "@uppy/core";
 import { useEffect, useState } from "react";
-import { Dashboard } from "@uppy/react";
+import { Dashboard, useUppyEvent } from "@uppy/react";
 import AwsS3 from "@uppy/aws-s3";
+import AzureBlob from "uppy-azure-blob";
+import Tus from "@uppy/tus";
 
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
+import AzureBlobPlugin from "@/lib/azure-blob-plugin";
 
 const UploadRoute = () => {
   const { activeWorkspace } = useWorkspace();
@@ -37,20 +40,76 @@ const UploadRoute = () => {
       },
       autoProceed: false,
       allowMultipleUploadBatches: false,
-    }).use(AwsS3, {
-      getUploadParameters: async (file: UppyFile<Meta, Body>) => {
-        const url = await getAzureSas(file.name);
-        return {
-          method: "PUT",
-          url,
-          fields: {},
-          headers: {
-            "x-ms-blob-type": "BlockBlob",
-          },
-        };
+    }).use(AzureBlobPlugin, {
+      getSasUrl: async (file: UppyFile<Meta, Body>) => {
+        return getAzureSas(file.name);
       },
-    } as any),
+      chunkSize: 10 * 1024 * 1024,
+      maxRetries: 3,
+    }),
   );
+
+  const [results, clearResults] = useUppyEvent(uppy, "upload-progress");
+
+  // const [uppy] = useState(() =>
+  //   new Uppy({
+  //     restrictions: {
+  //       allowedFileTypes: [".csv"],
+  //     },
+  //     autoProceed: false,
+  //     allowMultipleUploadBatches: false,
+  //   }).use(Tus, {
+  //     endpoint:
+  //       "https://app-tus-iunvi-dev-eastus-001-f5czeub6c8h8dea3.eastus-01.azurewebsites.net",
+
+  //   }),
+  // );
+
+  // const [uppy] = useState(() =>
+  //   new Uppy({
+  //     restrictions: {
+  //       allowedFileTypes: [".csv"],
+  //     },
+  //     autoProceed: false,
+  //     allowMultipleUploadBatches: false,
+  //     // @ts-ignore
+  //   }).use(AzureBlob, {
+  //     endpoint: "https://saiunvideveastus001.blob.core.windows.net",
+  //     containerName: "landing-zone",
+  //     sas: "?sv=2021-08-06",
+  //   }),
+  // );
+
+  // useEffect(() => {
+  //   getAzureSas("test").then((url) => {
+  //     const sas = "?" + url.split("?")[1];
+  //     uppy?.getPlugin("AzureBlob")?.setOptions({
+  //       sas,
+  //     });
+  //   });
+  // }, []);
+
+  // const [uppy] = useState(() =>
+  //   new Uppy({
+  //     restrictions: {
+  //       allowedFileTypes: [".csv"],
+  //     },
+  //     autoProceed: false,
+  //     allowMultipleUploadBatches: false,
+  //   }).use(AwsS3, {
+  //     getUploadParameters: async (file: UppyFile<Meta, Body>) => {
+  //       const url = await getAzureSas(file.name);
+  //       return {
+  //         method: "PUT",
+  //         url,
+  //         fields: {},
+  //         headers: {
+  //           "x-ms-blob-type": "BlockBlob",
+  //         },
+  //       };
+  //     },
+  //   } as any),
+  // );
 
   // useEffect(() => {
   //   uppy?.getPlugin("AwsS3")?.setOptions({
@@ -93,8 +152,9 @@ const UploadRoute = () => {
   return (
     <ContentLayout title="Upload">
       <div className="grid grid-cols-1 gap-4">
-        <div className="grid grid-cols-1 col-span-1 justify-items-center">
+        <div className="grid grid-cols-1 col-span-1 justify-items-start">
           <Dashboard uppy={uppy} />
+          Progress: {results[1]?.percentage} %
         </div>
       </div>
     </ContentLayout>
