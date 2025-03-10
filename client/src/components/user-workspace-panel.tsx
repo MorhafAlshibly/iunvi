@@ -65,7 +65,7 @@ export function UserWorkspacePanel({ user }: { user: User }) {
           <div className="grid grid-cols-4 items-center gap-4">
             <div className="col-span-4">
               <WorkspaceSelector
-                selectedWorspace={selectedWorkspace}
+                selectedWorkspace={selectedWorkspace}
                 setSelectedWorkspace={setSelectedWorkspace}
               />
             </div>

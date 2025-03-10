@@ -30,6 +30,11 @@ import {
   ErrorBoundary as AppUserRootErrorBoundary,
 } from "./routes/app/user/root";
 
+import {
+  default as AppUserFileGroupsRoot,
+  ErrorBoundary as AppUserFileGroupsRootErrorBoundary,
+} from "./routes/app/user/file-groups/root";
+
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;
   return {
@@ -138,6 +143,34 @@ export const createAppRouter = (queryClient: QueryClient) =>
                 import("./routes/app/user/landing-zone").then(
                   convert(queryClient),
                 ),
+            },
+            {
+              path: paths.app.user.fileGroups.root.path,
+              element: <AppUserFileGroupsRoot />,
+              ErrorBoundary: AppUserFileGroupsRootErrorBoundary,
+              children: [
+                {
+                  path: paths.app.user.fileGroups.list.path,
+                  lazy: () =>
+                    import("./routes/app/user/file-groups/list").then(
+                      convert(queryClient),
+                    ),
+                },
+                {
+                  path: paths.app.user.fileGroups.view.path,
+                  lazy: () =>
+                    import("./routes/app/user/file-groups/view").then(
+                      convert(queryClient),
+                    ),
+                },
+                {
+                  path: paths.app.user.fileGroups.create.path,
+                  lazy: () =>
+                    import("./routes/app/user/file-groups/create").then(
+                      convert(queryClient),
+                    ),
+                },
+              ],
             },
           ],
         },

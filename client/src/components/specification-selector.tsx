@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
@@ -18,17 +16,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useWorkspace } from "@/hooks/use-workspace";
-import { Workspace } from "@/types/api/tenantManagement_pb";
+import { SpecificationName } from "@/types/api/tenantManagement_pb";
 
-export function WorkspaceSelector({
-  selectedWorkspace,
-  setSelectedWorkspace,
+export function SpecificationSelector({
+  specifications,
+  selectedSpecification,
+  setSelectedSpecification,
 }: {
-  selectedWorkspace: Workspace | null;
-  setSelectedWorkspace: React.Dispatch<React.SetStateAction<Workspace | null>>;
+  specifications: SpecificationName[];
+  selectedSpecification: SpecificationName | null;
+  setSelectedSpecification: React.Dispatch<
+    React.SetStateAction<SpecificationName | null>
+  >;
 }) {
-  const { workspaces } = useWorkspace();
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -40,34 +40,35 @@ export function WorkspaceSelector({
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {selectedWorkspace
-            ? workspaces.find(
-                (workspace) => workspace.id === selectedWorkspace?.id,
+          {selectedSpecification
+            ? specifications.find(
+                (specification) =>
+                  specification.id === selectedSpecification?.id,
               )?.name
-            : "Select workspace..."}
+            : "Select specification..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0">
         <Command>
-          <CommandInput placeholder="Search workspace..." className="h-9" />
+          <CommandInput placeholder="Search specification..." className="h-9" />
           <CommandList>
-            <CommandEmpty>No workspace found.</CommandEmpty>
+            <CommandEmpty>No specification found.</CommandEmpty>
             <CommandGroup>
-              {workspaces.map((workspace) => (
+              {specifications.map((specification) => (
                 <CommandItem
-                  key={workspace.id}
-                  value={workspace.name}
+                  key={specification.id}
+                  value={specification.name}
                   onSelect={() => {
-                    setSelectedWorkspace(workspace);
+                    setSelectedSpecification(specification);
                     setOpen(false);
                   }}
                 >
-                  {workspace.name}
+                  {specification.name}
                   <Check
                     className={cn(
                       "ml-auto",
-                      selectedWorkspace?.id === workspace.id
+                      selectedSpecification?.id === specification.id
                         ? "opacity-100"
                         : "opacity-0",
                     )}

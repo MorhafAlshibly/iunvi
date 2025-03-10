@@ -81,6 +81,24 @@ export const paths = {
         path: "landing-zone",
         getHref: () => "/app/user/landing-zone",
       },
+      fileGroups: {
+        root: {
+          path: "file-groups",
+          getHref: () => "/app/user/file-groups",
+        },
+        list: {
+          path: "",
+          getHref: () => "/app/user/file-groups",
+        },
+        view: {
+          path: ":id",
+          getHref: (id: string) => `/app/user/file-groups/${id}`,
+        },
+        create: {
+          path: "create",
+          getHref: () => "/app/user/file-groups/create",
+        },
+      },
     },
   },
 } as const;

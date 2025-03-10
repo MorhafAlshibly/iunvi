@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { paths } from "@/config/paths";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { getSpecifications } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
@@ -8,7 +6,7 @@ import { useQuery } from "@connectrpc/connect-query";
 import { Info } from "lucide-react";
 import { useNavigate } from "react-router";
 
-const SpecificationsListRoute = () => {
+const FileGroupsListRoute = () => {
   const navigate = useNavigate();
   const { activeWorkspace } = useWorkspace();
   const { data: specificationsData } = useQuery(
@@ -29,39 +27,34 @@ const SpecificationsListRoute = () => {
           variant="default"
           className="mb-4"
           onClick={() => {
-            navigate(paths.app.developer.specifications.create.getHref());
+            navigate(paths.app.user.fileGroups.create.getHref());
           }}
         >
           Create Specification
         </Button>
       </div>
-      <div className="grid grid-cols-1 col-span-1">
+      <div className="grid grid-cols-1 col-span-1 gap-4">
         {specificationsData?.specifications.map((specification, index) => (
           <div
             key={index}
-            className="grid grid-cols-2 col-span-1 justify-items-between p-2"
+            className="grid grid-cols-2 col-span-1 justify-items-between border p-4"
           >
-            <div className="grid grid-cols-1 col-span-1 justify-items-start content-center">
-              <Label className="font-normal">{specification.name}</Label>
-            </div>
-            <div className="grid grid-cols-1 col-span-1 justify-items-end">
+            <span className="grid grid-cols-1 col-span-1 justify-items-start content-center">
+              {specification.name}
+            </span>
+            <span className="grid grid-cols-1 col-span-1 justify-items-end">
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={() => {
                   navigate(
-                    paths.app.developer.specifications.view.getHref(
-                      specification.id,
-                    ),
+                    paths.app.user.fileGroups.view.getHref(specification.id),
                   );
                 }}
               >
                 <Info />
               </Button>
-            </div>
-            <div className="grid grid-cols-1 col-span-2">
-              <Separator className="mt-2" />
-            </div>
+            </span>
           </div>
         ))}
       </div>
@@ -69,4 +62,4 @@ const SpecificationsListRoute = () => {
   );
 };
 
-export default SpecificationsListRoute;
+export default FileGroupsListRoute;

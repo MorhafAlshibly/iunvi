@@ -6,6 +6,8 @@ import {
   Bot,
   Command,
   Component,
+  Files,
+  FileStack,
   Frame,
   GalleryVerticalEnd,
   Home,
@@ -58,6 +60,11 @@ const navUser = [
     title: "Landing zone",
     url: paths.app.user.landingZone.getHref(),
     icon: PlaneLanding,
+  },
+  {
+    title: "File groups",
+    url: paths.app.user.fileGroups.list.getHref(),
+    icon: FileStack,
   },
   {
     title: "Run models",
