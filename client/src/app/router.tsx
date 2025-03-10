@@ -133,9 +133,11 @@ export const createAppRouter = (queryClient: QueryClient) =>
           ErrorBoundary: AppUserRootErrorBoundary,
           children: [
             {
-              path: paths.app.user.upload.path,
+              path: paths.app.user.landingZone.path,
               lazy: () =>
-                import("./routes/app/user/upload").then(convert(queryClient)),
+                import("./routes/app/user/landing-zone").then(
+                  convert(queryClient),
+                ),
             },
           ],
         },

@@ -22,8 +22,9 @@ import (
 	"github.com/microsoftgraph/msgraph-sdk-go/models"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/sas"
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/service"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/service"
 )
 
 type Service struct {
@@ -723,10 +724,27 @@ func (s *Service) CreateLandingZoneSharedAccessSignature(ctx context.Context, re
 	if err != nil {
 		return nil, err
 	}
-	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.dfs.core.windows.net", s.storageAccountName), cred, nil)
+	directory := getLandingZoneDirectory(ctx, req.Msg.WorkspaceId)
+	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
 	if err != nil {
 		return nil, err
 	}
+	// containerClient := svcClient.NewContainerClient(s.storageContainerName)
+	// blockBlobClient := containerClient.NewBlockBlobClient(directory + "/" + storedFileName)
+	// _, err = blockBlobClient.Upload(ctx, nil, nil)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// _, err = blockBlobClient.SetMetadata(ctx, map[string]*string{
+	// 	"tenantId":    conversion.ValueToPointer(tenantId),
+	// 	"workspaceId": conversion.ValueToPointer(workspaceId.String()),
+	// 	"fileName":    conversion.ValueToPointer(req.Msg.FileName),
+	// 	"uploaded":    conversion.ValueToPointer("false"),
+	// 	"processed":   conversion.ValueToPointer("false"),
+	// }, nil)
+	// if err != nil {
+	// 	return nil, err
+	// }
 	info := service.KeyInfo{
 		Start:  conversion.ValueToPointer(time.Now().UTC().Add(-10 * time.Second).Format(sas.TimeFormat)),
 		Expiry: conversion.ValueToPointer(time.Now().UTC().Add(48 * time.Hour).Format(sas.TimeFormat)),
@@ -735,23 +753,84 @@ func (s *Service) CreateLandingZoneSharedAccessSignature(ctx context.Context, re
 	if err != nil {
 		return nil, err
 	}
-	tenantId := ctx.Value("TenantDirectoryId").(string)
-	directory := tenantId + "/" + workspaceId.String()
-	sasQueryParams, err := sas.DatalakeSignatureValues{
-		Protocol:       sas.ProtocolHTTPS,
-		StartTime:      time.Now().UTC().Add(-10 * time.Second),
-		ExpiryTime:     time.Now().UTC().Add(1 * time.Hour),
-		Permissions:    (&sas.FilePermissions{Create: true}).String(),
-		FileSystemName: s.storageAccountName,
-		FilePath:       fmt.Sprintf("%s/%s", directory, req.Msg.FileName),
+	// Create Blob Signature Values with desired permissions and sign with user delegation credential
+	sasQueryParams, err := sas.BlobSignatureValues{
+		Protocol:      sas.ProtocolHTTPS,
+		StartTime:     time.Now().UTC().Add(-10 * time.Second),
+		ExpiryTime:    time.Now().UTC().Add(1 * time.Hour),
+		Permissions:   (&sas.BlobPermissions{Write: true}).String(),
+		ContainerName: s.storageContainerName,
+		Directory:     directory,
+		BlobName:      req.Msg.FileName,
 	}.SignWithUserDelegation(udc)
 	if err != nil {
 		return nil, err
 	}
-	sasUrl := fmt.Sprintf("https://%s.dfs.core.windows.net/%s/%s/%s?%s", s.storageAccountName, s.storageContainerName, directory, req.Msg.FileName, sasQueryParams.Encode())
+	sasUrl := fmt.Sprintf("https://%s.blob.core.windows.net/%s/%s/%s?%s", s.storageAccountName, s.storageContainerName, directory, req.Msg.FileName, sasQueryParams.Encode())
 	return connect.NewResponse(&api.CreateLandingZoneSharedAccessSignatureResponse{
 		Url: sasUrl,
 	}), nil
+}
+
+func (s *Service) GetLandingZoneFiles(ctx context.Context, req *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error) {
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	workspaceId, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceId), authorization.WithWorkspaceRole(api.WorkspaceRole_USER)).IsAuthorized(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !authorization {
+		return nil, fmt.Errorf("unauthorized")
+	}
+	cred, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
+	if err != nil {
+		return nil, err
+	}
+	directory := getLandingZoneDirectory(ctx, req.Msg.WorkspaceId)
+	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
+	if err != nil {
+		return nil, err
+	}
+	containerClient := svcClient.NewContainerClient(s.storageContainerName)
+	pager := containerClient.NewListBlobsFlatPager(&container.ListBlobsFlatOptions{
+		Prefix:     conversion.ValueToPointer(directory + "/"),
+		MaxResults: conversion.ValueToPointer(int32(10)),
+		Marker:     req.Msg.Marker,
+	})
+	var files []*api.LandingZoneFile
+	var page container.ListBlobsFlatResponse
+	for pager.More() {
+		page, err = pager.NextPage(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, blob := range page.Segment.BlobItems {
+			if blob.Name == nil {
+				continue
+			}
+			fileName := strings.TrimPrefix(*blob.Name, directory+"/")
+			files = append(files, &api.LandingZoneFile{
+				Name:         fileName,
+				Size:         uint64(conversion.PointerToValue(blob.Properties.ContentLength, 0)),
+				LastModified: timestamppb.New(conversion.PointerToValue(blob.Properties.LastModified, time.Time{})),
+			})
+		}
+	}
+	return connect.NewResponse(&api.GetLandingZoneFilesResponse{
+		Files:      files,
+		NextMarker: page.NextMarker,
+	}), nil
+}
+
+func getLandingZoneDirectory(ctx context.Context, workspaceId string) string {
+	tenantId := ctx.Value("TenantDirectoryId").(string)
+	userObjectId := ctx.Value("UserObjectId").(string)
+	return tenantId + "/" + strings.ToLower(workspaceId) + "/" + userObjectId
 }
 
 func getScope(workspaceId string) string {

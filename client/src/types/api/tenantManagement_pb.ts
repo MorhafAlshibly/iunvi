@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file api/tenantManagement.proto.
  */
 export const file_api_tenantManagement: GenFile = /*@__PURE__*/
-  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoCSIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciJOCiFHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJIkYKIkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USIAoEcm9sZRgBIAEoDjISLmFwaS5Xb3Jrc3BhY2VSb2xlImsKHEFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJEiAKBHJvbGUYAyABKA4yEi5hcGkuV29ya3NwYWNlUm9sZSIfCh1Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZSI3CiBHZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSKnAQohR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1Jlc3BvbnNlEjIKCXBhc3N3b3JkMRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAIgBARIyCglwYXNzd29yZDIYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAGIAQFCDAoKX3Bhc3N3b3JkMUIMCgpfcGFzc3dvcmQyIkwKIkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEQoJcGFzc3dvcmQyGAIgASgIImYKI0NyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlc3BvbnNlEhAKCHBhc3N3b3JkGAEgASgJEi0KCWNyZWF0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiJwoQR2V0SW1hZ2VzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSIvChFHZXRJbWFnZXNSZXNwb25zZRIaCgZpbWFnZXMYASADKAsyCi5hcGkuSW1hZ2UifQoaQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDAoEbmFtZRgCIAEoCRIbCgRtb2RlGAMgASgOMg0uYXBpLkRhdGFNb2RlEh8KBnRhYmxlcxgEIAMoCzIPLmFwaS5GaWxlU2NoZW1hIikKG0NyZWF0ZVNwZWNpZmljYXRpb25SZXNwb25zZRIKCgJpZBgBIAEoCSIvChhHZXRTcGVjaWZpY2F0aW9uc1JlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkiSwoZR2V0U3BlY2lmaWNhdGlvbnNSZXNwb25zZRIuCg5zcGVjaWZpY2F0aW9ucxgBIAMoCzIWLmFwaS5TcGVjaWZpY2F0aW9uTmFtZSIlChdHZXRTcGVjaWZpY2F0aW9uUmVxdWVzdBIKCgJpZBgBIAEoCSJiChhHZXRTcGVjaWZpY2F0aW9uUmVzcG9uc2USKQoNc3BlY2lmaWNhdGlvbhgBIAEoCzISLmFwaS5TcGVjaWZpY2F0aW9uEhsKBG1vZGUYAiABKA4yDS5hcGkuRGF0YU1vZGUiVgotQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXF1ZXN0EhMKC3dvcmtzcGFjZUlkGAEgASgJEhAKCGZpbGVOYW1lGAIgASgJIj0KLkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlUmVzcG9uc2USCwoDdXJsGAEgASgJIioKBEZpbGUSDAoEbmFtZRgBIAEoCRIUCgxmaWxlU2NoZW1hSWQYAiABKAkiSgoRU3BlY2lmaWNhdGlvbk5hbWUSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIbCgRtb2RlGAMgASgOMg0uYXBpLkRhdGFNb2RlIkoKDVNwZWNpZmljYXRpb24SCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIfCgZ0YWJsZXMYAyADKAsyDy5hcGkuRmlsZVNjaGVtYSIqCgpGaWxlU2NoZW1hEgwKBG5hbWUYASABKAkSDgoGc2NoZW1hGAIgASgJIhUKBUltYWdlEgwKBG5hbWUYASABKAkiJQoJV29ya3NwYWNlEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkiOQoEVXNlchIKCgJpZBgBIAEoCRIQCgh1c2VybmFtZRgCIAEoCRITCgtkaXNwbGF5TmFtZRgDIAEoCSpECg1Xb3Jrc3BhY2VSb2xlEg4KClVOQVNTSUdORUQQABIKCgZWSUVXRVIQARIICgRVU0VSEAISDQoJREVWRUxPUEVSEAMqIQoIRGF0YU1vZGUSCQoFSU5QVVQQABIKCgZPVVRQVVQQATKsCQoXVGVuYW50TWFuYWdlbWVudFNlcnZpY2USTAoPQ3JlYXRlV29ya3NwYWNlEhsuYXBpLkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QaHC5hcGkuQ3JlYXRlV29ya3NwYWNlUmVzcG9uc2USRgoNR2V0V29ya3NwYWNlcxIZLmFwaS5HZXRXb3Jrc3BhY2VzUmVxdWVzdBoaLmFwaS5HZXRXb3Jrc3BhY2VzUmVzcG9uc2USRgoNRWRpdFdvcmtzcGFjZRIZLmFwaS5FZGl0V29ya3NwYWNlUmVxdWVzdBoaLmFwaS5FZGl0V29ya3NwYWNlUmVzcG9uc2USNwoIR2V0VXNlcnMSFC5hcGkuR2V0VXNlcnNSZXF1ZXN0GhUuYXBpLkdldFVzZXJzUmVzcG9uc2USbQoaR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnQSJi5hcGkuR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnRSZXF1ZXN0GicuYXBpLkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USXgoVQXNzaWduVXNlclRvV29ya3NwYWNlEiEuYXBpLkFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QaIi5hcGkuQXNzaWduVXNlclRvV29ya3NwYWNlUmVzcG9uc2USagoZR2V0UmVnaXN0cnlUb2tlblBhc3N3b3JkcxIlLmFwaS5HZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBomLmFwaS5HZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVzcG9uc2UScAobQ3JlYXRlUmVnaXN0cnlUb2tlblBhc3N3b3JkEicuYXBpLkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QaKC5hcGkuQ3JlYXRlUmVnaXN0cnlUb2tlblBhc3N3b3JkUmVzcG9uc2USOgoJR2V0SW1hZ2VzEhUuYXBpLkdldEltYWdlc1JlcXVlc3QaFi5hcGkuR2V0SW1hZ2VzUmVzcG9uc2USWAoTQ3JlYXRlU3BlY2lmaWNhdGlvbhIfLmFwaS5DcmVhdGVTcGVjaWZpY2F0aW9uUmVxdWVzdBogLmFwaS5DcmVhdGVTcGVjaWZpY2F0aW9uUmVzcG9uc2USUgoRR2V0U3BlY2lmaWNhdGlvbnMSHS5hcGkuR2V0U3BlY2lmaWNhdGlvbnNSZXF1ZXN0Gh4uYXBpLkdldFNwZWNpZmljYXRpb25zUmVzcG9uc2USTwoQR2V0U3BlY2lmaWNhdGlvbhIcLmFwaS5HZXRTcGVjaWZpY2F0aW9uUmVxdWVzdBodLmFwaS5HZXRTcGVjaWZpY2F0aW9uUmVzcG9uc2USkQEKJkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlEjIuYXBpLkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlUmVxdWVzdBozLmFwaS5DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlc3BvbnNlQilaJ2dpdGh1Yi5jb20vTW9yaGFmQWxzaGlibHkvaXVudmkvZ2VuL2FwaWIGcHJvdG8z", [file_google_protobuf_timestamp]);
+  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoCSIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciJOCiFHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJIkYKIkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USIAoEcm9sZRgBIAEoDjISLmFwaS5Xb3Jrc3BhY2VSb2xlImsKHEFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJEiAKBHJvbGUYAyABKA4yEi5hcGkuV29ya3NwYWNlUm9sZSIfCh1Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZSI3CiBHZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSKnAQohR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1Jlc3BvbnNlEjIKCXBhc3N3b3JkMRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAIgBARIyCglwYXNzd29yZDIYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAGIAQFCDAoKX3Bhc3N3b3JkMUIMCgpfcGFzc3dvcmQyIkwKIkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEQoJcGFzc3dvcmQyGAIgASgIImYKI0NyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlc3BvbnNlEhAKCHBhc3N3b3JkGAEgASgJEi0KCWNyZWF0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiJwoQR2V0SW1hZ2VzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSIvChFHZXRJbWFnZXNSZXNwb25zZRIaCgZpbWFnZXMYASADKAsyCi5hcGkuSW1hZ2UifQoaQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDAoEbmFtZRgCIAEoCRIbCgRtb2RlGAMgASgOMg0uYXBpLkRhdGFNb2RlEh8KBnRhYmxlcxgEIAMoCzIPLmFwaS5GaWxlU2NoZW1hIikKG0NyZWF0ZVNwZWNpZmljYXRpb25SZXNwb25zZRIKCgJpZBgBIAEoCSIvChhHZXRTcGVjaWZpY2F0aW9uc1JlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkiSwoZR2V0U3BlY2lmaWNhdGlvbnNSZXNwb25zZRIuCg5zcGVjaWZpY2F0aW9ucxgBIAMoCzIWLmFwaS5TcGVjaWZpY2F0aW9uTmFtZSIlChdHZXRTcGVjaWZpY2F0aW9uUmVxdWVzdBIKCgJpZBgBIAEoCSJiChhHZXRTcGVjaWZpY2F0aW9uUmVzcG9uc2USKQoNc3BlY2lmaWNhdGlvbhgBIAEoCzISLmFwaS5TcGVjaWZpY2F0aW9uEhsKBG1vZGUYAiABKA4yDS5hcGkuRGF0YU1vZGUiVgotQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXF1ZXN0EhMKC3dvcmtzcGFjZUlkGAEgASgJEhAKCGZpbGVOYW1lGAIgASgJIj0KLkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlUmVzcG9uc2USCwoDdXJsGAEgASgJIlEKGkdldExhbmRpbmdab25lRmlsZXNSZXF1ZXN0EhMKC3dvcmtzcGFjZUlkGAEgASgJEhMKBm1hcmtlchgCIAEoCUgAiAEBQgkKB19tYXJrZXIiagobR2V0TGFuZGluZ1pvbmVGaWxlc1Jlc3BvbnNlEiMKBWZpbGVzGAEgAygLMhQuYXBpLkxhbmRpbmdab25lRmlsZRIXCgpuZXh0TWFya2VyGAIgASgJSACIAQFCDQoLX25leHRNYXJrZXIiXwoPTGFuZGluZ1pvbmVGaWxlEgwKBG5hbWUYASABKAkSDAoEc2l6ZRgCIAEoBBIwCgxsYXN0TW9kaWZpZWQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIkoKEVNwZWNpZmljYXRpb25OYW1lEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSGwoEbW9kZRgDIAEoDjINLmFwaS5EYXRhTW9kZSJKCg1TcGVjaWZpY2F0aW9uEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSHwoGdGFibGVzGAMgAygLMg8uYXBpLkZpbGVTY2hlbWEiKgoKRmlsZVNjaGVtYRIMCgRuYW1lGAEgASgJEg4KBnNjaGVtYRgCIAEoCSIVCgVJbWFnZRIMCgRuYW1lGAEgASgJIiUKCVdvcmtzcGFjZRIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJIjkKBFVzZXISCgoCaWQYASABKAkSEAoIdXNlcm5hbWUYAiABKAkSEwoLZGlzcGxheU5hbWUYAyABKAkqRAoNV29ya3NwYWNlUm9sZRIOCgpVTkFTU0lHTkVEEAASCgoGVklFV0VSEAESCAoEVVNFUhACEg0KCURFVkVMT1BFUhADKiEKCERhdGFNb2RlEgkKBUlOUFVUEAASCgoGT1VUUFVUEAEyhgoKF1RlbmFudE1hbmFnZW1lbnRTZXJ2aWNlEkwKD0NyZWF0ZVdvcmtzcGFjZRIbLmFwaS5DcmVhdGVXb3Jrc3BhY2VSZXF1ZXN0GhwuYXBpLkNyZWF0ZVdvcmtzcGFjZVJlc3BvbnNlEkYKDUdldFdvcmtzcGFjZXMSGS5hcGkuR2V0V29ya3NwYWNlc1JlcXVlc3QaGi5hcGkuR2V0V29ya3NwYWNlc1Jlc3BvbnNlEkYKDUVkaXRXb3Jrc3BhY2USGS5hcGkuRWRpdFdvcmtzcGFjZVJlcXVlc3QaGi5hcGkuRWRpdFdvcmtzcGFjZVJlc3BvbnNlEjcKCEdldFVzZXJzEhQuYXBpLkdldFVzZXJzUmVxdWVzdBoVLmFwaS5HZXRVc2Vyc1Jlc3BvbnNlEm0KGkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50EiYuYXBpLkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVxdWVzdBonLmFwaS5HZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlc3BvbnNlEl4KFUFzc2lnblVzZXJUb1dvcmtzcGFjZRIhLmFwaS5Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXF1ZXN0GiIuYXBpLkFzc2lnblVzZXJUb1dvcmtzcGFjZVJlc3BvbnNlEmoKGUdldFJlZ2lzdHJ5VG9rZW5QYXNzd29yZHMSJS5hcGkuR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1JlcXVlc3QaJi5hcGkuR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1Jlc3BvbnNlEnAKG0NyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZBInLmFwaS5DcmVhdGVSZWdpc3RyeVRva2VuUGFzc3dvcmRSZXF1ZXN0GiguYXBpLkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlc3BvbnNlEjoKCUdldEltYWdlcxIVLmFwaS5HZXRJbWFnZXNSZXF1ZXN0GhYuYXBpLkdldEltYWdlc1Jlc3BvbnNlElgKE0NyZWF0ZVNwZWNpZmljYXRpb24SHy5hcGkuQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QaIC5hcGkuQ3JlYXRlU3BlY2lmaWNhdGlvblJlc3BvbnNlElIKEUdldFNwZWNpZmljYXRpb25zEh0uYXBpLkdldFNwZWNpZmljYXRpb25zUmVxdWVzdBoeLmFwaS5HZXRTcGVjaWZpY2F0aW9uc1Jlc3BvbnNlEk8KEEdldFNwZWNpZmljYXRpb24SHC5hcGkuR2V0U3BlY2lmaWNhdGlvblJlcXVlc3QaHS5hcGkuR2V0U3BlY2lmaWNhdGlvblJlc3BvbnNlEpEBCiZDcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZRIyLmFwaS5DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlcXVlc3QaMy5hcGkuQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXNwb25zZRJYChNHZXRMYW5kaW5nWm9uZUZpbGVzEh8uYXBpLkdldExhbmRpbmdab25lRmlsZXNSZXF1ZXN0GiAuYXBpLkdldExhbmRpbmdab25lRmlsZXNSZXNwb25zZUIpWidnaXRodWIuY29tL01vcmhhZkFsc2hpYmx5L2l1bnZpL2dlbi9hcGliBnByb3RvMw", [file_google_protobuf_timestamp]);
 
 /**
  * @generated from message api.CreateWorkspaceRequest
@@ -501,26 +501,75 @@ export const CreateLandingZoneSharedAccessSignatureResponseSchema: GenMessage<Cr
   messageDesc(file_api_tenantManagement, 25);
 
 /**
- * @generated from message api.File
+ * @generated from message api.GetLandingZoneFilesRequest
  */
-export type File = Message<"api.File"> & {
+export type GetLandingZoneFilesRequest = Message<"api.GetLandingZoneFilesRequest"> & {
+  /**
+   * @generated from field: string workspaceId = 1;
+   */
+  workspaceId: string;
+
+  /**
+   * @generated from field: optional string marker = 2;
+   */
+  marker?: string;
+};
+
+/**
+ * Describes the message api.GetLandingZoneFilesRequest.
+ * Use `create(GetLandingZoneFilesRequestSchema)` to create a new message.
+ */
+export const GetLandingZoneFilesRequestSchema: GenMessage<GetLandingZoneFilesRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 26);
+
+/**
+ * @generated from message api.GetLandingZoneFilesResponse
+ */
+export type GetLandingZoneFilesResponse = Message<"api.GetLandingZoneFilesResponse"> & {
+  /**
+   * @generated from field: repeated api.LandingZoneFile files = 1;
+   */
+  files: LandingZoneFile[];
+
+  /**
+   * @generated from field: optional string nextMarker = 2;
+   */
+  nextMarker?: string;
+};
+
+/**
+ * Describes the message api.GetLandingZoneFilesResponse.
+ * Use `create(GetLandingZoneFilesResponseSchema)` to create a new message.
+ */
+export const GetLandingZoneFilesResponseSchema: GenMessage<GetLandingZoneFilesResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 27);
+
+/**
+ * @generated from message api.LandingZoneFile
+ */
+export type LandingZoneFile = Message<"api.LandingZoneFile"> & {
   /**
    * @generated from field: string name = 1;
    */
   name: string;
 
   /**
-   * @generated from field: string fileSchemaId = 2;
+   * @generated from field: uint64 size = 2;
    */
-  fileSchemaId: string;
+  size: bigint;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp lastModified = 3;
+   */
+  lastModified?: Timestamp;
 };
 
 /**
- * Describes the message api.File.
- * Use `create(FileSchema$)` to create a new message.
+ * Describes the message api.LandingZoneFile.
+ * Use `create(LandingZoneFileSchema)` to create a new message.
  */
-export const FileSchema$: GenMessage<File> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 26);
+export const LandingZoneFileSchema: GenMessage<LandingZoneFile> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 28);
 
 /**
  * @generated from message api.SpecificationName
@@ -547,7 +596,7 @@ export type SpecificationName = Message<"api.SpecificationName"> & {
  * Use `create(SpecificationNameSchema)` to create a new message.
  */
 export const SpecificationNameSchema: GenMessage<SpecificationName> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 27);
+  messageDesc(file_api_tenantManagement, 29);
 
 /**
  * @generated from message api.Specification
@@ -574,7 +623,7 @@ export type Specification = Message<"api.Specification"> & {
  * Use `create(SpecificationSchema)` to create a new message.
  */
 export const SpecificationSchema: GenMessage<Specification> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 28);
+  messageDesc(file_api_tenantManagement, 30);
 
 /**
  * @generated from message api.FileSchema
@@ -596,7 +645,7 @@ export type FileSchema = Message<"api.FileSchema"> & {
  * Use `create(FileSchemaSchema)` to create a new message.
  */
 export const FileSchemaSchema: GenMessage<FileSchema> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 29);
+  messageDesc(file_api_tenantManagement, 31);
 
 /**
  * @generated from message api.Image
@@ -613,7 +662,7 @@ export type Image = Message<"api.Image"> & {
  * Use `create(ImageSchema)` to create a new message.
  */
 export const ImageSchema: GenMessage<Image> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 30);
+  messageDesc(file_api_tenantManagement, 32);
 
 /**
  * @generated from message api.Workspace
@@ -635,7 +684,7 @@ export type Workspace = Message<"api.Workspace"> & {
  * Use `create(WorkspaceSchema)` to create a new message.
  */
 export const WorkspaceSchema: GenMessage<Workspace> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 31);
+  messageDesc(file_api_tenantManagement, 33);
 
 /**
  * @generated from message api.User
@@ -662,7 +711,7 @@ export type User = Message<"api.User"> & {
  * Use `create(UserSchema)` to create a new message.
  */
 export const UserSchema: GenMessage<User> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 32);
+  messageDesc(file_api_tenantManagement, 34);
 
 /**
  * @generated from enum api.WorkspaceRole
@@ -823,6 +872,14 @@ export const TenantManagementService: GenService<{
     methodKind: "unary";
     input: typeof CreateLandingZoneSharedAccessSignatureRequestSchema;
     output: typeof CreateLandingZoneSharedAccessSignatureResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.GetLandingZoneFiles
+   */
+  getLandingZoneFiles: {
+    methodKind: "unary";
+    input: typeof GetLandingZoneFilesRequestSchema;
+    output: typeof GetLandingZoneFilesResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_api_tenantManagement, 0);

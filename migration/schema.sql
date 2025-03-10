@@ -134,8 +134,8 @@ CREATE TABLE app.ModelRuns (
     StatusId INT NOT NULL,
     InputFileGroupId UNIQUEIDENTIFIER NOT NULL,
     OutputFileGroupId UNIQUEIDENTIFIER NOT NULL,
-    ContainerId NVARCHAR(255) NOT NULL,
     Parameters NVARCHAR(MAX) NOT NULL,
+    ContainerId NVARCHAR(255) NULL,
     CreatedAt DATETIME DEFAULT GETUTCDATE(),
     FOREIGN KEY (ModelId) REFERENCES app.Models(ModelId),
     FOREIGN KEY (StatusId) REFERENCES app.ModelRunStatuses(ModelRunStatusId),
@@ -278,7 +278,12 @@ GRANT SELECT,
     UPDATE,
     DELETE ON app.FileSchemas TO WebApp;
 DENY
-UPDATE ON app.FileSchemas(FileSchemaId, SpecificationId, FileTypeId) TO WebApp;
+UPDATE ON app.FileSchemas(
+        FileSchemaId,
+        SpecificationId,
+        FileTypeId,
+        Definition
+    ) TO WebApp;
 GRANT SELECT,
     INSERT,
     UPDATE,
@@ -305,12 +310,23 @@ UPDATE ON app.Models(
         ModelId,
         InputSpecificationId,
         OutputSpecificationId,
+        ParametersSchema,
         ImageId
     ) TO WebApp;
 GRANT SELECT ON app.ModelRunStatuses TO WebApp;
 GRANT SELECT,
     INSERT,
     DELETE ON app.ModelRuns TO WebApp;
+DENY
+UPDATE ON app.ModelRuns(
+        RunId,
+        ModelId,
+        StatusId,
+        InputFileGroupId,
+        OutputFileGroupId,
+        Parameters,
+        CreatedAt
+    ) TO WebApp;
 GRANT EXECUTE ON auth.fn_GetSessionTenantId TO WebApp;
 GRANT EXECUTE ON auth.fn_GetSessionUserId TO WebApp;
 -- =============================================

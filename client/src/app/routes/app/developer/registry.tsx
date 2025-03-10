@@ -8,6 +8,7 @@ import {
   getRegistryTokenPasswords,
 } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { RegistryTokenPassword } from "@/types/registry";
+import { timestampDate } from "@bufbuild/protobuf/wkt";
 import { useMutation, useQuery } from "@connectrpc/connect-query";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Check, Plus, RefreshCcw } from "lucide-react";
@@ -41,18 +42,14 @@ const RegistryRoute = () => {
     if (passwords[0] === null && registryTokenPasswords.password1) {
       const password1 = {
         password: ".........................",
-        createdAt: new Date(
-          Number(registryTokenPasswords.password1.seconds) * 1000,
-        ),
+        createdAt: timestampDate(registryTokenPasswords.password1),
       };
       setPasswords((prev) => [password1, prev[1]]);
     }
     if (passwords[1] === null && registryTokenPasswords.password2) {
       const password2 = {
         password: ".........................",
-        createdAt: new Date(
-          Number(registryTokenPasswords.password2.seconds) * 1000,
-        ),
+        createdAt: timestampDate(registryTokenPasswords.password2),
       };
       setPasswords((prev) => [prev[0], password2]);
     }
@@ -70,13 +67,19 @@ const RegistryRoute = () => {
       });
     if (!password2) {
       setPasswords((prev) => [
-        { password, createdAt: new Date(Number(createdAt?.seconds) * 1000) },
+        {
+          password,
+          createdAt: createdAt ? timestampDate(createdAt) : new Date(),
+        },
         prev[1],
       ]);
     } else {
       setPasswords((prev) => [
         prev[0],
-        { password, createdAt: new Date(Number(createdAt?.seconds) * 1000) },
+        {
+          password,
+          createdAt: createdAt ? timestampDate(createdAt) : new Date(),
+        },
       ]);
     }
     await refetchRegistryTokenPasswords();

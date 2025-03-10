@@ -12,6 +12,7 @@ import {
   Map,
   Newspaper,
   PieChart,
+  PlaneLanding,
   Settings2,
   SquareTerminal,
   UploadCloud,
@@ -54,9 +55,9 @@ const navViewer = [
 ];
 const navUser = [
   {
-    title: "Upload",
-    url: paths.app.user.upload.getHref(),
-    icon: UploadCloud,
+    title: "Landing zone",
+    url: paths.app.user.landingZone.getHref(),
+    icon: PlaneLanding,
   },
   {
     title: "Run models",

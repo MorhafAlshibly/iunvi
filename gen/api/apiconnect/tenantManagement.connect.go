@@ -72,6 +72,9 @@ const (
 	// TenantManagementServiceCreateLandingZoneSharedAccessSignatureProcedure is the fully-qualified
 	// name of the TenantManagementService's CreateLandingZoneSharedAccessSignature RPC.
 	TenantManagementServiceCreateLandingZoneSharedAccessSignatureProcedure = "/api.TenantManagementService/CreateLandingZoneSharedAccessSignature"
+	// TenantManagementServiceGetLandingZoneFilesProcedure is the fully-qualified name of the
+	// TenantManagementService's GetLandingZoneFiles RPC.
+	TenantManagementServiceGetLandingZoneFilesProcedure = "/api.TenantManagementService/GetLandingZoneFiles"
 )
 
 // TenantManagementServiceClient is a client for the api.TenantManagementService service.
@@ -89,6 +92,7 @@ type TenantManagementServiceClient interface {
 	GetSpecifications(context.Context, *connect.Request[api.GetSpecificationsRequest]) (*connect.Response[api.GetSpecificationsResponse], error)
 	GetSpecification(context.Context, *connect.Request[api.GetSpecificationRequest]) (*connect.Response[api.GetSpecificationResponse], error)
 	CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error)
+	GetLandingZoneFiles(context.Context, *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error)
 }
 
 // NewTenantManagementServiceClient constructs a client for the api.TenantManagementService service.
@@ -180,6 +184,12 @@ func NewTenantManagementServiceClient(httpClient connect.HTTPClient, baseURL str
 			connect.WithSchema(tenantManagementServiceMethods.ByName("CreateLandingZoneSharedAccessSignature")),
 			connect.WithClientOptions(opts...),
 		),
+		getLandingZoneFiles: connect.NewClient[api.GetLandingZoneFilesRequest, api.GetLandingZoneFilesResponse](
+			httpClient,
+			baseURL+TenantManagementServiceGetLandingZoneFilesProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("GetLandingZoneFiles")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -198,6 +208,7 @@ type tenantManagementServiceClient struct {
 	getSpecifications                      *connect.Client[api.GetSpecificationsRequest, api.GetSpecificationsResponse]
 	getSpecification                       *connect.Client[api.GetSpecificationRequest, api.GetSpecificationResponse]
 	createLandingZoneSharedAccessSignature *connect.Client[api.CreateLandingZoneSharedAccessSignatureRequest, api.CreateLandingZoneSharedAccessSignatureResponse]
+	getLandingZoneFiles                    *connect.Client[api.GetLandingZoneFilesRequest, api.GetLandingZoneFilesResponse]
 }
 
 // CreateWorkspace calls api.TenantManagementService.CreateWorkspace.
@@ -266,6 +277,11 @@ func (c *tenantManagementServiceClient) CreateLandingZoneSharedAccessSignature(c
 	return c.createLandingZoneSharedAccessSignature.CallUnary(ctx, req)
 }
 
+// GetLandingZoneFiles calls api.TenantManagementService.GetLandingZoneFiles.
+func (c *tenantManagementServiceClient) GetLandingZoneFiles(ctx context.Context, req *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error) {
+	return c.getLandingZoneFiles.CallUnary(ctx, req)
+}
+
 // TenantManagementServiceHandler is an implementation of the api.TenantManagementService service.
 type TenantManagementServiceHandler interface {
 	CreateWorkspace(context.Context, *connect.Request[api.CreateWorkspaceRequest]) (*connect.Response[api.CreateWorkspaceResponse], error)
@@ -281,6 +297,7 @@ type TenantManagementServiceHandler interface {
 	GetSpecifications(context.Context, *connect.Request[api.GetSpecificationsRequest]) (*connect.Response[api.GetSpecificationsResponse], error)
 	GetSpecification(context.Context, *connect.Request[api.GetSpecificationRequest]) (*connect.Response[api.GetSpecificationResponse], error)
 	CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error)
+	GetLandingZoneFiles(context.Context, *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error)
 }
 
 // NewTenantManagementServiceHandler builds an HTTP handler from the service implementation. It
@@ -368,6 +385,12 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 		connect.WithSchema(tenantManagementServiceMethods.ByName("CreateLandingZoneSharedAccessSignature")),
 		connect.WithHandlerOptions(opts...),
 	)
+	tenantManagementServiceGetLandingZoneFilesHandler := connect.NewUnaryHandler(
+		TenantManagementServiceGetLandingZoneFilesProcedure,
+		svc.GetLandingZoneFiles,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("GetLandingZoneFiles")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/api.TenantManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case TenantManagementServiceCreateWorkspaceProcedure:
@@ -396,6 +419,8 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 			tenantManagementServiceGetSpecificationHandler.ServeHTTP(w, r)
 		case TenantManagementServiceCreateLandingZoneSharedAccessSignatureProcedure:
 			tenantManagementServiceCreateLandingZoneSharedAccessSignatureHandler.ServeHTTP(w, r)
+		case TenantManagementServiceGetLandingZoneFilesProcedure:
+			tenantManagementServiceGetLandingZoneFilesHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -455,4 +480,8 @@ func (UnimplementedTenantManagementServiceHandler) GetSpecification(context.Cont
 
 func (UnimplementedTenantManagementServiceHandler) CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.CreateLandingZoneSharedAccessSignature is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) GetLandingZoneFiles(context.Context, *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetLandingZoneFiles is not implemented"))
 }

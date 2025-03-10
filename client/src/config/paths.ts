@@ -77,9 +77,9 @@ export const paths = {
         path: "user",
         getHref: () => "/app/user",
       },
-      upload: {
-        path: "upload",
-        getHref: () => "/app/user/upload",
+      landingZone: {
+        path: "landing-zone",
+        getHref: () => "/app/user/landing-zone",
       },
     },
   },

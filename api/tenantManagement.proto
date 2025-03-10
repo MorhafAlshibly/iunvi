@@ -20,6 +20,7 @@ service TenantManagementService {
   rpc GetSpecifications(GetSpecificationsRequest) returns (GetSpecificationsResponse);
   rpc GetSpecification(GetSpecificationRequest) returns (GetSpecificationResponse);
   rpc CreateLandingZoneSharedAccessSignature(CreateLandingZoneSharedAccessSignatureRequest) returns (CreateLandingZoneSharedAccessSignatureResponse);
+  rpc GetLandingZoneFiles(GetLandingZoneFilesRequest) returns (GetLandingZoneFilesResponse);
 }
 
 message CreateWorkspaceRequest {
@@ -134,9 +135,20 @@ message CreateLandingZoneSharedAccessSignatureResponse {
   string url = 1;
 }
 
-message File {
+message GetLandingZoneFilesRequest {
+  string workspaceId = 1;
+  optional string marker = 2;
+}
+
+message GetLandingZoneFilesResponse {
+  repeated LandingZoneFile files = 1;
+  optional string nextMarker = 2;
+}
+
+message LandingZoneFile {
   string name = 1;
-  string fileSchemaId = 2;
+  uint64 size = 2;
+  google.protobuf.Timestamp lastModified = 3;
 }
 
 message SpecificationName {
