@@ -137,7 +137,8 @@ message CreateLandingZoneSharedAccessSignatureResponse {
 
 message GetLandingZoneFilesRequest {
   string workspaceId = 1;
-  optional string marker = 2;
+  string prefix = 2;
+  optional string marker = 3;
 }
 
 message GetLandingZoneFilesResponse {

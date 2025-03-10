@@ -729,22 +729,6 @@ func (s *Service) CreateLandingZoneSharedAccessSignature(ctx context.Context, re
 	if err != nil {
 		return nil, err
 	}
-	// containerClient := svcClient.NewContainerClient(s.storageContainerName)
-	// blockBlobClient := containerClient.NewBlockBlobClient(directory + "/" + storedFileName)
-	// _, err = blockBlobClient.Upload(ctx, nil, nil)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// _, err = blockBlobClient.SetMetadata(ctx, map[string]*string{
-	// 	"tenantId":    conversion.ValueToPointer(tenantId),
-	// 	"workspaceId": conversion.ValueToPointer(workspaceId.String()),
-	// 	"fileName":    conversion.ValueToPointer(req.Msg.FileName),
-	// 	"uploaded":    conversion.ValueToPointer("false"),
-	// 	"processed":   conversion.ValueToPointer("false"),
-	// }, nil)
-	// if err != nil {
-	// 	return nil, err
-	// }
 	info := service.KeyInfo{
 		Start:  conversion.ValueToPointer(time.Now().UTC().Add(-10 * time.Second).Format(sas.TimeFormat)),
 		Expiry: conversion.ValueToPointer(time.Now().UTC().Add(48 * time.Hour).Format(sas.TimeFormat)),
@@ -798,13 +782,13 @@ func (s *Service) GetLandingZoneFiles(ctx context.Context, req *connect.Request[
 	}
 	containerClient := svcClient.NewContainerClient(s.storageContainerName)
 	pager := containerClient.NewListBlobsFlatPager(&container.ListBlobsFlatOptions{
-		Prefix:     conversion.ValueToPointer(directory + "/"),
+		Prefix:     conversion.ValueToPointer(directory + "/" + req.Msg.Prefix),
 		MaxResults: conversion.ValueToPointer(int32(10)),
 		Marker:     req.Msg.Marker,
 	})
 	var files []*api.LandingZoneFile
 	var page container.ListBlobsFlatResponse
-	for pager.More() {
+	if pager.More() {
 		page, err = pager.NextPage(ctx)
 		if err != nil {
 			return nil, err

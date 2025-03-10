@@ -1,0 +1,7 @@
+.uppy-Container {
+  grid-column: 1;
+  .uppy-Dashboard-inner {
+    width: 100% !important;
+    height: 300px !important;
+  }
+}
