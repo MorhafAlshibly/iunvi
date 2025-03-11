@@ -102,7 +102,7 @@ message CreateSpecificationRequest {
   string workspaceId = 1;
   string name = 2;
   DataMode mode = 3;
-  repeated FileSchema tables = 4;
+  repeated TableSchema tables = 4;
 }
 
 message CreateSpecificationResponse {
@@ -111,6 +111,7 @@ message CreateSpecificationResponse {
 
 message GetSpecificationsRequest {
   string workspaceId = 1;
+  optional DataMode mode = 2;
 }
 
 message GetSpecificationsResponse {
@@ -161,12 +162,43 @@ message SpecificationName {
 message Specification {
   string id = 1;
   string name = 2;
-  repeated FileSchema tables = 3;
+  repeated TableSchema tables = 3;
 }
 
-message FileSchema {
+message TableSchema {
   string name = 1;
-  string schema = 2;
+  repeated TableField fields = 2;
+}
+
+message TableField {
+  string name = 1;
+  TableFieldType type = 2;
+}
+
+enum TableFieldType {
+  BIGINT = 0;
+  BIT = 1;
+  BLOB = 2;
+  BOOLEAN = 3;
+  DATE = 4;
+  DOUBLE = 5;
+  FLOAT = 6;
+  HUGEINT = 7;
+  INTEGER = 8;
+  INTERVAL = 9;
+  JSON = 10;
+  SMALLINT = 11;
+  TIME = 12;
+  TIMESTAMPTZ = 13;
+  TIMESTAMP = 14;
+  TINYINT = 15;
+  UBIGINT = 16;
+  UHUGEINT = 17;
+  UINTEGER = 18;
+  USMALLINT = 19;
+  UTINYINT = 20;
+  UUID = 21;
+  VARCHAR = 22;
 }
 
 message Image {

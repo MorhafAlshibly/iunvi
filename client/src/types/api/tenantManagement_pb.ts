@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file api/tenantManagement.proto.
  */
 export const file_api_tenantManagement: GenFile = /*@__PURE__*/
-  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoCSIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciJOCiFHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJIkYKIkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USIAoEcm9sZRgBIAEoDjISLmFwaS5Xb3Jrc3BhY2VSb2xlImsKHEFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJEiAKBHJvbGUYAyABKA4yEi5hcGkuV29ya3NwYWNlUm9sZSIfCh1Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZSI3CiBHZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSKnAQohR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1Jlc3BvbnNlEjIKCXBhc3N3b3JkMRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAIgBARIyCglwYXNzd29yZDIYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAGIAQFCDAoKX3Bhc3N3b3JkMUIMCgpfcGFzc3dvcmQyIkwKIkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEQoJcGFzc3dvcmQyGAIgASgIImYKI0NyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlc3BvbnNlEhAKCHBhc3N3b3JkGAEgASgJEi0KCWNyZWF0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiJwoQR2V0SW1hZ2VzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSIvChFHZXRJbWFnZXNSZXNwb25zZRIaCgZpbWFnZXMYASADKAsyCi5hcGkuSW1hZ2UifQoaQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDAoEbmFtZRgCIAEoCRIbCgRtb2RlGAMgASgOMg0uYXBpLkRhdGFNb2RlEh8KBnRhYmxlcxgEIAMoCzIPLmFwaS5GaWxlU2NoZW1hIikKG0NyZWF0ZVNwZWNpZmljYXRpb25SZXNwb25zZRIKCgJpZBgBIAEoCSIvChhHZXRTcGVjaWZpY2F0aW9uc1JlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkiSwoZR2V0U3BlY2lmaWNhdGlvbnNSZXNwb25zZRIuCg5zcGVjaWZpY2F0aW9ucxgBIAMoCzIWLmFwaS5TcGVjaWZpY2F0aW9uTmFtZSIlChdHZXRTcGVjaWZpY2F0aW9uUmVxdWVzdBIKCgJpZBgBIAEoCSJiChhHZXRTcGVjaWZpY2F0aW9uUmVzcG9uc2USKQoNc3BlY2lmaWNhdGlvbhgBIAEoCzISLmFwaS5TcGVjaWZpY2F0aW9uEhsKBG1vZGUYAiABKA4yDS5hcGkuRGF0YU1vZGUiVgotQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXF1ZXN0EhMKC3dvcmtzcGFjZUlkGAEgASgJEhAKCGZpbGVOYW1lGAIgASgJIj0KLkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlUmVzcG9uc2USCwoDdXJsGAEgASgJImEKGkdldExhbmRpbmdab25lRmlsZXNSZXF1ZXN0EhMKC3dvcmtzcGFjZUlkGAEgASgJEg4KBnByZWZpeBgCIAEoCRITCgZtYXJrZXIYAyABKAlIAIgBAUIJCgdfbWFya2VyImoKG0dldExhbmRpbmdab25lRmlsZXNSZXNwb25zZRIjCgVmaWxlcxgBIAMoCzIULmFwaS5MYW5kaW5nWm9uZUZpbGUSFwoKbmV4dE1hcmtlchgCIAEoCUgAiAEBQg0KC19uZXh0TWFya2VyIl8KD0xhbmRpbmdab25lRmlsZRIMCgRuYW1lGAEgASgJEgwKBHNpemUYAiABKAQSMAoMbGFzdE1vZGlmaWVkGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCJKChFTcGVjaWZpY2F0aW9uTmFtZRIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhsKBG1vZGUYAyABKA4yDS5hcGkuRGF0YU1vZGUiSgoNU3BlY2lmaWNhdGlvbhIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEh8KBnRhYmxlcxgDIAMoCzIPLmFwaS5GaWxlU2NoZW1hIioKCkZpbGVTY2hlbWESDAoEbmFtZRgBIAEoCRIOCgZzY2hlbWEYAiABKAkiFQoFSW1hZ2USDAoEbmFtZRgBIAEoCSIlCglXb3Jrc3BhY2USCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSI5CgRVc2VyEgoKAmlkGAEgASgJEhAKCHVzZXJuYW1lGAIgASgJEhMKC2Rpc3BsYXlOYW1lGAMgASgJKkQKDVdvcmtzcGFjZVJvbGUSDgoKVU5BU1NJR05FRBAAEgoKBlZJRVdFUhABEggKBFVTRVIQAhINCglERVZFTE9QRVIQAyohCghEYXRhTW9kZRIJCgVJTlBVVBAAEgoKBk9VVFBVVBABMoYKChdUZW5hbnRNYW5hZ2VtZW50U2VydmljZRJMCg9DcmVhdGVXb3Jrc3BhY2USGy5hcGkuQ3JlYXRlV29ya3NwYWNlUmVxdWVzdBocLmFwaS5DcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRJGCg1HZXRXb3Jrc3BhY2VzEhkuYXBpLkdldFdvcmtzcGFjZXNSZXF1ZXN0GhouYXBpLkdldFdvcmtzcGFjZXNSZXNwb25zZRJGCg1FZGl0V29ya3NwYWNlEhkuYXBpLkVkaXRXb3Jrc3BhY2VSZXF1ZXN0GhouYXBpLkVkaXRXb3Jrc3BhY2VSZXNwb25zZRI3CghHZXRVc2VycxIULmFwaS5HZXRVc2Vyc1JlcXVlc3QaFS5hcGkuR2V0VXNlcnNSZXNwb25zZRJtChpHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudBImLmFwaS5HZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QaJy5hcGkuR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnRSZXNwb25zZRJeChVBc3NpZ25Vc2VyVG9Xb3Jrc3BhY2USIS5hcGkuQXNzaWduVXNlclRvV29ya3NwYWNlUmVxdWVzdBoiLmFwaS5Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZRJqChlHZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzEiUuYXBpLkdldFJlZ2lzdHJ5VG9rZW5QYXNzd29yZHNSZXF1ZXN0GiYuYXBpLkdldFJlZ2lzdHJ5VG9rZW5QYXNzd29yZHNSZXNwb25zZRJwChtDcmVhdGVSZWdpc3RyeVRva2VuUGFzc3dvcmQSJy5hcGkuQ3JlYXRlUmVnaXN0cnlUb2tlblBhc3N3b3JkUmVxdWVzdBooLmFwaS5DcmVhdGVSZWdpc3RyeVRva2VuUGFzc3dvcmRSZXNwb25zZRI6CglHZXRJbWFnZXMSFS5hcGkuR2V0SW1hZ2VzUmVxdWVzdBoWLmFwaS5HZXRJbWFnZXNSZXNwb25zZRJYChNDcmVhdGVTcGVjaWZpY2F0aW9uEh8uYXBpLkNyZWF0ZVNwZWNpZmljYXRpb25SZXF1ZXN0GiAuYXBpLkNyZWF0ZVNwZWNpZmljYXRpb25SZXNwb25zZRJSChFHZXRTcGVjaWZpY2F0aW9ucxIdLmFwaS5HZXRTcGVjaWZpY2F0aW9uc1JlcXVlc3QaHi5hcGkuR2V0U3BlY2lmaWNhdGlvbnNSZXNwb25zZRJPChBHZXRTcGVjaWZpY2F0aW9uEhwuYXBpLkdldFNwZWNpZmljYXRpb25SZXF1ZXN0Gh0uYXBpLkdldFNwZWNpZmljYXRpb25SZXNwb25zZRKRAQomQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmUSMi5hcGkuQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXF1ZXN0GjMuYXBpLkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlUmVzcG9uc2USWAoTR2V0TGFuZGluZ1pvbmVGaWxlcxIfLmFwaS5HZXRMYW5kaW5nWm9uZUZpbGVzUmVxdWVzdBogLmFwaS5HZXRMYW5kaW5nWm9uZUZpbGVzUmVzcG9uc2VCKVonZ2l0aHViLmNvbS9Nb3JoYWZBbHNoaWJseS9pdW52aS9nZW4vYXBpYgZwcm90bzM", [file_google_protobuf_timestamp]);
+  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoCSIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciJOCiFHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJIkYKIkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USIAoEcm9sZRgBIAEoDjISLmFwaS5Xb3Jrc3BhY2VSb2xlImsKHEFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJEiAKBHJvbGUYAyABKA4yEi5hcGkuV29ya3NwYWNlUm9sZSIfCh1Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZSI3CiBHZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSKnAQohR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1Jlc3BvbnNlEjIKCXBhc3N3b3JkMRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAIgBARIyCglwYXNzd29yZDIYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAGIAQFCDAoKX3Bhc3N3b3JkMUIMCgpfcGFzc3dvcmQyIkwKIkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEQoJcGFzc3dvcmQyGAIgASgIImYKI0NyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlc3BvbnNlEhAKCHBhc3N3b3JkGAEgASgJEi0KCWNyZWF0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiJwoQR2V0SW1hZ2VzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSIvChFHZXRJbWFnZXNSZXNwb25zZRIaCgZpbWFnZXMYASADKAsyCi5hcGkuSW1hZ2UifgoaQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDAoEbmFtZRgCIAEoCRIbCgRtb2RlGAMgASgOMg0uYXBpLkRhdGFNb2RlEiAKBnRhYmxlcxgEIAMoCzIQLmFwaS5UYWJsZVNjaGVtYSIpChtDcmVhdGVTcGVjaWZpY2F0aW9uUmVzcG9uc2USCgoCaWQYASABKAkiWgoYR2V0U3BlY2lmaWNhdGlvbnNSZXF1ZXN0EhMKC3dvcmtzcGFjZUlkGAEgASgJEiAKBG1vZGUYAiABKA4yDS5hcGkuRGF0YU1vZGVIAIgBAUIHCgVfbW9kZSJLChlHZXRTcGVjaWZpY2F0aW9uc1Jlc3BvbnNlEi4KDnNwZWNpZmljYXRpb25zGAEgAygLMhYuYXBpLlNwZWNpZmljYXRpb25OYW1lIiUKF0dldFNwZWNpZmljYXRpb25SZXF1ZXN0EgoKAmlkGAEgASgJImIKGEdldFNwZWNpZmljYXRpb25SZXNwb25zZRIpCg1zcGVjaWZpY2F0aW9uGAEgASgLMhIuYXBpLlNwZWNpZmljYXRpb24SGwoEbW9kZRgCIAEoDjINLmFwaS5EYXRhTW9kZSJWCi1DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEAoIZmlsZU5hbWUYAiABKAkiPQouQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXNwb25zZRILCgN1cmwYASABKAkiYQoaR2V0TGFuZGluZ1pvbmVGaWxlc1JlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDgoGcHJlZml4GAIgASgJEhMKBm1hcmtlchgDIAEoCUgAiAEBQgkKB19tYXJrZXIiagobR2V0TGFuZGluZ1pvbmVGaWxlc1Jlc3BvbnNlEiMKBWZpbGVzGAEgAygLMhQuYXBpLkxhbmRpbmdab25lRmlsZRIXCgpuZXh0TWFya2VyGAIgASgJSACIAQFCDQoLX25leHRNYXJrZXIiXwoPTGFuZGluZ1pvbmVGaWxlEgwKBG5hbWUYASABKAkSDAoEc2l6ZRgCIAEoBBIwCgxsYXN0TW9kaWZpZWQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIkoKEVNwZWNpZmljYXRpb25OYW1lEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSGwoEbW9kZRgDIAEoDjINLmFwaS5EYXRhTW9kZSJLCg1TcGVjaWZpY2F0aW9uEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSIAoGdGFibGVzGAMgAygLMhAuYXBpLlRhYmxlU2NoZW1hIjwKC1RhYmxlU2NoZW1hEgwKBG5hbWUYASABKAkSHwoGZmllbGRzGAIgAygLMg8uYXBpLlRhYmxlRmllbGQiPQoKVGFibGVGaWVsZBIMCgRuYW1lGAEgASgJEiEKBHR5cGUYAiABKA4yEy5hcGkuVGFibGVGaWVsZFR5cGUiFQoFSW1hZ2USDAoEbmFtZRgBIAEoCSIlCglXb3Jrc3BhY2USCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSI5CgRVc2VyEgoKAmlkGAEgASgJEhAKCHVzZXJuYW1lGAIgASgJEhMKC2Rpc3BsYXlOYW1lGAMgASgJKrECCg5UYWJsZUZpZWxkVHlwZRIKCgZCSUdJTlQQABIHCgNCSVQQARIICgRCTE9CEAISCwoHQk9PTEVBThADEggKBERBVEUQBBIKCgZET1VCTEUQBRIJCgVGTE9BVBAGEgsKB0hVR0VJTlQQBxILCgdJTlRFR0VSEAgSDAoISU5URVJWQUwQCRIICgRKU09OEAoSDAoIU01BTExJTlQQCxIICgRUSU1FEAwSDwoLVElNRVNUQU1QVFoQDRINCglUSU1FU1RBTVAQDhILCgdUSU5ZSU5UEA8SCwoHVUJJR0lOVBAQEgwKCFVIVUdFSU5UEBESDAoIVUlOVEVHRVIQEhINCglVU01BTExJTlQQExIMCghVVElOWUlOVBAUEggKBFVVSUQQFRILCgdWQVJDSEFSEBYqRAoNV29ya3NwYWNlUm9sZRIOCgpVTkFTU0lHTkVEEAASCgoGVklFV0VSEAESCAoEVVNFUhACEg0KCURFVkVMT1BFUhADKiEKCERhdGFNb2RlEgkKBUlOUFVUEAASCgoGT1VUUFVUEAEyhgoKF1RlbmFudE1hbmFnZW1lbnRTZXJ2aWNlEkwKD0NyZWF0ZVdvcmtzcGFjZRIbLmFwaS5DcmVhdGVXb3Jrc3BhY2VSZXF1ZXN0GhwuYXBpLkNyZWF0ZVdvcmtzcGFjZVJlc3BvbnNlEkYKDUdldFdvcmtzcGFjZXMSGS5hcGkuR2V0V29ya3NwYWNlc1JlcXVlc3QaGi5hcGkuR2V0V29ya3NwYWNlc1Jlc3BvbnNlEkYKDUVkaXRXb3Jrc3BhY2USGS5hcGkuRWRpdFdvcmtzcGFjZVJlcXVlc3QaGi5hcGkuRWRpdFdvcmtzcGFjZVJlc3BvbnNlEjcKCEdldFVzZXJzEhQuYXBpLkdldFVzZXJzUmVxdWVzdBoVLmFwaS5HZXRVc2Vyc1Jlc3BvbnNlEm0KGkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50EiYuYXBpLkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVxdWVzdBonLmFwaS5HZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlc3BvbnNlEl4KFUFzc2lnblVzZXJUb1dvcmtzcGFjZRIhLmFwaS5Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXF1ZXN0GiIuYXBpLkFzc2lnblVzZXJUb1dvcmtzcGFjZVJlc3BvbnNlEmoKGUdldFJlZ2lzdHJ5VG9rZW5QYXNzd29yZHMSJS5hcGkuR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1JlcXVlc3QaJi5hcGkuR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1Jlc3BvbnNlEnAKG0NyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZBInLmFwaS5DcmVhdGVSZWdpc3RyeVRva2VuUGFzc3dvcmRSZXF1ZXN0GiguYXBpLkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlc3BvbnNlEjoKCUdldEltYWdlcxIVLmFwaS5HZXRJbWFnZXNSZXF1ZXN0GhYuYXBpLkdldEltYWdlc1Jlc3BvbnNlElgKE0NyZWF0ZVNwZWNpZmljYXRpb24SHy5hcGkuQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QaIC5hcGkuQ3JlYXRlU3BlY2lmaWNhdGlvblJlc3BvbnNlElIKEUdldFNwZWNpZmljYXRpb25zEh0uYXBpLkdldFNwZWNpZmljYXRpb25zUmVxdWVzdBoeLmFwaS5HZXRTcGVjaWZpY2F0aW9uc1Jlc3BvbnNlEk8KEEdldFNwZWNpZmljYXRpb24SHC5hcGkuR2V0U3BlY2lmaWNhdGlvblJlcXVlc3QaHS5hcGkuR2V0U3BlY2lmaWNhdGlvblJlc3BvbnNlEpEBCiZDcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZRIyLmFwaS5DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlcXVlc3QaMy5hcGkuQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXNwb25zZRJYChNHZXRMYW5kaW5nWm9uZUZpbGVzEh8uYXBpLkdldExhbmRpbmdab25lRmlsZXNSZXF1ZXN0GiAuYXBpLkdldExhbmRpbmdab25lRmlsZXNSZXNwb25zZUIpWidnaXRodWIuY29tL01vcmhhZkFsc2hpYmx5L2l1bnZpL2dlbi9hcGliBnByb3RvMw", [file_google_protobuf_timestamp]);
 
 /**
  * @generated from message api.CreateWorkspaceRequest
@@ -359,9 +359,9 @@ export type CreateSpecificationRequest = Message<"api.CreateSpecificationRequest
   mode: DataMode;
 
   /**
-   * @generated from field: repeated api.FileSchema tables = 4;
+   * @generated from field: repeated api.TableSchema tables = 4;
    */
-  tables: FileSchema[];
+  tables: TableSchema[];
 };
 
 /**
@@ -396,6 +396,11 @@ export type GetSpecificationsRequest = Message<"api.GetSpecificationsRequest"> &
    * @generated from field: string workspaceId = 1;
    */
   workspaceId: string;
+
+  /**
+   * @generated from field: optional api.DataMode mode = 2;
+   */
+  mode?: DataMode;
 };
 
 /**
@@ -618,9 +623,9 @@ export type Specification = Message<"api.Specification"> & {
   name: string;
 
   /**
-   * @generated from field: repeated api.FileSchema tables = 3;
+   * @generated from field: repeated api.TableSchema tables = 3;
    */
-  tables: FileSchema[];
+  tables: TableSchema[];
 };
 
 /**
@@ -631,26 +636,48 @@ export const SpecificationSchema: GenMessage<Specification> = /*@__PURE__*/
   messageDesc(file_api_tenantManagement, 30);
 
 /**
- * @generated from message api.FileSchema
+ * @generated from message api.TableSchema
  */
-export type FileSchema = Message<"api.FileSchema"> & {
+export type TableSchema = Message<"api.TableSchema"> & {
   /**
    * @generated from field: string name = 1;
    */
   name: string;
 
   /**
-   * @generated from field: string schema = 2;
+   * @generated from field: repeated api.TableField fields = 2;
    */
-  schema: string;
+  fields: TableField[];
 };
 
 /**
- * Describes the message api.FileSchema.
- * Use `create(FileSchemaSchema)` to create a new message.
+ * Describes the message api.TableSchema.
+ * Use `create(TableSchemaSchema)` to create a new message.
  */
-export const FileSchemaSchema: GenMessage<FileSchema> = /*@__PURE__*/
+export const TableSchemaSchema: GenMessage<TableSchema> = /*@__PURE__*/
   messageDesc(file_api_tenantManagement, 31);
+
+/**
+ * @generated from message api.TableField
+ */
+export type TableField = Message<"api.TableField"> & {
+  /**
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * @generated from field: api.TableFieldType type = 2;
+   */
+  type: TableFieldType;
+};
+
+/**
+ * Describes the message api.TableField.
+ * Use `create(TableFieldSchema)` to create a new message.
+ */
+export const TableFieldSchema: GenMessage<TableField> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 32);
 
 /**
  * @generated from message api.Image
@@ -667,7 +694,7 @@ export type Image = Message<"api.Image"> & {
  * Use `create(ImageSchema)` to create a new message.
  */
 export const ImageSchema: GenMessage<Image> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 32);
+  messageDesc(file_api_tenantManagement, 33);
 
 /**
  * @generated from message api.Workspace
@@ -689,7 +716,7 @@ export type Workspace = Message<"api.Workspace"> & {
  * Use `create(WorkspaceSchema)` to create a new message.
  */
 export const WorkspaceSchema: GenMessage<Workspace> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 33);
+  messageDesc(file_api_tenantManagement, 34);
 
 /**
  * @generated from message api.User
@@ -716,7 +743,133 @@ export type User = Message<"api.User"> & {
  * Use `create(UserSchema)` to create a new message.
  */
 export const UserSchema: GenMessage<User> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 34);
+  messageDesc(file_api_tenantManagement, 35);
+
+/**
+ * @generated from enum api.TableFieldType
+ */
+export enum TableFieldType {
+  /**
+   * @generated from enum value: BIGINT = 0;
+   */
+  BIGINT = 0,
+
+  /**
+   * @generated from enum value: BIT = 1;
+   */
+  BIT = 1,
+
+  /**
+   * @generated from enum value: BLOB = 2;
+   */
+  BLOB = 2,
+
+  /**
+   * @generated from enum value: BOOLEAN = 3;
+   */
+  BOOLEAN = 3,
+
+  /**
+   * @generated from enum value: DATE = 4;
+   */
+  DATE = 4,
+
+  /**
+   * @generated from enum value: DOUBLE = 5;
+   */
+  DOUBLE = 5,
+
+  /**
+   * @generated from enum value: FLOAT = 6;
+   */
+  FLOAT = 6,
+
+  /**
+   * @generated from enum value: HUGEINT = 7;
+   */
+  HUGEINT = 7,
+
+  /**
+   * @generated from enum value: INTEGER = 8;
+   */
+  INTEGER = 8,
+
+  /**
+   * @generated from enum value: INTERVAL = 9;
+   */
+  INTERVAL = 9,
+
+  /**
+   * @generated from enum value: JSON = 10;
+   */
+  JSON = 10,
+
+  /**
+   * @generated from enum value: SMALLINT = 11;
+   */
+  SMALLINT = 11,
+
+  /**
+   * @generated from enum value: TIME = 12;
+   */
+  TIME = 12,
+
+  /**
+   * @generated from enum value: TIMESTAMPTZ = 13;
+   */
+  TIMESTAMPTZ = 13,
+
+  /**
+   * @generated from enum value: TIMESTAMP = 14;
+   */
+  TIMESTAMP = 14,
+
+  /**
+   * @generated from enum value: TINYINT = 15;
+   */
+  TINYINT = 15,
+
+  /**
+   * @generated from enum value: UBIGINT = 16;
+   */
+  UBIGINT = 16,
+
+  /**
+   * @generated from enum value: UHUGEINT = 17;
+   */
+  UHUGEINT = 17,
+
+  /**
+   * @generated from enum value: UINTEGER = 18;
+   */
+  UINTEGER = 18,
+
+  /**
+   * @generated from enum value: USMALLINT = 19;
+   */
+  USMALLINT = 19,
+
+  /**
+   * @generated from enum value: UTINYINT = 20;
+   */
+  UTINYINT = 20,
+
+  /**
+   * @generated from enum value: UUID = 21;
+   */
+  UUID = 21,
+
+  /**
+   * @generated from enum value: VARCHAR = 22;
+   */
+  VARCHAR = 22,
+}
+
+/**
+ * Describes the enum api.TableFieldType.
+ */
+export const TableFieldTypeSchema: GenEnum<TableFieldType> = /*@__PURE__*/
+  enumDesc(file_api_tenantManagement, 0);
 
 /**
  * @generated from enum api.WorkspaceRole
@@ -747,7 +900,7 @@ export enum WorkspaceRole {
  * Describes the enum api.WorkspaceRole.
  */
 export const WorkspaceRoleSchema: GenEnum<WorkspaceRole> = /*@__PURE__*/
-  enumDesc(file_api_tenantManagement, 0);
+  enumDesc(file_api_tenantManagement, 1);
 
 /**
  * @generated from enum api.DataMode
@@ -768,7 +921,7 @@ export enum DataMode {
  * Describes the enum api.DataMode.
  */
 export const DataModeSchema: GenEnum<DataMode> = /*@__PURE__*/
-  enumDesc(file_api_tenantManagement, 1);
+  enumDesc(file_api_tenantManagement, 2);
 
 /**
  * @generated from service api.TenantManagementService

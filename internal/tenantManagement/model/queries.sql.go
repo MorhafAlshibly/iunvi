@@ -250,11 +250,13 @@ SELECT s.SpecificationId,
 	   dm.Name AS DataModeName
 FROM app.Specifications s
 JOIN app.DataModes dm ON s.DataModeId = dm.DataModeId
-WHERE WorkspaceId = @WorkspaceId;
+WHERE WorkspaceId = @WorkspaceId
+  AND (@DataModeName IS NULL OR dm.Name = @DataModeName);
 `
 
 type GetSpecificationsParams struct {
-	WorkspaceId mssql.UniqueIdentifier `db:"WorkspaceId"`
+	WorkspaceId  mssql.UniqueIdentifier `db:"WorkspaceId"`
+	DataModeName *string                `db:"DataModeName"`
 }
 
 type GetSpecificationRow struct {
@@ -267,7 +269,7 @@ type GetSpecificationRow struct {
 }
 
 func (q *Queries) GetSpecifications(ctx context.Context, arg GetSpecificationsParams) ([]GetSpecificationRow, error) {
-	rows, err := q.db.QueryContext(ctx, GetSpecifications, sql.Named("WorkspaceId", arg.WorkspaceId))
+	rows, err := q.db.QueryContext(ctx, GetSpecifications, sql.Named("WorkspaceId", arg.WorkspaceId), sql.Named("DataModeName", arg.DataModeName))
 	if err != nil {
 		return nil, err
 	}

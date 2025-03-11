@@ -7,7 +7,7 @@ import {
   CreateSpecificationRequest,
   CreateSpecificationRequestSchema,
   DataMode,
-  FileSchema,
+  TableFieldType,
 } from "@/types/api/tenantManagement_pb";
 import { useMutation } from "@connectrpc/connect-query";
 import { useState } from "react";
@@ -39,9 +39,15 @@ const SpecificationsCreateRoute = () => {
       mode: DataMode.INPUT,
       tables: [
         {
-          $typeName: "api.FileSchema",
+          $typeName: "api.TableSchema",
           name: "",
-          schema: "",
+          fields: [
+            {
+              $typeName: "api.TableField",
+              name: "",
+              type: TableFieldType.BIGINT,
+            },
+          ],
         },
       ],
     });
@@ -54,7 +60,12 @@ const SpecificationsCreateRoute = () => {
         if (!table.name) {
           throw new Error("Name is required");
         }
-        JSON.parse(table.schema);
+        table.fields.forEach((field) => {
+          // check if name is not empty
+          if (!field.name) {
+            throw new Error("Name is required");
+          }
+        });
       });
     } catch (e) {
       return false;
@@ -69,8 +80,7 @@ const SpecificationsCreateRoute = () => {
   return (
     <div className="grid grid-cols-1 gap-4">
       <span className="col-span-1 text-md mb-4">
-        Use this page to create specifications using the Frictionless Table
-        Schema for the Data tables.
+        Use this page to create specifications using DuckDB types.
       </span>
       <div className="grid grid-cols-2 col-span-1 gap-4 justify-items-between mb-4">
         <div className="col-span-1">

@@ -5,7 +5,12 @@ import {
   createLandingZoneSharedAccessSignature,
   getLandingZoneFiles,
 } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
-import { useMutation, useQuery } from "@connectrpc/connect-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useSuspenseInfiniteQuery,
+} from "@connectrpc/connect-query";
 import Uppy, { Meta, UppyFile, Body } from "@uppy/core";
 import { useEffect, useState } from "react";
 import { Dashboard, useUppyEvent } from "@uppy/react";
@@ -20,57 +25,62 @@ import { formatBytes } from "@/utils/bytes";
 import { Separator } from "@/components/ui/separator";
 import { LandingZoneFile } from "@/types/api/tenantManagement_pb";
 import { Input } from "@/components/ui/input";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const LandingZoneRoute = () => {
   const { activeWorkspace } = useWorkspace();
 
-  const [files, setFiles] = useState<Map<string, LandingZoneFile>>(new Map());
-  const [nextMarker, setNextMarker] = useState<string | undefined>(undefined);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchFilter, setSearchFilter] = useState<string>("");
 
   const createLandingZoneSharedAccessSignatureMutation = useMutation(
     createLandingZoneSharedAccessSignature,
   );
 
-  const { data: landingZoneFilesData, refetch: landingZoneFilesRefetch } =
-    useQuery(
-      getLandingZoneFiles,
-      {
-        workspaceId: activeWorkspace?.id,
-        marker: nextMarker,
-        prefix: searchFilter,
-      },
-      {
-        enabled: !!activeWorkspace?.id,
-      },
-    );
-
-  useEffect(() => {
-    if (landingZoneFilesData?.files) {
-      setFiles((prevFiles) => {
-        const newFiles = new Map(prevFiles);
-        landingZoneFilesData.files.forEach((file) => {
-          newFiles.set(file.name, file);
-        });
-        return newFiles;
-      });
-    }
-  }, [landingZoneFilesData]);
+  const {
+    data: landingZoneFilesData,
+    refetch: landingZoneFilesRefetch,
+    hasNextPage: landingZoneFilesHasNextPage,
+    fetchNextPage: landingZoneFilesFetchNextPage,
+  } = useInfiniteQuery(
+    getLandingZoneFiles,
+    {
+      workspaceId: activeWorkspace?.id || "",
+      marker: "",
+      prefix: searchFilter,
+    },
+    {
+      pageParamKey: "marker",
+      getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) =>
+        lastPage.nextMarker,
+      enabled: !!activeWorkspace?.id,
+    },
+  );
 
   const getMoreFiles = () => {
-    setNextMarker(landingZoneFilesData?.nextMarker);
+    if (landingZoneFilesHasNextPage) {
+      landingZoneFilesFetchNextPage();
+    }
   };
 
   const refreshFiles = () => {
-    setNextMarker(undefined);
-    setFiles(new Map());
     setSearchFilter("");
     landingZoneFilesRefetch();
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const handleSearchFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNextMarker(undefined);
-    setFiles(new Map());
     setSearchFilter(e.target.value);
     landingZoneFilesRefetch();
   };
@@ -127,36 +137,74 @@ const LandingZoneRoute = () => {
         </div>
 
         <div className="grid grid-cols-1 col-span-1">
-          {Array.from(files.values()).map((file) => (
-            <div key={file.name} className="grid grid-cols-3 col-span-1 p-2">
-              <div className="grid grid-cols-1 col-span-1 content-center justify-items-start">
-                <Label className="font-normal">{file.name}</Label>
-              </div>
-              <div className="grid grid-cols-1 col-span-1 content-center justify-items-end">
-                <Label className="font-light">
-                  {formatBytes(Number(file.size))}
-                </Label>
-              </div>
-              <div className="grid grid-cols-1 col-span-1 content-center justify-items-end">
-                <Label className="font-light">
-                  {file.lastModified
-                    ? timestampDate(file.lastModified).toLocaleString()
-                    : ""}
-                </Label>
-              </div>
-              <div className="grid grid-cols-1 col-span-3">
-                <Separator className="mt-2" />
-              </div>
+          {landingZoneFilesData?.pages.map((page, pageIndex) => (
+            <div
+              key={pageIndex}
+              className="grid grid-cols-1 col-span-1"
+              hidden={pageIndex !== landingZoneFilesData.pages.length - 1}
+            >
+              {page.files.map((file: LandingZoneFile) => (
+                <div
+                  key={file.name}
+                  className="grid grid-cols-3 col-span-1 p-2"
+                >
+                  <div className="grid grid-cols-1 col-span-1 content-center justify-items-start">
+                    <Label className="font-normal">{file.name}</Label>
+                  </div>
+                  <div className="grid grid-cols-1 col-span-1 content-center justify-items-end">
+                    <Label className="font-light">
+                      {formatBytes(Number(file.size))}
+                    </Label>
+                  </div>
+                  <div className="grid grid-cols-1 col-span-1 content-center justify-items-end">
+                    <Label className="font-light">
+                      {file.lastModified
+                        ? timestampDate(file.lastModified).toLocaleString()
+                        : ""}
+                    </Label>
+                  </div>
+                  <div className="grid grid-cols-1 col-span-3">
+                    <Separator className="mt-2" />
+                  </div>
+                </div>
+              ))}
             </div>
           ))}
         </div>
-        {landingZoneFilesData?.nextMarker ? (
-          <div className="grid grid-cols-1 col-span-1 justify-items-center">
-            <Button size="sm" variant="outline" onClick={getMoreFiles}>
-              <ChevronDown />
-            </Button>
-          </div>
-        ) : null}
+        <div className="grid grid-cols-1 col-span-1 justify-items-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                />
+              </PaginationItem>
+              {Array.from(
+                { length: landingZoneFilesData?.pages.length || 0 },
+                (_, page) => page,
+              ).map((page: number) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    onClick={() => handlePageChange(page + 1)}
+                    isActive={currentPage === page + 1}
+                  >
+                    {page + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === landingZoneFilesData?.pages.length}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       </div>
     </ContentLayout>
   );

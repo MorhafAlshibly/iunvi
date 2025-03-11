@@ -3,12 +3,13 @@ import { useMatch } from "react-router-dom";
 import { useQuery } from "@connectrpc/connect-query";
 import { getSpecification } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { paths } from "@/config/paths";
-import { DataMode } from "@/types/api/tenantManagement_pb";
+import { DataMode, TableFieldType } from "@/types/api/tenantManagement_pb";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 const SpecificationsViewRoute = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const SpecificationsViewRoute = () => {
     <div className="grid grid-cols-1 gap-4">
       <div className="grid grid-cols-2 col-span-1 justify-items-between">
         <div className="grid grid-cols-1 col-span-1 justify-items-start">
-          <Label className="col-span-1 content-center text-lg">
+          <Label className="col-span-1 content-center text-lg font-medium">
             {specification?.name}
           </Label>
         </div>
@@ -48,7 +49,7 @@ const SpecificationsViewRoute = () => {
           </Button>
         </div>
       </div>
-      <Label className="col-span-1 content-center mt-4 text-lg">
+      <Label className="col-span-1 content-center mt-4 text-md font-normal">
         Data tables -{" "}
         {specificationData?.mode == DataMode.INPUT ? "CSV" : "Parquet"}
       </Label>
@@ -57,14 +58,29 @@ const SpecificationsViewRoute = () => {
           key={index}
           className="grid grid-cols-1 col-span-1 border p-4 gap-4"
         >
-          <Label className="col-span-1 content-center">{table.name}</Label>
-          <CodeMirror
-            value={table.schema}
-            height="auto"
-            extensions={[json()]}
-            editable={false}
-            className="col-span-1 border"
-          />
+          <Label className="col-span-1 content-center font-normal">
+            {table.name}
+          </Label>
+          <div className="grid grid-cols-1 col-span-1 gap-2">
+            {table.fields.map((field, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-2 col-span-1 justify-items-between"
+              >
+                <div className="grid grid-cols-1 col-span-1 justify-items-start content-center">
+                  <Label className="text-sm font-light">{field.name}</Label>
+                </div>
+                <div className="grid grid-cols-1 col-span-1 justify-items-end content-center">
+                  <Label className="text-sm font-medium">
+                    {TableFieldType[field.type]}
+                  </Label>
+                </div>
+                <div className="col-span-2">
+                  <Separator className="mt-2" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       ))}
     </div>

@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
 import {
   createSpecification,
+  getSpecification,
   getSpecifications,
 } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import {
@@ -61,22 +62,52 @@ const FileGroupsCreateRoute = () => {
     getSpecifications,
     {
       workspaceId: activeWorkspace?.id || "",
+      mode: DataMode.INPUT,
     },
     {
       enabled: !!activeWorkspace,
     },
   );
 
+  const { data: specificationData } = useQuery(
+    getSpecification,
+    {
+      id: selectedSpecification?.id || "",
+    },
+    {
+      enabled: !!selectedSpecification,
+    },
+  );
+
   return (
     <div className="grid grid-cols-1">
-      <div className="grid grid-cols-2 col-span-1 gap-4 justify-items-between">
-        <div className="grid grid-cols-1 col-span-2">
+      <div className="grid grid-cols-1 col-span-1 gap-4 mt-4 justify-items-between">
+        <div className="grid grid-cols-1 col-span-1">
           <SpecificationSelector
             specifications={specifications?.specifications || []}
             selectedSpecification={selectedSpecification}
             setSelectedSpecification={setSelectedSpecification}
           />
         </div>
+        {specificationData?.specification ? (
+          <div className="grid grid-cols-1 col-span-1 mt-4 gap-4">
+            <div className="grid grid-cols-1 col-span-1 content-center">
+              <Label className="text-md font-medium">
+                {specificationData.specification.name}
+              </Label>
+            </div>
+            {specificationData.specification.tables.map((table) => (
+              <div className="grid grid-cols-1 gap-4 border p-4">
+                <div className="grid grid-cols-1 col-span-1 justify-items-start">
+                  <Label className="text-sm font-normal">{table.name}</Label>
+                </div>{" "}
+                <div className="grid grid-cols-1 col-span-1 justify-items-start">
+                  <select>{table.name}</select>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
     </div>
   );

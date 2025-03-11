@@ -3,6 +3,7 @@ package tenantManagement
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -16,7 +17,6 @@ import (
 	"github.com/MorhafAlshibly/iunvi/pkg/authorization"
 	"github.com/MorhafAlshibly/iunvi/pkg/conversion"
 	"github.com/MorhafAlshibly/iunvi/pkg/middleware"
-	tableschema "github.com/frictionlessdata/tableschema-go/schema"
 	msgraphsdk "github.com/microsoftgraph/msgraph-sdk-go"
 	msgraphcore "github.com/microsoftgraph/msgraph-sdk-go-core"
 	"github.com/microsoftgraph/msgraph-sdk-go/models"
@@ -538,15 +538,12 @@ func (s *Service) CreateSpecification(ctx context.Context, req *connect.Request[
 		if table.Name == "" {
 			return nil, fmt.Errorf("name is required")
 		}
-		if table.Schema == "" {
-			return nil, fmt.Errorf("definition is required")
+		if table.Fields == nil || len(table.Fields) == 0 {
+			return nil, fmt.Errorf("fields are required")
 		}
-		schema, err := tableschema.Read(strings.NewReader(table.Schema))
+		schema, err := json.Marshal(table.Fields)
 		if err != nil {
 			return nil, err
-		}
-		if schema == nil {
-			return nil, fmt.Errorf("schema is nil")
 		}
 		fileTypeName := "CSV"
 		if req.Msg.Mode == api.DataMode_OUTPUT {
@@ -556,7 +553,7 @@ func (s *Service) CreateSpecification(ctx context.Context, req *connect.Request[
 			SpecificationId: specification.SpecificationID,
 			FileTypeName:    fileTypeName,
 			Name:            table.Name,
-			Definition:      table.Schema,
+			Definition:      string(schema),
 		})
 		if err != nil {
 			return nil, err
@@ -576,8 +573,13 @@ func (s *Service) GetSpecifications(ctx context.Context, req *connect.Request[ap
 		return nil, err
 	}
 	database := model.New(middleware.GetTx(ctx))
+	var mode *string
+	if req.Msg.Mode != nil {
+		mode = conversion.ValueToPointer(req.Msg.Mode.String())
+	}
 	specifications, err := database.GetSpecifications(ctx, model.GetSpecificationsParams{
-		WorkspaceId: workspaceIdBytes,
+		WorkspaceId:  workspaceIdBytes,
+		DataModeName: mode,
 	})
 	if err != nil {
 		return nil, err
@@ -615,7 +617,7 @@ func (s *Service) GetSpecification(ctx context.Context, req *connect.Request[api
 		fileTypeName = "Parquet"
 		dataMode = api.DataMode_OUTPUT
 	}
-	var tables []*api.FileSchema
+	var tables []*api.TableSchema
 	tableSchemas, err := database.GetFileSchemasBySpecificationIdAndDataTypeName(ctx, model.GetFileSchemasBySpecificationIdAndDataTypeNameParams{
 		SpecificationId: specificationIdBytes,
 		FileTypeName:    fileTypeName,
@@ -627,9 +629,14 @@ func (s *Service) GetSpecification(ctx context.Context, req *connect.Request[api
 		return nil, fmt.Errorf("table schemas not found")
 	}
 	for _, tableSchema := range tableSchemas {
-		table := &api.FileSchema{
+		var fields []*api.TableField
+		err := json.Unmarshal([]byte(tableSchema.Definition), &fields)
+		if err != nil {
+			return nil, err
+		}
+		table := &api.TableSchema{
 			Name:   tableSchema.Name,
-			Schema: tableSchema.Definition,
+			Fields: fields,
 		}
 		tables = append(tables, table)
 	}
