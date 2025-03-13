@@ -3,18 +3,26 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
 import {
+  createFileGroup,
   createSpecification,
+  getLandingZoneFiles,
   getSpecification,
   getSpecifications,
 } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import {
+  CreateFileGroupRequest,
   CreateSpecificationRequest,
   CreateSpecificationRequestSchema,
   DataMode,
-  FileSchema,
+  LandingZoneFile,
   SpecificationName,
+  TableSchema,
 } from "@/types/api/tenantManagement_pb";
-import { useMutation, useQuery } from "@connectrpc/connect-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+} from "@connectrpc/connect-query";
 import { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
@@ -25,6 +33,7 @@ import {
   CircleX,
   Command,
   Cross,
+  Plus,
   PlusCircle,
 } from "lucide-react";
 import { paths } from "@/config/paths";
@@ -51,17 +60,22 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SpecificationSelector } from "@/components/specification-selector";
+import { FileSelector } from "@/components/file-selector";
 
 const FileGroupsCreateRoute = () => {
   const navigate = useNavigate();
   const { activeWorkspace } = useWorkspace();
-  const [selectedSpecification, setSelectedSpecification] =
-    useState<SpecificationName | null>(null);
+  const [createFileGroupInput, setCreateFileGroupInput] =
+    useState<CreateFileGroupRequest>({
+      $typeName: "api.CreateFileGroupRequest",
+      specificationId: "",
+      schemaFileMappings: [],
+    });
 
   const { data: specifications } = useQuery(
     getSpecifications,
     {
-      workspaceId: activeWorkspace?.id || "",
+      workspaceId: activeWorkspace?.id ?? "",
       mode: DataMode.INPUT,
     },
     {
@@ -72,40 +86,167 @@ const FileGroupsCreateRoute = () => {
   const { data: specificationData } = useQuery(
     getSpecification,
     {
-      id: selectedSpecification?.id || "",
+      id: createFileGroupInput.specificationId,
     },
     {
-      enabled: !!selectedSpecification,
+      enabled: !!createFileGroupInput.specificationId,
     },
   );
+
+  const [searchFilter, setSearchFilter] = useState<string>("");
+  const {
+    data: landingZoneFilesData,
+    refetch: landingZoneFilesRefetch,
+    hasNextPage: landingZoneFilesHasNextPage,
+    fetchNextPage: landingZoneFilesFetchNextPage,
+  } = useInfiniteQuery(
+    getLandingZoneFiles,
+    {
+      workspaceId: activeWorkspace?.id ?? "",
+      marker: "",
+      prefix: searchFilter,
+    },
+    {
+      pageParamKey: "marker",
+      getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) =>
+        lastPage.nextMarker,
+      enabled: !!activeWorkspace?.id,
+    },
+  );
+
+  const selectedSpecification =
+    specifications?.specifications.find(
+      (specification) =>
+        specification.id === createFileGroupInput.specificationId,
+    ) ?? null;
+
+  const validateFileGroups = () => {
+    if (!createFileGroupInput.specificationId) {
+      return false;
+    }
+    if (
+      createFileGroupInput.schemaFileMappings.length !==
+      specificationData?.specification?.tables.length
+    ) {
+      return false;
+    }
+    try {
+      createFileGroupInput.schemaFileMappings.forEach((mapping) => {
+        if (!mapping.landingZoneFileName) {
+          throw new Error("File is required");
+        }
+      });
+    } catch (e) {
+      return false;
+    }
+    return true;
+  };
+
+  const handleFileAssignment = (
+    action: React.SetStateAction<string | null>,
+    table: TableSchema,
+  ) => {
+    setCreateFileGroupInput((prev) => {
+      let newSelectedFileName = null;
+      if (typeof action == "function") {
+        newSelectedFileName = action(
+          prev.schemaFileMappings.find(
+            (mapping) => mapping.schemaName === table.name,
+          )?.landingZoneFileName ?? null,
+        );
+      } else {
+        newSelectedFileName = action;
+      }
+      const mappingIndex = prev.schemaFileMappings.findIndex(
+        (mapping) => mapping.schemaName === table.name,
+      );
+      // If the file is already mapped, update the mapping, otherwise add a new mapping
+      const newMappings = [...prev.schemaFileMappings];
+      if (mappingIndex !== -1) {
+        newMappings[mappingIndex].landingZoneFileName =
+          newSelectedFileName ?? "";
+      } else {
+        newMappings.push({
+          $typeName: "api.SchemaFileMapping",
+          schemaName: table.name,
+          landingZoneFileName: newSelectedFileName ?? "",
+        });
+      }
+      return {
+        ...prev,
+        schemaFileMappings: newMappings,
+      };
+    });
+  };
+
+  const createFileGroupMutation = useMutation(createFileGroup);
+
+  const handleCreateFileGroup = async () => {
+    if (!validateFileGroups()) {
+      return;
+    }
+    await createFileGroupMutation.mutateAsync(createFileGroupInput);
+    navigate(paths.app.user.fileGroups.list.getHref());
+  };
 
   return (
     <div className="grid grid-cols-1">
       <div className="grid grid-cols-1 col-span-1 gap-4 mt-4 justify-items-between">
         <div className="grid grid-cols-1 col-span-1">
           <SpecificationSelector
-            specifications={specifications?.specifications || []}
+            specifications={specifications?.specifications ?? []}
             selectedSpecification={selectedSpecification}
-            setSelectedSpecification={setSelectedSpecification}
+            setSelectedSpecification={(action) => {
+              setCreateFileGroupInput((prev) => ({
+                ...prev,
+                specificationId:
+                  (typeof action == "function"
+                    ? action(
+                        specifications?.specifications.find(
+                          (specification) =>
+                            specification.id === prev.specificationId,
+                        ) ?? null,
+                      )?.id
+                    : action?.id) ?? "",
+              }));
+            }}
           />
         </div>
         {specificationData?.specification ? (
           <div className="grid grid-cols-1 col-span-1 mt-4 gap-4">
-            <div className="grid grid-cols-1 col-span-1 content-center">
-              <Label className="text-md font-medium">
-                {specificationData.specification.name}
-              </Label>
-            </div>
             {specificationData.specification.tables.map((table) => (
-              <div className="grid grid-cols-1 gap-4 border p-4">
-                <div className="grid grid-cols-1 col-span-1 justify-items-start">
+              <div
+                className="grid grid-cols-2 gap-4 border p-4"
+                key={table.name}
+              >
+                <div className="grid grid-cols-1 col-span-1 justify-items-start content-center">
                   <Label className="text-sm font-normal">{table.name}</Label>
-                </div>{" "}
-                <div className="grid grid-cols-1 col-span-1 justify-items-start">
-                  <select>{table.name}</select>
+                </div>
+                <div className="grid grid-cols-1 col-span-1 justify-items-end">
+                  <FileSelector
+                    files={landingZoneFilesData?.pages[0]?.files ?? []}
+                    selectedFileName={
+                      createFileGroupInput.schemaFileMappings.find(
+                        (mapping) => mapping.schemaName === table.name,
+                      )?.landingZoneFileName ?? null
+                    }
+                    setSelectedFileName={(action) =>
+                      handleFileAssignment(action, table)
+                    }
+                    searchFilter={searchFilter}
+                    setSearchFilter={setSearchFilter}
+                  />
                 </div>
               </div>
             ))}
+            <div className="grid grid-cols-1 col-span-1 mt-4 justify-items-end">
+              <Button
+                onClick={handleCreateFileGroup}
+                disabled={!validateFileGroups()}
+              >
+                Create
+              </Button>
+            </div>
           </div>
         ) : null}
       </div>

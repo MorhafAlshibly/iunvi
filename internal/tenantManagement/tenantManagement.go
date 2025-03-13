@@ -22,9 +22,11 @@ import (
 	"github.com/microsoftgraph/msgraph-sdk-go/models"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/blob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/service"
+	_ "github.com/marcboeker/go-duckdb"
 )
 
 type Service struct {
@@ -812,10 +814,166 @@ func (s *Service) GetLandingZoneFiles(ctx context.Context, req *connect.Request[
 			})
 		}
 	}
+	if page.NextMarker != nil {
+		if *page.NextMarker == "" {
+			page.NextMarker = nil
+		}
+	}
 	return connect.NewResponse(&api.GetLandingZoneFilesResponse{
 		Files:      files,
 		NextMarker: page.NextMarker,
 	}), nil
+}
+
+func (s *Service) CreateFileGroup(ctx context.Context, req *connect.Request[api.CreateFileGroupRequest]) (*connect.Response[api.CreateFileGroupResponse], error) {
+	if req.Msg.SpecificationId == "" {
+		return nil, fmt.Errorf("SpecificationId is required")
+	}
+	if req.Msg.SchemaFileMappings == nil || len(req.Msg.SchemaFileMappings) == 0 {
+		return nil, fmt.Errorf("SchemaFileMappings are required")
+	}
+	specificationIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.SpecificationId)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	workspaceId, err := database.GetWorkspaceIdBySpecificationId(ctx, model.GetWorkspaceIdBySpecificationIdParams{
+		SpecificationId: specificationIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceId), authorization.WithWorkspaceRole(api.WorkspaceRole_USER)).IsAuthorized(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !authorization {
+		return nil, fmt.Errorf("unauthorized")
+	}
+	tableSchemas, err := database.GetFileSchemasBySpecificationIdAndDataTypeName(ctx, model.GetFileSchemasBySpecificationIdAndDataTypeNameParams{
+		SpecificationId: specificationIdBytes,
+		FileTypeName:    "CSV",
+	})
+	if err != nil {
+		return nil, err
+	}
+	if len(tableSchemas) == 0 {
+		return nil, fmt.Errorf("table schemas not found")
+	}
+	tableSchemasMap := make(map[string]model.GetFileSchemaBySpecificationIdAndDataTypeNameRow)
+	for _, tableSchema := range tableSchemas {
+		tableSchemasMap[tableSchema.Name] = tableSchema
+	}
+	cred, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
+	if err != nil {
+		return nil, err
+	}
+	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
+	if err != nil {
+		return nil, err
+	}
+	containerClient := svcClient.NewContainerClient(s.storageContainerName)
+	duckdb, err := sql.Open("duckdb", "") //"?allow_unsigned_extensions=true")
+	if err != nil {
+		return nil, err
+	}
+	defer duckdb.Close()
+	// _, err = duckdb.Exec("SET allow_unsigned_extensions=true;")
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// _, err = duckdb.Exec("SET autoinstall_known_extensions=true;")
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// _, err = duckdb.Exec("SET autoload_known_extensions=true;")
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// loop through schema file mappings and check if the schema exists
+	for _, schemaFileMapping := range req.Msg.SchemaFileMappings {
+		if schemaFileMapping.SchemaName == "" {
+			return nil, fmt.Errorf("SchemaName is required")
+		}
+		if schemaFileMapping.LandingZoneFileName == "" {
+			return nil, fmt.Errorf("LandingZoneFileName is required")
+		}
+		if _, ok := tableSchemasMap[schemaFileMapping.SchemaName]; !ok {
+			return nil, fmt.Errorf("schema not found: %s", schemaFileMapping.SchemaName)
+		}
+		var fields []*api.TableField
+		err = json.Unmarshal([]byte(tableSchemasMap[schemaFileMapping.SchemaName].Definition), &fields)
+		if err != nil {
+			return nil, err
+		}
+		directory := getLandingZoneDirectory(ctx, workspaceId.String())
+		blobClient := containerClient.NewBlobClient(directory + "/" + schemaFileMapping.LandingZoneFileName)
+		// Create []bytes of length 10KB to download the first 10KB of the file
+		buffer := make([]byte, 10*1024)
+		_, err = blobClient.DownloadBuffer(ctx, buffer, &blob.DownloadBufferOptions{
+			Range: blob.HTTPRange{
+				Count: 10 * 1024,
+			},
+		})
+		if err != nil {
+			return nil, err
+		}
+		info := service.KeyInfo{
+			Start:  conversion.ValueToPointer(time.Now().UTC().Add(-10 * time.Second).Format(sas.TimeFormat)),
+			Expiry: conversion.ValueToPointer(time.Now().UTC().Add(48 * time.Hour).Format(sas.TimeFormat)),
+		}
+		udc, err := svcClient.GetUserDelegationCredential(ctx, info, nil)
+		if err != nil {
+			return nil, err
+		}
+		// Create Blob Signature Values with desired permissions and sign with user delegation credential
+		sasQueryParams, err := sas.BlobSignatureValues{
+			Protocol:      sas.ProtocolHTTPS,
+			StartTime:     time.Now().UTC().Add(-10 * time.Second),
+			ExpiryTime:    time.Now().UTC().Add(1 * time.Hour),
+			Permissions:   (&sas.BlobPermissions{Read: true}).String(),
+			ContainerName: s.storageContainerName,
+			Directory:     directory,
+			BlobName:      schemaFileMapping.LandingZoneFileName,
+		}.SignWithUserDelegation(udc)
+		if err != nil {
+			return nil, err
+		}
+		blobUrl := fmt.Sprintf("https://%s.blob.core.windows.net/%s/%s/%s?%s", s.storageAccountName, s.storageContainerName, directory, schemaFileMapping.LandingZoneFileName, sasQueryParams.Encode())
+		fmt.Println("Blob URL: ", blobUrl)
+		// _, err = duckdb.Exec("INSTALL httpfs;")
+		// if err != nil {
+		// 	fmt.Println("Error installing httpfs extension")
+		// 	return nil, err
+		// }
+		// fmt.Println("Installed httpfs extension")
+		// _, err = duckdb.Exec("LOAD httpfs;")
+		// if err != nil {
+		// 	return nil, err
+		// }
+		// fmt.Println("Loaded httpfs extension")
+		_, err = duckdb.Exec("CREATE SECRET http_range ( TYPE HTTP, EXTRA_HTTP_HEADERS MAP { 'Range': 'bytes=0-10239' });")
+		if err != nil {
+			return nil, err
+		}
+		rows, err := duckdb.Query("DESCRIBE (SELECT * FROM read_csv_auto($1) LIMIT 0);", blobUrl)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+		fmt.Println("Schema for file: ", schemaFileMapping.LandingZoneFileName)
+		for rows.Next() {
+			var field, field_type string
+			if err := rows.Scan(&field, &field_type); err != nil {
+				return nil, err
+			}
+			fmt.Println(field, field_type)
+		}
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+	}
+	return connect.NewResponse(&api.CreateFileGroupResponse{}), nil
 }
 
 func getLandingZoneDirectory(ctx context.Context, workspaceId string) string {

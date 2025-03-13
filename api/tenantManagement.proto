@@ -21,6 +21,7 @@ service TenantManagementService {
   rpc GetSpecification(GetSpecificationRequest) returns (GetSpecificationResponse);
   rpc CreateLandingZoneSharedAccessSignature(CreateLandingZoneSharedAccessSignatureRequest) returns (CreateLandingZoneSharedAccessSignatureResponse);
   rpc GetLandingZoneFiles(GetLandingZoneFilesRequest) returns (GetLandingZoneFilesResponse);
+  rpc CreateFileGroup(CreateFileGroupRequest) returns (CreateFileGroupResponse);
 }
 
 message CreateWorkspaceRequest {
@@ -145,6 +146,20 @@ message GetLandingZoneFilesRequest {
 message GetLandingZoneFilesResponse {
   repeated LandingZoneFile files = 1;
   optional string nextMarker = 2;
+}
+
+message CreateFileGroupRequest {
+  string specificationId = 1;
+  repeated SchemaFileMapping schemaFileMappings = 2;
+}
+
+message CreateFileGroupResponse {
+  string id = 1;
+}
+
+message SchemaFileMapping {
+  string schemaName = 1;
+  string landingZoneFileName = 2;
 }
 
 message LandingZoneFile {

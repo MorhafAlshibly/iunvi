@@ -75,6 +75,9 @@ const (
 	// TenantManagementServiceGetLandingZoneFilesProcedure is the fully-qualified name of the
 	// TenantManagementService's GetLandingZoneFiles RPC.
 	TenantManagementServiceGetLandingZoneFilesProcedure = "/api.TenantManagementService/GetLandingZoneFiles"
+	// TenantManagementServiceCreateFileGroupProcedure is the fully-qualified name of the
+	// TenantManagementService's CreateFileGroup RPC.
+	TenantManagementServiceCreateFileGroupProcedure = "/api.TenantManagementService/CreateFileGroup"
 )
 
 // TenantManagementServiceClient is a client for the api.TenantManagementService service.
@@ -93,6 +96,7 @@ type TenantManagementServiceClient interface {
 	GetSpecification(context.Context, *connect.Request[api.GetSpecificationRequest]) (*connect.Response[api.GetSpecificationResponse], error)
 	CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error)
 	GetLandingZoneFiles(context.Context, *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error)
+	CreateFileGroup(context.Context, *connect.Request[api.CreateFileGroupRequest]) (*connect.Response[api.CreateFileGroupResponse], error)
 }
 
 // NewTenantManagementServiceClient constructs a client for the api.TenantManagementService service.
@@ -190,6 +194,12 @@ func NewTenantManagementServiceClient(httpClient connect.HTTPClient, baseURL str
 			connect.WithSchema(tenantManagementServiceMethods.ByName("GetLandingZoneFiles")),
 			connect.WithClientOptions(opts...),
 		),
+		createFileGroup: connect.NewClient[api.CreateFileGroupRequest, api.CreateFileGroupResponse](
+			httpClient,
+			baseURL+TenantManagementServiceCreateFileGroupProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("CreateFileGroup")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -209,6 +219,7 @@ type tenantManagementServiceClient struct {
 	getSpecification                       *connect.Client[api.GetSpecificationRequest, api.GetSpecificationResponse]
 	createLandingZoneSharedAccessSignature *connect.Client[api.CreateLandingZoneSharedAccessSignatureRequest, api.CreateLandingZoneSharedAccessSignatureResponse]
 	getLandingZoneFiles                    *connect.Client[api.GetLandingZoneFilesRequest, api.GetLandingZoneFilesResponse]
+	createFileGroup                        *connect.Client[api.CreateFileGroupRequest, api.CreateFileGroupResponse]
 }
 
 // CreateWorkspace calls api.TenantManagementService.CreateWorkspace.
@@ -282,6 +293,11 @@ func (c *tenantManagementServiceClient) GetLandingZoneFiles(ctx context.Context,
 	return c.getLandingZoneFiles.CallUnary(ctx, req)
 }
 
+// CreateFileGroup calls api.TenantManagementService.CreateFileGroup.
+func (c *tenantManagementServiceClient) CreateFileGroup(ctx context.Context, req *connect.Request[api.CreateFileGroupRequest]) (*connect.Response[api.CreateFileGroupResponse], error) {
+	return c.createFileGroup.CallUnary(ctx, req)
+}
+
 // TenantManagementServiceHandler is an implementation of the api.TenantManagementService service.
 type TenantManagementServiceHandler interface {
 	CreateWorkspace(context.Context, *connect.Request[api.CreateWorkspaceRequest]) (*connect.Response[api.CreateWorkspaceResponse], error)
@@ -298,6 +314,7 @@ type TenantManagementServiceHandler interface {
 	GetSpecification(context.Context, *connect.Request[api.GetSpecificationRequest]) (*connect.Response[api.GetSpecificationResponse], error)
 	CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error)
 	GetLandingZoneFiles(context.Context, *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error)
+	CreateFileGroup(context.Context, *connect.Request[api.CreateFileGroupRequest]) (*connect.Response[api.CreateFileGroupResponse], error)
 }
 
 // NewTenantManagementServiceHandler builds an HTTP handler from the service implementation. It
@@ -391,6 +408,12 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 		connect.WithSchema(tenantManagementServiceMethods.ByName("GetLandingZoneFiles")),
 		connect.WithHandlerOptions(opts...),
 	)
+	tenantManagementServiceCreateFileGroupHandler := connect.NewUnaryHandler(
+		TenantManagementServiceCreateFileGroupProcedure,
+		svc.CreateFileGroup,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("CreateFileGroup")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/api.TenantManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case TenantManagementServiceCreateWorkspaceProcedure:
@@ -421,6 +444,8 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 			tenantManagementServiceCreateLandingZoneSharedAccessSignatureHandler.ServeHTTP(w, r)
 		case TenantManagementServiceGetLandingZoneFilesProcedure:
 			tenantManagementServiceGetLandingZoneFilesHandler.ServeHTTP(w, r)
+		case TenantManagementServiceCreateFileGroupProcedure:
+			tenantManagementServiceCreateFileGroupHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -484,4 +509,8 @@ func (UnimplementedTenantManagementServiceHandler) CreateLandingZoneSharedAccess
 
 func (UnimplementedTenantManagementServiceHandler) GetLandingZoneFiles(context.Context, *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetLandingZoneFiles is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) CreateFileGroup(context.Context, *connect.Request[api.CreateFileGroupRequest]) (*connect.Response[api.CreateFileGroupResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.CreateFileGroup is not implemented"))
 }

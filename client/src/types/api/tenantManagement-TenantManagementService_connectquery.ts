@@ -73,3 +73,8 @@ export const createLandingZoneSharedAccessSignature = TenantManagementService.me
  * @generated from rpc api.TenantManagementService.GetLandingZoneFiles
  */
 export const getLandingZoneFiles = TenantManagementService.method.getLandingZoneFiles;
+
+/**
+ * @generated from rpc api.TenantManagementService.CreateFileGroup
+ */
+export const createFileGroup = TenantManagementService.method.createFileGroup;
