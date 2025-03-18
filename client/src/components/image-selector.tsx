@@ -16,36 +16,31 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DataMode, SpecificationName } from "@/types/api/tenantManagement_pb";
+import { DataMode, Image } from "@/types/api/tenantManagement_pb";
 import { useQuery } from "@connectrpc/connect-query";
-import { getSpecifications } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
+import { getImages } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { useWorkspace } from "@/hooks/use-workspace";
 
-export function SpecificationSelector({
-  mode,
-  selectedSpecificationId,
-  setSelectedSpecificationId,
+export function ImageSelector({
+  selectedImageName,
+  setSelectedImageName,
 }: {
-  mode: DataMode;
-  selectedSpecificationId: string | null;
-  setSelectedSpecificationId: React.Dispatch<
-    React.SetStateAction<string | null>
-  >;
+  selectedImageName: string | null;
+  setSelectedImageName: React.Dispatch<React.SetStateAction<string | null>>;
 }) {
   const { activeWorkspace } = useWorkspace();
 
-  const { data: specificationsData } = useQuery(
-    getSpecifications,
+  const { data: imagesData } = useQuery(
+    getImages,
     {
       workspaceId: activeWorkspace?.id ?? "",
-      mode,
     },
     {
       enabled: !!activeWorkspace,
     },
   );
 
-  const specifications = specificationsData?.specifications || [];
+  const images = imagesData?.images || [];
 
   const [open, setOpen] = React.useState(false);
 
@@ -58,34 +53,30 @@ export function SpecificationSelector({
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {selectedSpecificationId
-            ? specifications.find(
-                (specification) => specification.id === selectedSpecificationId,
-              )?.name
-            : `Select ${mode == DataMode.INPUT ? "input" : "output"} specification...`}
+          {selectedImageName ? selectedImageName : `Select image...`}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0">
         <Command>
-          <CommandInput placeholder="Search specification..." className="h-9" />
+          <CommandInput placeholder="Search image..." className="h-9" />
           <CommandList>
-            <CommandEmpty>No specification found.</CommandEmpty>
+            <CommandEmpty>No image found.</CommandEmpty>
             <CommandGroup>
-              {specifications.map((specification) => (
+              {images.map((image) => (
                 <CommandItem
-                  key={specification.id}
-                  value={specification.name}
+                  key={image.name}
+                  value={image.name}
                   onSelect={() => {
-                    setSelectedSpecificationId(specification.id);
+                    setSelectedImageName(image.name);
                     setOpen(false);
                   }}
                 >
-                  {specification.name}
+                  {image.name}
                   <Check
                     className={cn(
                       "ml-auto",
-                      selectedSpecificationId === specification.id
+                      selectedImageName === image.name
                         ? "opacity-100"
                         : "opacity-0",
                     )}

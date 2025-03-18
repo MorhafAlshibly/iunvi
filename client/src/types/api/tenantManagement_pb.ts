@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file api/tenantManagement.proto.
  */
 export const file_api_tenantManagement: GenFile = /*@__PURE__*/
-  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoCSIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciJOCiFHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJIkYKIkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USIAoEcm9sZRgBIAEoDjISLmFwaS5Xb3Jrc3BhY2VSb2xlImsKHEFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJEiAKBHJvbGUYAyABKA4yEi5hcGkuV29ya3NwYWNlUm9sZSIfCh1Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZSI3CiBHZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSKnAQohR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1Jlc3BvbnNlEjIKCXBhc3N3b3JkMRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAIgBARIyCglwYXNzd29yZDIYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAGIAQFCDAoKX3Bhc3N3b3JkMUIMCgpfcGFzc3dvcmQyIkwKIkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEQoJcGFzc3dvcmQyGAIgASgIImYKI0NyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlc3BvbnNlEhAKCHBhc3N3b3JkGAEgASgJEi0KCWNyZWF0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiJwoQR2V0SW1hZ2VzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSIvChFHZXRJbWFnZXNSZXNwb25zZRIaCgZpbWFnZXMYASADKAsyCi5hcGkuSW1hZ2UifgoaQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDAoEbmFtZRgCIAEoCRIbCgRtb2RlGAMgASgOMg0uYXBpLkRhdGFNb2RlEiAKBnRhYmxlcxgEIAMoCzIQLmFwaS5UYWJsZVNjaGVtYSIpChtDcmVhdGVTcGVjaWZpY2F0aW9uUmVzcG9uc2USCgoCaWQYASABKAkiWgoYR2V0U3BlY2lmaWNhdGlvbnNSZXF1ZXN0EhMKC3dvcmtzcGFjZUlkGAEgASgJEiAKBG1vZGUYAiABKA4yDS5hcGkuRGF0YU1vZGVIAIgBAUIHCgVfbW9kZSJLChlHZXRTcGVjaWZpY2F0aW9uc1Jlc3BvbnNlEi4KDnNwZWNpZmljYXRpb25zGAEgAygLMhYuYXBpLlNwZWNpZmljYXRpb25OYW1lIiUKF0dldFNwZWNpZmljYXRpb25SZXF1ZXN0EgoKAmlkGAEgASgJImIKGEdldFNwZWNpZmljYXRpb25SZXNwb25zZRIpCg1zcGVjaWZpY2F0aW9uGAEgASgLMhIuYXBpLlNwZWNpZmljYXRpb24SGwoEbW9kZRgCIAEoDjINLmFwaS5EYXRhTW9kZSJWCi1DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEAoIZmlsZU5hbWUYAiABKAkiPQouQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXNwb25zZRILCgN1cmwYASABKAkiYQoaR2V0TGFuZGluZ1pvbmVGaWxlc1JlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDgoGcHJlZml4GAIgASgJEhMKBm1hcmtlchgDIAEoCUgAiAEBQgkKB19tYXJrZXIiagobR2V0TGFuZGluZ1pvbmVGaWxlc1Jlc3BvbnNlEiMKBWZpbGVzGAEgAygLMhQuYXBpLkxhbmRpbmdab25lRmlsZRIXCgpuZXh0TWFya2VyGAIgASgJSACIAQFCDQoLX25leHRNYXJrZXIiZQoWQ3JlYXRlRmlsZUdyb3VwUmVxdWVzdBIXCg9zcGVjaWZpY2F0aW9uSWQYASABKAkSMgoSc2NoZW1hRmlsZU1hcHBpbmdzGAIgAygLMhYuYXBpLlNjaGVtYUZpbGVNYXBwaW5nIiUKF0NyZWF0ZUZpbGVHcm91cFJlc3BvbnNlEgoKAmlkGAEgASgJIkQKEVNjaGVtYUZpbGVNYXBwaW5nEhIKCnNjaGVtYU5hbWUYASABKAkSGwoTbGFuZGluZ1pvbmVGaWxlTmFtZRgCIAEoCSJfCg9MYW5kaW5nWm9uZUZpbGUSDAoEbmFtZRgBIAEoCRIMCgRzaXplGAIgASgEEjAKDGxhc3RNb2RpZmllZBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiSgoRU3BlY2lmaWNhdGlvbk5hbWUSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIbCgRtb2RlGAMgASgOMg0uYXBpLkRhdGFNb2RlIksKDVNwZWNpZmljYXRpb24SCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIgCgZ0YWJsZXMYAyADKAsyEC5hcGkuVGFibGVTY2hlbWEiPAoLVGFibGVTY2hlbWESDAoEbmFtZRgBIAEoCRIfCgZmaWVsZHMYAiADKAsyDy5hcGkuVGFibGVGaWVsZCI9CgpUYWJsZUZpZWxkEgwKBG5hbWUYASABKAkSIQoEdHlwZRgCIAEoDjITLmFwaS5UYWJsZUZpZWxkVHlwZSIVCgVJbWFnZRIMCgRuYW1lGAEgASgJIiUKCVdvcmtzcGFjZRIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJIjkKBFVzZXISCgoCaWQYASABKAkSEAoIdXNlcm5hbWUYAiABKAkSEwoLZGlzcGxheU5hbWUYAyABKAkqsQIKDlRhYmxlRmllbGRUeXBlEgoKBkJJR0lOVBAAEgcKA0JJVBABEggKBEJMT0IQAhILCgdCT09MRUFOEAMSCAoEREFURRAEEgoKBkRPVUJMRRAFEgkKBUZMT0FUEAYSCwoHSFVHRUlOVBAHEgsKB0lOVEVHRVIQCBIMCghJTlRFUlZBTBAJEggKBEpTT04QChIMCghTTUFMTElOVBALEggKBFRJTUUQDBIPCgtUSU1FU1RBTVBUWhANEg0KCVRJTUVTVEFNUBAOEgsKB1RJTllJTlQQDxILCgdVQklHSU5UEBASDAoIVUhVR0VJTlQQERIMCghVSU5URUdFUhASEg0KCVVTTUFMTElOVBATEgwKCFVUSU5ZSU5UEBQSCAoEVVVJRBAVEgsKB1ZBUkNIQVIQFipECg1Xb3Jrc3BhY2VSb2xlEg4KClVOQVNTSUdORUQQABIKCgZWSUVXRVIQARIICgRVU0VSEAISDQoJREVWRUxPUEVSEAMqIQoIRGF0YU1vZGUSCQoFSU5QVVQQABIKCgZPVVRQVVQQATLUCgoXVGVuYW50TWFuYWdlbWVudFNlcnZpY2USTAoPQ3JlYXRlV29ya3NwYWNlEhsuYXBpLkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QaHC5hcGkuQ3JlYXRlV29ya3NwYWNlUmVzcG9uc2USRgoNR2V0V29ya3NwYWNlcxIZLmFwaS5HZXRXb3Jrc3BhY2VzUmVxdWVzdBoaLmFwaS5HZXRXb3Jrc3BhY2VzUmVzcG9uc2USRgoNRWRpdFdvcmtzcGFjZRIZLmFwaS5FZGl0V29ya3NwYWNlUmVxdWVzdBoaLmFwaS5FZGl0V29ya3NwYWNlUmVzcG9uc2USNwoIR2V0VXNlcnMSFC5hcGkuR2V0VXNlcnNSZXF1ZXN0GhUuYXBpLkdldFVzZXJzUmVzcG9uc2USbQoaR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnQSJi5hcGkuR2V0VXNlcldvcmtzcGFjZUFzc2lnbm1lbnRSZXF1ZXN0GicuYXBpLkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USXgoVQXNzaWduVXNlclRvV29ya3NwYWNlEiEuYXBpLkFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QaIi5hcGkuQXNzaWduVXNlclRvV29ya3NwYWNlUmVzcG9uc2USagoZR2V0UmVnaXN0cnlUb2tlblBhc3N3b3JkcxIlLmFwaS5HZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBomLmFwaS5HZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVzcG9uc2UScAobQ3JlYXRlUmVnaXN0cnlUb2tlblBhc3N3b3JkEicuYXBpLkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QaKC5hcGkuQ3JlYXRlUmVnaXN0cnlUb2tlblBhc3N3b3JkUmVzcG9uc2USOgoJR2V0SW1hZ2VzEhUuYXBpLkdldEltYWdlc1JlcXVlc3QaFi5hcGkuR2V0SW1hZ2VzUmVzcG9uc2USWAoTQ3JlYXRlU3BlY2lmaWNhdGlvbhIfLmFwaS5DcmVhdGVTcGVjaWZpY2F0aW9uUmVxdWVzdBogLmFwaS5DcmVhdGVTcGVjaWZpY2F0aW9uUmVzcG9uc2USUgoRR2V0U3BlY2lmaWNhdGlvbnMSHS5hcGkuR2V0U3BlY2lmaWNhdGlvbnNSZXF1ZXN0Gh4uYXBpLkdldFNwZWNpZmljYXRpb25zUmVzcG9uc2USTwoQR2V0U3BlY2lmaWNhdGlvbhIcLmFwaS5HZXRTcGVjaWZpY2F0aW9uUmVxdWVzdBodLmFwaS5HZXRTcGVjaWZpY2F0aW9uUmVzcG9uc2USkQEKJkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlEjIuYXBpLkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlUmVxdWVzdBozLmFwaS5DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlc3BvbnNlElgKE0dldExhbmRpbmdab25lRmlsZXMSHy5hcGkuR2V0TGFuZGluZ1pvbmVGaWxlc1JlcXVlc3QaIC5hcGkuR2V0TGFuZGluZ1pvbmVGaWxlc1Jlc3BvbnNlEkwKD0NyZWF0ZUZpbGVHcm91cBIbLmFwaS5DcmVhdGVGaWxlR3JvdXBSZXF1ZXN0GhwuYXBpLkNyZWF0ZUZpbGVHcm91cFJlc3BvbnNlQilaJ2dpdGh1Yi5jb20vTW9yaGFmQWxzaGlibHkvaXVudmkvZ2VuL2FwaWIGcHJvdG8z", [file_google_protobuf_timestamp]);
+  fileDesc("ChphcGkvdGVuYW50TWFuYWdlbWVudC5wcm90bxIDYXBpIiYKFkNyZWF0ZVdvcmtzcGFjZVJlcXVlc3QSDAoEbmFtZRgBIAEoCSIlChdDcmVhdGVXb3Jrc3BhY2VSZXNwb25zZRIKCgJpZBgBIAEoCSIWChRHZXRXb3Jrc3BhY2VzUmVxdWVzdCI7ChVHZXRXb3Jrc3BhY2VzUmVzcG9uc2USIgoKd29ya3NwYWNlcxgBIAMoCzIOLmFwaS5Xb3Jrc3BhY2UiMAoURWRpdFdvcmtzcGFjZVJlcXVlc3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSIXChVFZGl0V29ya3NwYWNlUmVzcG9uc2UiEQoPR2V0VXNlcnNSZXF1ZXN0IiwKEEdldFVzZXJzUmVzcG9uc2USGAoFdXNlcnMYASADKAsyCS5hcGkuVXNlciJOCiFHZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJIkYKIkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVzcG9uc2USIAoEcm9sZRgBIAEoDjISLmFwaS5Xb3Jrc3BhY2VSb2xlImsKHEFzc2lnblVzZXJUb1dvcmtzcGFjZVJlcXVlc3QSFAoMdXNlck9iamVjdElkGAEgASgJEhMKC3dvcmtzcGFjZUlkGAIgASgJEiAKBHJvbGUYAyABKA4yEi5hcGkuV29ya3NwYWNlUm9sZSIfCh1Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXNwb25zZSI3CiBHZXRSZWdpc3RyeVRva2VuUGFzc3dvcmRzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSKnAQohR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1Jlc3BvbnNlEjIKCXBhc3N3b3JkMRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAIgBARIyCglwYXNzd29yZDIYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSAGIAQFCDAoKX3Bhc3N3b3JkMUIMCgpfcGFzc3dvcmQyIkwKIkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEQoJcGFzc3dvcmQyGAIgASgIImYKI0NyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlc3BvbnNlEhAKCHBhc3N3b3JkGAEgASgJEi0KCWNyZWF0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiJwoQR2V0SW1hZ2VzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCSIvChFHZXRJbWFnZXNSZXNwb25zZRIaCgZpbWFnZXMYASADKAsyCi5hcGkuSW1hZ2UifgoaQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDAoEbmFtZRgCIAEoCRIbCgRtb2RlGAMgASgOMg0uYXBpLkRhdGFNb2RlEiAKBnRhYmxlcxgEIAMoCzIQLmFwaS5UYWJsZVNjaGVtYSIpChtDcmVhdGVTcGVjaWZpY2F0aW9uUmVzcG9uc2USCgoCaWQYASABKAkiWgoYR2V0U3BlY2lmaWNhdGlvbnNSZXF1ZXN0EhMKC3dvcmtzcGFjZUlkGAEgASgJEiAKBG1vZGUYAiABKA4yDS5hcGkuRGF0YU1vZGVIAIgBAUIHCgVfbW9kZSJLChlHZXRTcGVjaWZpY2F0aW9uc1Jlc3BvbnNlEi4KDnNwZWNpZmljYXRpb25zGAEgAygLMhYuYXBpLlNwZWNpZmljYXRpb25OYW1lIiUKF0dldFNwZWNpZmljYXRpb25SZXF1ZXN0EgoKAmlkGAEgASgJImIKGEdldFNwZWNpZmljYXRpb25SZXNwb25zZRIpCg1zcGVjaWZpY2F0aW9uGAEgASgLMhIuYXBpLlNwZWNpZmljYXRpb24SGwoEbW9kZRgCIAEoDjINLmFwaS5EYXRhTW9kZSJWCi1DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEAoIZmlsZU5hbWUYAiABKAkiPQouQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXNwb25zZRILCgN1cmwYASABKAkiYQoaR2V0TGFuZGluZ1pvbmVGaWxlc1JlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDgoGcHJlZml4GAIgASgJEhMKBm1hcmtlchgDIAEoCUgAiAEBQgkKB19tYXJrZXIiagobR2V0TGFuZGluZ1pvbmVGaWxlc1Jlc3BvbnNlEiMKBWZpbGVzGAEgAygLMhQuYXBpLkxhbmRpbmdab25lRmlsZRIXCgpuZXh0TWFya2VyGAIgASgJSACIAQFCDQoLX25leHRNYXJrZXIicwoWQ3JlYXRlRmlsZUdyb3VwUmVxdWVzdBIXCg9zcGVjaWZpY2F0aW9uSWQYASABKAkSDAoEbmFtZRgCIAEoCRIyChJzY2hlbWFGaWxlTWFwcGluZ3MYAyADKAsyFi5hcGkuU2NoZW1hRmlsZU1hcHBpbmciJQoXQ3JlYXRlRmlsZUdyb3VwUmVzcG9uc2USCgoCaWQYASABKAkiKwoUR2V0RmlsZUdyb3Vwc1JlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkiPwoVR2V0RmlsZUdyb3Vwc1Jlc3BvbnNlEiYKCmZpbGVHcm91cHMYASADKAsyEi5hcGkuRmlsZUdyb3VwTmFtZSKmAQoSQ3JlYXRlTW9kZWxSZXF1ZXN0EhwKFGlucHV0U3BlY2lmaWNhdGlvbklkGAEgASgJEh0KFW91dHB1dFNwZWNpZmljYXRpb25JZBgCIAEoCRIMCgRuYW1lGAMgASgJEh0KEHBhcmFtZXRlcnNTY2hlbWEYBCABKAlIAIgBARIRCglpbWFnZU5hbWUYBSABKAlCEwoRX3BhcmFtZXRlcnNTY2hlbWEiIQoTQ3JlYXRlTW9kZWxSZXNwb25zZRIKCgJpZBgBIAEoCSInChBHZXRNb2RlbHNSZXF1ZXN0EhMKC3dvcmtzcGFjZUlkGAEgASgJIjMKEUdldE1vZGVsc1Jlc3BvbnNlEh4KBm1vZGVscxgBIAMoCzIOLmFwaS5Nb2RlbE5hbWUiHQoPR2V0TW9kZWxSZXF1ZXN0EgoKAmlkGAEgASgJIi0KEEdldE1vZGVsUmVzcG9uc2USGQoFbW9kZWwYASABKAsyCi5hcGkuTW9kZWwieAoVQ3JlYXRlTW9kZWxSdW5SZXF1ZXN0Eg8KB21vZGVsSWQYASABKAkSGAoQaW5wdXRGaWxlR3JvdXBJZBgCIAEoCRIXCgpwYXJhbWV0ZXJzGAMgASgJSACIAQESDAoEbmFtZRgEIAEoCUINCgtfcGFyYW1ldGVycyIkChZDcmVhdGVNb2RlbFJ1blJlc3BvbnNlEgoKAmlkGAEgASgJIqUBCgVNb2RlbBIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhwKFGlucHV0U3BlY2lmaWNhdGlvbklkGAMgASgJEh0KFW91dHB1dFNwZWNpZmljYXRpb25JZBgEIAEoCRIdChBwYXJhbWV0ZXJzU2NoZW1hGAUgASgJSACIAQESEQoJaW1hZ2VOYW1lGAYgASgJQhMKEV9wYXJhbWV0ZXJzU2NoZW1hIiUKCU1vZGVsTmFtZRIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJIikKDUZpbGVHcm91cE5hbWUSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSJEChFTY2hlbWFGaWxlTWFwcGluZxISCgpzY2hlbWFOYW1lGAEgASgJEhsKE2xhbmRpbmdab25lRmlsZU5hbWUYAiABKAkiXwoPTGFuZGluZ1pvbmVGaWxlEgwKBG5hbWUYASABKAkSDAoEc2l6ZRgCIAEoBBIwCgxsYXN0TW9kaWZpZWQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIkoKEVNwZWNpZmljYXRpb25OYW1lEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSGwoEbW9kZRgDIAEoDjINLmFwaS5EYXRhTW9kZSJLCg1TcGVjaWZpY2F0aW9uEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSIAoGdGFibGVzGAMgAygLMhAuYXBpLlRhYmxlU2NoZW1hIjwKC1RhYmxlU2NoZW1hEgwKBG5hbWUYASABKAkSHwoGZmllbGRzGAIgAygLMg8uYXBpLlRhYmxlRmllbGQiPQoKVGFibGVGaWVsZBIMCgRuYW1lGAEgASgJEiEKBHR5cGUYAiABKA4yEy5hcGkuVGFibGVGaWVsZFR5cGUiJAoFSW1hZ2USDQoFc2NvcGUYASABKAkSDAoEbmFtZRgCIAEoCSIlCglXb3Jrc3BhY2USCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSI5CgRVc2VyEgoKAmlkGAEgASgJEhAKCHVzZXJuYW1lGAIgASgJEhMKC2Rpc3BsYXlOYW1lGAMgASgJKrECCg5UYWJsZUZpZWxkVHlwZRIKCgZCSUdJTlQQABIHCgNCSVQQARIICgRCTE9CEAISCwoHQk9PTEVBThADEggKBERBVEUQBBIKCgZET1VCTEUQBRIJCgVGTE9BVBAGEgsKB0hVR0VJTlQQBxILCgdJTlRFR0VSEAgSDAoISU5URVJWQUwQCRIICgRKU09OEAoSDAoIU01BTExJTlQQCxIICgRUSU1FEAwSDwoLVElNRVNUQU1QVFoQDRINCglUSU1FU1RBTVAQDhILCgdUSU5ZSU5UEA8SCwoHVUJJR0lOVBAQEgwKCFVIVUdFSU5UEBESDAoIVUlOVEVHRVIQEhINCglVU01BTExJTlQQExIMCghVVElOWUlOVBAUEggKBFVVSUQQFRILCgdWQVJDSEFSEBYqRAoNV29ya3NwYWNlUm9sZRIOCgpVTkFTU0lHTkVEEAASCgoGVklFV0VSEAESCAoEVVNFUhACEg0KCURFVkVMT1BFUhADKiEKCERhdGFNb2RlEgkKBUlOUFVUEAASCgoGT1VUUFVUEAEyng0KF1RlbmFudE1hbmFnZW1lbnRTZXJ2aWNlEkwKD0NyZWF0ZVdvcmtzcGFjZRIbLmFwaS5DcmVhdGVXb3Jrc3BhY2VSZXF1ZXN0GhwuYXBpLkNyZWF0ZVdvcmtzcGFjZVJlc3BvbnNlEkYKDUdldFdvcmtzcGFjZXMSGS5hcGkuR2V0V29ya3NwYWNlc1JlcXVlc3QaGi5hcGkuR2V0V29ya3NwYWNlc1Jlc3BvbnNlEkYKDUVkaXRXb3Jrc3BhY2USGS5hcGkuRWRpdFdvcmtzcGFjZVJlcXVlc3QaGi5hcGkuRWRpdFdvcmtzcGFjZVJlc3BvbnNlEjcKCEdldFVzZXJzEhQuYXBpLkdldFVzZXJzUmVxdWVzdBoVLmFwaS5HZXRVc2Vyc1Jlc3BvbnNlEm0KGkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50EiYuYXBpLkdldFVzZXJXb3Jrc3BhY2VBc3NpZ25tZW50UmVxdWVzdBonLmFwaS5HZXRVc2VyV29ya3NwYWNlQXNzaWdubWVudFJlc3BvbnNlEl4KFUFzc2lnblVzZXJUb1dvcmtzcGFjZRIhLmFwaS5Bc3NpZ25Vc2VyVG9Xb3Jrc3BhY2VSZXF1ZXN0GiIuYXBpLkFzc2lnblVzZXJUb1dvcmtzcGFjZVJlc3BvbnNlEmoKGUdldFJlZ2lzdHJ5VG9rZW5QYXNzd29yZHMSJS5hcGkuR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1JlcXVlc3QaJi5hcGkuR2V0UmVnaXN0cnlUb2tlblBhc3N3b3Jkc1Jlc3BvbnNlEnAKG0NyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZBInLmFwaS5DcmVhdGVSZWdpc3RyeVRva2VuUGFzc3dvcmRSZXF1ZXN0GiguYXBpLkNyZWF0ZVJlZ2lzdHJ5VG9rZW5QYXNzd29yZFJlc3BvbnNlEjoKCUdldEltYWdlcxIVLmFwaS5HZXRJbWFnZXNSZXF1ZXN0GhYuYXBpLkdldEltYWdlc1Jlc3BvbnNlElgKE0NyZWF0ZVNwZWNpZmljYXRpb24SHy5hcGkuQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QaIC5hcGkuQ3JlYXRlU3BlY2lmaWNhdGlvblJlc3BvbnNlElIKEUdldFNwZWNpZmljYXRpb25zEh0uYXBpLkdldFNwZWNpZmljYXRpb25zUmVxdWVzdBoeLmFwaS5HZXRTcGVjaWZpY2F0aW9uc1Jlc3BvbnNlEk8KEEdldFNwZWNpZmljYXRpb24SHC5hcGkuR2V0U3BlY2lmaWNhdGlvblJlcXVlc3QaHS5hcGkuR2V0U3BlY2lmaWNhdGlvblJlc3BvbnNlEpEBCiZDcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZRIyLmFwaS5DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlcXVlc3QaMy5hcGkuQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXNwb25zZRJYChNHZXRMYW5kaW5nWm9uZUZpbGVzEh8uYXBpLkdldExhbmRpbmdab25lRmlsZXNSZXF1ZXN0GiAuYXBpLkdldExhbmRpbmdab25lRmlsZXNSZXNwb25zZRJMCg9DcmVhdGVGaWxlR3JvdXASGy5hcGkuQ3JlYXRlRmlsZUdyb3VwUmVxdWVzdBocLmFwaS5DcmVhdGVGaWxlR3JvdXBSZXNwb25zZRJGCg1HZXRGaWxlR3JvdXBzEhkuYXBpLkdldEZpbGVHcm91cHNSZXF1ZXN0GhouYXBpLkdldEZpbGVHcm91cHNSZXNwb25zZRJACgtDcmVhdGVNb2RlbBIXLmFwaS5DcmVhdGVNb2RlbFJlcXVlc3QaGC5hcGkuQ3JlYXRlTW9kZWxSZXNwb25zZRI6CglHZXRNb2RlbHMSFS5hcGkuR2V0TW9kZWxzUmVxdWVzdBoWLmFwaS5HZXRNb2RlbHNSZXNwb25zZRI3CghHZXRNb2RlbBIULmFwaS5HZXRNb2RlbFJlcXVlc3QaFS5hcGkuR2V0TW9kZWxSZXNwb25zZRJJCg5DcmVhdGVNb2RlbFJ1bhIaLmFwaS5DcmVhdGVNb2RlbFJ1blJlcXVlc3QaGy5hcGkuQ3JlYXRlTW9kZWxSdW5SZXNwb25zZUIpWidnaXRodWIuY29tL01vcmhhZkFsc2hpYmx5L2l1bnZpL2dlbi9hcGliBnByb3RvMw", [file_google_protobuf_timestamp]);
 
 /**
  * @generated from message api.CreateWorkspaceRequest
@@ -564,7 +564,12 @@ export type CreateFileGroupRequest = Message<"api.CreateFileGroupRequest"> & {
   specificationId: string;
 
   /**
-   * @generated from field: repeated api.SchemaFileMapping schemaFileMappings = 2;
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from field: repeated api.SchemaFileMapping schemaFileMappings = 3;
    */
   schemaFileMappings: SchemaFileMapping[];
 };
@@ -594,6 +599,297 @@ export const CreateFileGroupResponseSchema: GenMessage<CreateFileGroupResponse> 
   messageDesc(file_api_tenantManagement, 29);
 
 /**
+ * @generated from message api.GetFileGroupsRequest
+ */
+export type GetFileGroupsRequest = Message<"api.GetFileGroupsRequest"> & {
+  /**
+   * @generated from field: string workspaceId = 1;
+   */
+  workspaceId: string;
+};
+
+/**
+ * Describes the message api.GetFileGroupsRequest.
+ * Use `create(GetFileGroupsRequestSchema)` to create a new message.
+ */
+export const GetFileGroupsRequestSchema: GenMessage<GetFileGroupsRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 30);
+
+/**
+ * @generated from message api.GetFileGroupsResponse
+ */
+export type GetFileGroupsResponse = Message<"api.GetFileGroupsResponse"> & {
+  /**
+   * @generated from field: repeated api.FileGroupName fileGroups = 1;
+   */
+  fileGroups: FileGroupName[];
+};
+
+/**
+ * Describes the message api.GetFileGroupsResponse.
+ * Use `create(GetFileGroupsResponseSchema)` to create a new message.
+ */
+export const GetFileGroupsResponseSchema: GenMessage<GetFileGroupsResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 31);
+
+/**
+ * @generated from message api.CreateModelRequest
+ */
+export type CreateModelRequest = Message<"api.CreateModelRequest"> & {
+  /**
+   * @generated from field: string inputSpecificationId = 1;
+   */
+  inputSpecificationId: string;
+
+  /**
+   * @generated from field: string outputSpecificationId = 2;
+   */
+  outputSpecificationId: string;
+
+  /**
+   * @generated from field: string name = 3;
+   */
+  name: string;
+
+  /**
+   * @generated from field: optional string parametersSchema = 4;
+   */
+  parametersSchema?: string;
+
+  /**
+   * @generated from field: string imageName = 5;
+   */
+  imageName: string;
+};
+
+/**
+ * Describes the message api.CreateModelRequest.
+ * Use `create(CreateModelRequestSchema)` to create a new message.
+ */
+export const CreateModelRequestSchema: GenMessage<CreateModelRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 32);
+
+/**
+ * @generated from message api.CreateModelResponse
+ */
+export type CreateModelResponse = Message<"api.CreateModelResponse"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message api.CreateModelResponse.
+ * Use `create(CreateModelResponseSchema)` to create a new message.
+ */
+export const CreateModelResponseSchema: GenMessage<CreateModelResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 33);
+
+/**
+ * @generated from message api.GetModelsRequest
+ */
+export type GetModelsRequest = Message<"api.GetModelsRequest"> & {
+  /**
+   * @generated from field: string workspaceId = 1;
+   */
+  workspaceId: string;
+};
+
+/**
+ * Describes the message api.GetModelsRequest.
+ * Use `create(GetModelsRequestSchema)` to create a new message.
+ */
+export const GetModelsRequestSchema: GenMessage<GetModelsRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 34);
+
+/**
+ * @generated from message api.GetModelsResponse
+ */
+export type GetModelsResponse = Message<"api.GetModelsResponse"> & {
+  /**
+   * @generated from field: repeated api.ModelName models = 1;
+   */
+  models: ModelName[];
+};
+
+/**
+ * Describes the message api.GetModelsResponse.
+ * Use `create(GetModelsResponseSchema)` to create a new message.
+ */
+export const GetModelsResponseSchema: GenMessage<GetModelsResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 35);
+
+/**
+ * @generated from message api.GetModelRequest
+ */
+export type GetModelRequest = Message<"api.GetModelRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message api.GetModelRequest.
+ * Use `create(GetModelRequestSchema)` to create a new message.
+ */
+export const GetModelRequestSchema: GenMessage<GetModelRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 36);
+
+/**
+ * @generated from message api.GetModelResponse
+ */
+export type GetModelResponse = Message<"api.GetModelResponse"> & {
+  /**
+   * @generated from field: api.Model model = 1;
+   */
+  model?: Model;
+};
+
+/**
+ * Describes the message api.GetModelResponse.
+ * Use `create(GetModelResponseSchema)` to create a new message.
+ */
+export const GetModelResponseSchema: GenMessage<GetModelResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 37);
+
+/**
+ * @generated from message api.CreateModelRunRequest
+ */
+export type CreateModelRunRequest = Message<"api.CreateModelRunRequest"> & {
+  /**
+   * @generated from field: string modelId = 1;
+   */
+  modelId: string;
+
+  /**
+   * @generated from field: string inputFileGroupId = 2;
+   */
+  inputFileGroupId: string;
+
+  /**
+   * @generated from field: optional string parameters = 3;
+   */
+  parameters?: string;
+
+  /**
+   * @generated from field: string name = 4;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message api.CreateModelRunRequest.
+ * Use `create(CreateModelRunRequestSchema)` to create a new message.
+ */
+export const CreateModelRunRequestSchema: GenMessage<CreateModelRunRequest> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 38);
+
+/**
+ * @generated from message api.CreateModelRunResponse
+ */
+export type CreateModelRunResponse = Message<"api.CreateModelRunResponse"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message api.CreateModelRunResponse.
+ * Use `create(CreateModelRunResponseSchema)` to create a new message.
+ */
+export const CreateModelRunResponseSchema: GenMessage<CreateModelRunResponse> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 39);
+
+/**
+ * @generated from message api.Model
+ */
+export type Model = Message<"api.Model"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from field: string inputSpecificationId = 3;
+   */
+  inputSpecificationId: string;
+
+  /**
+   * @generated from field: string outputSpecificationId = 4;
+   */
+  outputSpecificationId: string;
+
+  /**
+   * @generated from field: optional string parametersSchema = 5;
+   */
+  parametersSchema?: string;
+
+  /**
+   * @generated from field: string imageName = 6;
+   */
+  imageName: string;
+};
+
+/**
+ * Describes the message api.Model.
+ * Use `create(ModelSchema)` to create a new message.
+ */
+export const ModelSchema: GenMessage<Model> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 40);
+
+/**
+ * @generated from message api.ModelName
+ */
+export type ModelName = Message<"api.ModelName"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message api.ModelName.
+ * Use `create(ModelNameSchema)` to create a new message.
+ */
+export const ModelNameSchema: GenMessage<ModelName> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 41);
+
+/**
+ * @generated from message api.FileGroupName
+ */
+export type FileGroupName = Message<"api.FileGroupName"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message api.FileGroupName.
+ * Use `create(FileGroupNameSchema)` to create a new message.
+ */
+export const FileGroupNameSchema: GenMessage<FileGroupName> = /*@__PURE__*/
+  messageDesc(file_api_tenantManagement, 42);
+
+/**
  * @generated from message api.SchemaFileMapping
  */
 export type SchemaFileMapping = Message<"api.SchemaFileMapping"> & {
@@ -613,7 +909,7 @@ export type SchemaFileMapping = Message<"api.SchemaFileMapping"> & {
  * Use `create(SchemaFileMappingSchema)` to create a new message.
  */
 export const SchemaFileMappingSchema: GenMessage<SchemaFileMapping> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 30);
+  messageDesc(file_api_tenantManagement, 43);
 
 /**
  * @generated from message api.LandingZoneFile
@@ -640,7 +936,7 @@ export type LandingZoneFile = Message<"api.LandingZoneFile"> & {
  * Use `create(LandingZoneFileSchema)` to create a new message.
  */
 export const LandingZoneFileSchema: GenMessage<LandingZoneFile> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 31);
+  messageDesc(file_api_tenantManagement, 44);
 
 /**
  * @generated from message api.SpecificationName
@@ -667,7 +963,7 @@ export type SpecificationName = Message<"api.SpecificationName"> & {
  * Use `create(SpecificationNameSchema)` to create a new message.
  */
 export const SpecificationNameSchema: GenMessage<SpecificationName> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 32);
+  messageDesc(file_api_tenantManagement, 45);
 
 /**
  * @generated from message api.Specification
@@ -694,7 +990,7 @@ export type Specification = Message<"api.Specification"> & {
  * Use `create(SpecificationSchema)` to create a new message.
  */
 export const SpecificationSchema: GenMessage<Specification> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 33);
+  messageDesc(file_api_tenantManagement, 46);
 
 /**
  * @generated from message api.TableSchema
@@ -716,7 +1012,7 @@ export type TableSchema = Message<"api.TableSchema"> & {
  * Use `create(TableSchemaSchema)` to create a new message.
  */
 export const TableSchemaSchema: GenMessage<TableSchema> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 34);
+  messageDesc(file_api_tenantManagement, 47);
 
 /**
  * @generated from message api.TableField
@@ -738,14 +1034,19 @@ export type TableField = Message<"api.TableField"> & {
  * Use `create(TableFieldSchema)` to create a new message.
  */
 export const TableFieldSchema: GenMessage<TableField> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 35);
+  messageDesc(file_api_tenantManagement, 48);
 
 /**
  * @generated from message api.Image
  */
 export type Image = Message<"api.Image"> & {
   /**
-   * @generated from field: string name = 1;
+   * @generated from field: string scope = 1;
+   */
+  scope: string;
+
+  /**
+   * @generated from field: string name = 2;
    */
   name: string;
 };
@@ -755,7 +1056,7 @@ export type Image = Message<"api.Image"> & {
  * Use `create(ImageSchema)` to create a new message.
  */
 export const ImageSchema: GenMessage<Image> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 36);
+  messageDesc(file_api_tenantManagement, 49);
 
 /**
  * @generated from message api.Workspace
@@ -777,7 +1078,7 @@ export type Workspace = Message<"api.Workspace"> & {
  * Use `create(WorkspaceSchema)` to create a new message.
  */
 export const WorkspaceSchema: GenMessage<Workspace> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 37);
+  messageDesc(file_api_tenantManagement, 50);
 
 /**
  * @generated from message api.User
@@ -804,7 +1105,7 @@ export type User = Message<"api.User"> & {
  * Use `create(UserSchema)` to create a new message.
  */
 export const UserSchema: GenMessage<User> = /*@__PURE__*/
-  messageDesc(file_api_tenantManagement, 38);
+  messageDesc(file_api_tenantManagement, 51);
 
 /**
  * @generated from enum api.TableFieldType
@@ -1107,6 +1408,46 @@ export const TenantManagementService: GenService<{
     methodKind: "unary";
     input: typeof CreateFileGroupRequestSchema;
     output: typeof CreateFileGroupResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.GetFileGroups
+   */
+  getFileGroups: {
+    methodKind: "unary";
+    input: typeof GetFileGroupsRequestSchema;
+    output: typeof GetFileGroupsResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.CreateModel
+   */
+  createModel: {
+    methodKind: "unary";
+    input: typeof CreateModelRequestSchema;
+    output: typeof CreateModelResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.GetModels
+   */
+  getModels: {
+    methodKind: "unary";
+    input: typeof GetModelsRequestSchema;
+    output: typeof GetModelsResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.GetModel
+   */
+  getModel: {
+    methodKind: "unary";
+    input: typeof GetModelRequestSchema;
+    output: typeof GetModelResponseSchema;
+  },
+  /**
+   * @generated from rpc api.TenantManagementService.CreateModelRun
+   */
+  createModelRun: {
+    methodKind: "unary";
+    input: typeof CreateModelRunRequestSchema;
+    output: typeof CreateModelRunResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_api_tenantManagement, 0);

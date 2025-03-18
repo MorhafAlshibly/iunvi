@@ -69,19 +69,9 @@ const FileGroupsCreateRoute = () => {
     useState<CreateFileGroupRequest>({
       $typeName: "api.CreateFileGroupRequest",
       specificationId: "",
+      name: "",
       schemaFileMappings: [],
     });
-
-  const { data: specifications } = useQuery(
-    getSpecifications,
-    {
-      workspaceId: activeWorkspace?.id ?? "",
-      mode: DataMode.INPUT,
-    },
-    {
-      enabled: !!activeWorkspace,
-    },
-  );
 
   const { data: specificationData } = useQuery(
     getSpecification,
@@ -114,27 +104,17 @@ const FileGroupsCreateRoute = () => {
     },
   );
 
-  const selectedSpecification =
-    specifications?.specifications.find(
-      (specification) =>
-        specification.id === createFileGroupInput.specificationId,
-    ) ?? null;
-
   const validateFileGroups = () => {
-    if (!createFileGroupInput.specificationId) {
-      return false;
-    }
+    if (!createFileGroupInput.specificationId) return false;
+    if (!createFileGroupInput.name) return false;
     if (
       createFileGroupInput.schemaFileMappings.length !==
       specificationData?.specification?.tables.length
-    ) {
+    )
       return false;
-    }
     try {
       createFileGroupInput.schemaFileMappings.forEach((mapping) => {
-        if (!mapping.landingZoneFileName) {
-          throw new Error("File is required");
-        }
+        if (!mapping.landingZoneFileName) throw new Error("File is required");
       });
     } catch (e) {
       return false;
@@ -194,26 +174,33 @@ const FileGroupsCreateRoute = () => {
       <div className="grid grid-cols-1 col-span-1 gap-4 mt-4 justify-items-between">
         <div className="grid grid-cols-1 col-span-1">
           <SpecificationSelector
-            specifications={specifications?.specifications ?? []}
-            selectedSpecification={selectedSpecification}
-            setSelectedSpecification={(action) => {
+            mode={DataMode.INPUT}
+            selectedSpecificationId={createFileGroupInput.specificationId}
+            setSelectedSpecificationId={(action) => {
               setCreateFileGroupInput((prev) => ({
                 ...prev,
                 specificationId:
                   (typeof action == "function"
-                    ? action(
-                        specifications?.specifications.find(
-                          (specification) =>
-                            specification.id === prev.specificationId,
-                        ) ?? null,
-                      )?.id
-                    : action?.id) ?? "",
+                    ? action(prev.specificationId)
+                    : action) ?? "",
               }));
             }}
           />
         </div>
+        <div className="grid grid-cols-1 col-span-1 gap-4">
+          <Input
+            placeholder="Name"
+            value={createFileGroupInput.name}
+            onChange={(e) =>
+              setCreateFileGroupInput((prev) => ({
+                ...prev,
+                name: e.target.value,
+              }))
+            }
+          />
+        </div>
         {specificationData?.specification ? (
-          <div className="grid grid-cols-1 col-span-1 mt-4 gap-4">
+          <div className="grid grid-cols-1 col-span-1 gap-4 mt-2">
             {specificationData.specification.tables.map((table) => (
               <div
                 className="grid grid-cols-2 gap-4 border p-4"

@@ -1,0 +1,24 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pv-file-groups-iunvi-dev-eastus-001
+  annotations:
+    pv.kubernetes.io/provisioned-by: blob.csi.azure.com
+spec:
+  capacity:
+    storage: 100Gi
+  csi:
+    driver: blob.csi.azure.com
+    volumeHandle: saiunvideveastus001_file-groups
+    volumeAttributes:
+      storageAccount: saiunvideveastus001
+      containerName: file-groups
+      AzureStorageAuthType: msi
+      AzureStorageIdentityClientID: 3a44c973-ceff-4833-9a50-8fcf7e7c8f85
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azureblob-fuse-premium
+  mountOptions:
+    - "-o allow_other"
+    - "--file-cache-timeout-in-seconds=120"

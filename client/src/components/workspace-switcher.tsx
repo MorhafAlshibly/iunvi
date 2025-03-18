@@ -17,15 +17,22 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useWorkspace } from "@/hooks/use-workspace";
+import { useEffect, useState } from "react";
 
 export function WorkspaceSwitcher() {
   const { isMobile } = useSidebar();
-  const { workspaces, activeWorkspace, changeWorkspace } = useWorkspace();
+  const { workspaces, activeWorkspace, changeWorkspace, workspacesRefetch } =
+    useWorkspace();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    if (isDropdownOpen) workspacesRefetch();
+  }, [isDropdownOpen]);
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
+        <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"

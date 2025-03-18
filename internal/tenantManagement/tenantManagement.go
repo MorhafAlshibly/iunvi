@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -17,28 +19,38 @@ import (
 	"github.com/MorhafAlshibly/iunvi/pkg/authorization"
 	"github.com/MorhafAlshibly/iunvi/pkg/conversion"
 	"github.com/MorhafAlshibly/iunvi/pkg/middleware"
+	mssql "github.com/microsoft/go-mssqldb"
 	msgraphsdk "github.com/microsoftgraph/msgraph-sdk-go"
 	msgraphcore "github.com/microsoftgraph/msgraph-sdk-go-core"
 	"github.com/microsoftgraph/msgraph-sdk-go/models"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	batchv1 "k8s.io/api/batch/v1"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/blob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/service"
 	_ "github.com/marcboeker/go-duckdb"
+	"github.com/santhosh-tekuri/jsonschema/v6"
 )
 
 type Service struct {
-	subscriptionId       string
-	resourceGroupName    string
-	tenantId             string
-	clientId             string
-	clientSecret         string
-	registryName         string
-	registryTokenName    string
-	storageAccountName   string
-	storageContainerName string
+	subscriptionId           string
+	resourceGroupName        string
+	tenantId                 string
+	clientId                 string
+	clientSecret             string
+	registryName             string
+	registryTokenName        string
+	storageAccountName       string
+	landingZoneContainerName string
+	fileGroupsContainerName  string
+	modelRunsContainerName   string
+	kubeconfigPath           string
 }
 
 func WithSubscriptionId(subscriptionId string) func(*Service) {
@@ -89,9 +101,27 @@ func WithStorageAccountName(storageAccountName string) func(*Service) {
 	}
 }
 
-func WithStorageContainerName(storageContainerName string) func(*Service) {
+func WithLandingZoneContainerName(landingZoneContainerName string) func(*Service) {
 	return func(input *Service) {
-		input.storageContainerName = storageContainerName
+		input.landingZoneContainerName = landingZoneContainerName
+	}
+}
+
+func WithFileGroupsContainerName(fileGroupsContainerName string) func(*Service) {
+	return func(input *Service) {
+		input.fileGroupsContainerName = fileGroupsContainerName
+	}
+}
+
+func WithModelRunsContainerName(modelRunsContainerName string) func(*Service) {
+	return func(input *Service) {
+		input.modelRunsContainerName = modelRunsContainerName
+	}
+}
+
+func WithKubeconfigPath(kubeconfigPath string) func(*Service) {
+	return func(input *Service) {
+		input.kubeconfigPath = kubeconfigPath
 	}
 }
 
@@ -126,6 +156,7 @@ func (s *Service) CreateWorkspace(ctx context.Context, req *connect.Request[api.
 		Properties: &armcontainerregistry.ScopeMapProperties{
 			// Only read, list and write actions are allowed
 			Actions: []*string{
+				conversion.ValueToPointer(fmt.Sprintf("repositories/%s/*/%s", scope, "content/read")),
 				conversion.ValueToPointer(fmt.Sprintf("repositories/%s/*/%s", scope, "content/write")),
 				conversion.ValueToPointer(fmt.Sprintf("repositories/%s/*/%s", scope, "metadata/read")),
 				conversion.ValueToPointer(fmt.Sprintf("repositories/%s/*/%s", scope, "metadata/write")),
@@ -483,8 +514,10 @@ func (s *Service) GetImages(ctx context.Context, req *connect.Request[api.GetIma
 			if !strings.HasPrefix(*repository, scope) {
 				continue
 			}
+			name := strings.TrimPrefix(*repository, scope+"/")
 			images = append(images, &api.Image{
-				Name: *repository,
+				Scope: scope,
+				Name:  name,
 			})
 		}
 	}
@@ -497,14 +530,6 @@ func (s *Service) CreateSpecification(ctx context.Context, req *connect.Request[
 	if req.Msg.WorkspaceId == "" {
 		return nil, fmt.Errorf("WorkspaceId is required")
 	}
-	// compiler := jsonschema.NewCompiler()
-	// parametersSchema, err := compiler.Compile([]byte(req.Msg.ParametersSchema))
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// if parametersSchema == nil {
-	// 	return nil, fmt.Errorf("Schema is nil")
-	// }
 	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
 	if err != nil {
 		return nil, err
@@ -751,15 +776,15 @@ func (s *Service) CreateLandingZoneSharedAccessSignature(ctx context.Context, re
 		Protocol:      sas.ProtocolHTTPS,
 		StartTime:     time.Now().UTC().Add(-10 * time.Second),
 		ExpiryTime:    time.Now().UTC().Add(1 * time.Hour),
-		Permissions:   (&sas.BlobPermissions{Write: true}).String(),
-		ContainerName: s.storageContainerName,
+		Permissions:   (&sas.BlobPermissions{Read: true, Create: true, Add: true, Write: true, Delete: true, List: true}).String(),
+		ContainerName: s.landingZoneContainerName,
 		Directory:     directory,
 		BlobName:      req.Msg.FileName,
 	}.SignWithUserDelegation(udc)
 	if err != nil {
 		return nil, err
 	}
-	sasUrl := fmt.Sprintf("https://%s.blob.core.windows.net/%s/%s/%s?%s", s.storageAccountName, s.storageContainerName, directory, req.Msg.FileName, sasQueryParams.Encode())
+	sasUrl := fmt.Sprintf("https://%s.blob.core.windows.net/%s/%s/%s?%s", s.storageAccountName, s.landingZoneContainerName, directory, req.Msg.FileName, sasQueryParams.Encode())
 	return connect.NewResponse(&api.CreateLandingZoneSharedAccessSignatureResponse{
 		Url: sasUrl,
 	}), nil
@@ -789,7 +814,7 @@ func (s *Service) GetLandingZoneFiles(ctx context.Context, req *connect.Request[
 	if err != nil {
 		return nil, err
 	}
-	containerClient := svcClient.NewContainerClient(s.storageContainerName)
+	containerClient := svcClient.NewContainerClient(s.landingZoneContainerName)
 	pager := containerClient.NewListBlobsFlatPager(&container.ListBlobsFlatOptions{
 		Prefix:     conversion.ValueToPointer(directory + "/" + req.Msg.Prefix),
 		MaxResults: conversion.ValueToPointer(int32(10)),
@@ -829,6 +854,9 @@ func (s *Service) CreateFileGroup(ctx context.Context, req *connect.Request[api.
 	if req.Msg.SpecificationId == "" {
 		return nil, fmt.Errorf("SpecificationId is required")
 	}
+	if req.Msg.Name == "" {
+		return nil, fmt.Errorf("Name is required")
+	}
 	if req.Msg.SchemaFileMappings == nil || len(req.Msg.SchemaFileMappings) == 0 {
 		return nil, fmt.Errorf("SchemaFileMappings are required")
 	}
@@ -850,6 +878,16 @@ func (s *Service) CreateFileGroup(ctx context.Context, req *connect.Request[api.
 	if !authorization {
 		return nil, fmt.Errorf("unauthorized")
 	}
+	// make sure specification is for input data
+	specification, err := database.GetSpecification(ctx, model.GetSpecificationParams{
+		SpecificationId: specificationIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if specification.DataModeName != "Input" {
+		return nil, fmt.Errorf("invalid specification data mode")
+	}
 	tableSchemas, err := database.GetFileSchemasBySpecificationIdAndDataTypeName(ctx, model.GetFileSchemasBySpecificationIdAndDataTypeNameParams{
 		SpecificationId: specificationIdBytes,
 		FileTypeName:    "CSV",
@@ -859,6 +897,27 @@ func (s *Service) CreateFileGroup(ctx context.Context, req *connect.Request[api.
 	}
 	if len(tableSchemas) == 0 {
 		return nil, fmt.Errorf("table schemas not found")
+	}
+	userObjectId := ctx.Value("UserObjectId").(string)
+	userObjectIdBytes, err := conversion.StringToUniqueIdentifier(userObjectId)
+	if err != nil {
+		return nil, err
+	}
+	_, err = database.CreateFileGroup(ctx, model.CreateFileGroupParams{
+		SpecificationId:    specificationIdBytes,
+		CreatedBy:          userObjectIdBytes,
+		Name:               req.Msg.Name,
+		ShareWithWorkspace: false,
+	})
+	if err != nil {
+		return nil, err
+	}
+	fileGroup, err := database.GetFileGroupBySpecificationIdAndName(ctx, model.GetFileGroupBySpecificationIdAndNameParams{
+		SpecificationId: specificationIdBytes,
+		Name:            req.Msg.Name,
+	})
+	if err != nil {
+		return nil, err
 	}
 	tableSchemasMap := make(map[string]model.GetFileSchemaBySpecificationIdAndDataTypeNameRow)
 	for _, tableSchema := range tableSchemas {
@@ -872,24 +931,13 @@ func (s *Service) CreateFileGroup(ctx context.Context, req *connect.Request[api.
 	if err != nil {
 		return nil, err
 	}
-	containerClient := svcClient.NewContainerClient(s.storageContainerName)
-	duckdb, err := sql.Open("duckdb", "") //"?allow_unsigned_extensions=true")
+	landingZoneContainerClient := svcClient.NewContainerClient(s.landingZoneContainerName)
+	fileGroupsContainerClient := svcClient.NewContainerClient(s.fileGroupsContainerName)
+	duckdb, err := sql.Open("duckdb", "")
 	if err != nil {
 		return nil, err
 	}
 	defer duckdb.Close()
-	// _, err = duckdb.Exec("SET allow_unsigned_extensions=true;")
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// _, err = duckdb.Exec("SET autoinstall_known_extensions=true;")
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// _, err = duckdb.Exec("SET autoload_known_extensions=true;")
-	// if err != nil {
-	// 	return nil, err
-	// }
 	// loop through schema file mappings and check if the schema exists
 	for _, schemaFileMapping := range req.Msg.SchemaFileMappings {
 		if schemaFileMapping.SchemaName == "" {
@@ -906,80 +954,470 @@ func (s *Service) CreateFileGroup(ctx context.Context, req *connect.Request[api.
 		if err != nil {
 			return nil, err
 		}
-		directory := getLandingZoneDirectory(ctx, workspaceId.String())
-		blobClient := containerClient.NewBlobClient(directory + "/" + schemaFileMapping.LandingZoneFileName)
+		blobClient := landingZoneContainerClient.NewBlobClient(getLandingZoneDirectory(ctx, workspaceId.String()) + "/" + schemaFileMapping.LandingZoneFileName)
+		// TODO: Acquire a lease on the blob to prevent other users from writing to it
+
 		// Create []bytes of length 10KB to download the first 10KB of the file
 		buffer := make([]byte, 10*1024)
 		_, err = blobClient.DownloadBuffer(ctx, buffer, &blob.DownloadBufferOptions{
 			Range: blob.HTTPRange{
-				Count: 10 * 1024,
+				Offset: 0,
+				Count:  10 * 1024,
 			},
 		})
 		if err != nil {
 			return nil, err
 		}
-		info := service.KeyInfo{
-			Start:  conversion.ValueToPointer(time.Now().UTC().Add(-10 * time.Second).Format(sas.TimeFormat)),
-			Expiry: conversion.ValueToPointer(time.Now().UTC().Add(48 * time.Hour).Format(sas.TimeFormat)),
+		// Remove last bytes from buffer until we remove last newline character
+		for i := len(buffer) - 1; i >= 0; i-- {
+			if buffer[i] == '\n' {
+				buffer = buffer[:i-1]
+				break
+			}
 		}
-		udc, err := svcClient.GetUserDelegationCredential(ctx, info, nil)
+		// Create a temporary file to store the first 10KB of the file
+		tempFile, err := os.CreateTemp("", "temp")
 		if err != nil {
 			return nil, err
 		}
-		// Create Blob Signature Values with desired permissions and sign with user delegation credential
-		sasQueryParams, err := sas.BlobSignatureValues{
-			Protocol:      sas.ProtocolHTTPS,
-			StartTime:     time.Now().UTC().Add(-10 * time.Second),
-			ExpiryTime:    time.Now().UTC().Add(1 * time.Hour),
-			Permissions:   (&sas.BlobPermissions{Read: true}).String(),
-			ContainerName: s.storageContainerName,
-			Directory:     directory,
-			BlobName:      schemaFileMapping.LandingZoneFileName,
-		}.SignWithUserDelegation(udc)
+		defer os.Remove(tempFile.Name())
+		_, err = tempFile.Write(buffer)
+		if err != nil {
+			tempFile.Close()
+			return nil, err
+		}
+		err = tempFile.Close()
 		if err != nil {
 			return nil, err
 		}
-		blobUrl := fmt.Sprintf("https://%s.blob.core.windows.net/%s/%s/%s?%s", s.storageAccountName, s.storageContainerName, directory, schemaFileMapping.LandingZoneFileName, sasQueryParams.Encode())
-		fmt.Println("Blob URL: ", blobUrl)
-		// _, err = duckdb.Exec("INSTALL httpfs;")
-		// if err != nil {
-		// 	fmt.Println("Error installing httpfs extension")
-		// 	return nil, err
-		// }
-		// fmt.Println("Installed httpfs extension")
-		// _, err = duckdb.Exec("LOAD httpfs;")
-		// if err != nil {
-		// 	return nil, err
-		// }
-		// fmt.Println("Loaded httpfs extension")
-		_, err = duckdb.Exec("CREATE SECRET http_range ( TYPE HTTP, EXTRA_HTTP_HEADERS MAP { 'Range': 'bytes=0-10239' });")
-		if err != nil {
-			return nil, err
+		// Create a query to read the CSV file and get the schema
+		columnsString := ""
+		for i := 2; i < len(fields)+2; i++ {
+			columnsString += "'$" + strconv.Itoa(i) + "': " + fields[i-2].Type.String() + ", "
 		}
-		rows, err := duckdb.Query("DESCRIBE (SELECT * FROM read_csv_auto($1) LIMIT 0);", blobUrl)
+		query := "SELECT COUNT(*) FROM read_csv($1, max_line_size=10000000, columns={" + columnsString[:len(columnsString)-2] + "});"
+		queryValues := make([]interface{}, 0, len(fields)+1)
+		queryValues = append(queryValues, tempFile.Name())
+		for _, field := range fields {
+			queryValues = append(queryValues, field.Name)
+		}
+		rows, err := duckdb.Query(query, queryValues...)
 		if err != nil {
 			return nil, err
 		}
 		defer rows.Close()
-		fmt.Println("Schema for file: ", schemaFileMapping.LandingZoneFileName)
-		for rows.Next() {
-			var field, field_type string
-			if err := rows.Scan(&field, &field_type); err != nil {
-				return nil, err
-			}
-			fmt.Println(field, field_type)
+		// file is now validated
+		// want to create a file in the file group
+		_, err = database.CreateFile(ctx, model.CreateFileParams{
+			FileGroupId:    fileGroup.FileGroupID,
+			FileSchemaName: schemaFileMapping.SchemaName,
+			Name:           schemaFileMapping.LandingZoneFileName,
+		})
+		if err != nil {
+			return nil, err
 		}
-		if err := rows.Err(); err != nil {
+		// file, err := database.GetFileByFileGroupIdAndSchemaName(ctx, model.GetFileByFileGroupIdAndSchemaNameParams{
+		// 	FileGroupId:    fileGroup.FileGroupID,
+		// 	FileSchemaName: schemaFileMapping.LandingZoneFileName,
+		// })
+		// if err != nil {
+		// 	return nil, err
+		// }
+	}
+	// copy the files from the landing zone to the file group
+	for _, schemaFileMapping := range req.Msg.SchemaFileMappings {
+		landingZoneBlobClient := landingZoneContainerClient.NewBlobClient(getLandingZoneDirectory(ctx, workspaceId.String()) + "/" + schemaFileMapping.LandingZoneFileName)
+		fileGroupsBlobClient := fileGroupsContainerClient.NewBlobClient(getFileGroupDirectory(ctx, workspaceId.String(), req.Msg.SpecificationId, fileGroup.FileGroupID.String()) + "/" + schemaFileMapping.LandingZoneFileName)
+		_, err = fileGroupsBlobClient.StartCopyFromURL(ctx, landingZoneBlobClient.URL(), nil)
+		if err != nil {
 			return nil, err
 		}
 	}
-	return connect.NewResponse(&api.CreateFileGroupResponse{}), nil
+	return connect.NewResponse(&api.CreateFileGroupResponse{
+		Id: fileGroup.FileGroupID.String(),
+	}), nil
+}
+
+func (s *Service) GetFileGroups(ctx context.Context, req *connect.Request[api.GetFileGroupsRequest]) (*connect.Response[api.GetFileGroupsResponse], error) {
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	fileGroups, err := database.GetFileGroups(ctx, model.GetFileGroupsParams{
+		WorkspaceId: workspaceIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	var fileGroupNames []*api.FileGroupName
+	for _, fileGroup := range fileGroups {
+		fileGroupNames = append(fileGroupNames, &api.FileGroupName{
+			Id:   fileGroup.FileGroupID.String(),
+			Name: fileGroup.Name,
+		})
+	}
+	return connect.NewResponse(&api.GetFileGroupsResponse{
+		FileGroups: fileGroupNames,
+	}), nil
+}
+
+func (s *Service) CreateModel(ctx context.Context, req *connect.Request[api.CreateModelRequest]) (*connect.Response[api.CreateModelResponse], error) {
+	if req.Msg.InputSpecificationId == "" {
+		return nil, fmt.Errorf("InputSpecificationId is required")
+	}
+	if req.Msg.OutputSpecificationId == "" {
+		return nil, fmt.Errorf("OutputSpecificationId is required")
+	}
+	if req.Msg.Name == "" {
+		return nil, fmt.Errorf("Name is required")
+	}
+	var parametersSchema mssql.NVarCharMax
+	if req.Msg.ParametersSchema != nil {
+		if *req.Msg.ParametersSchema == "" {
+			return nil, fmt.Errorf("ParametersSchema is required")
+		}
+		if len(*req.Msg.ParametersSchema) > 100000 {
+			return nil, fmt.Errorf("ParametersSchema is too long")
+		}
+		// create temporary schema file
+		tempFile, err := os.CreateTemp("", "temp")
+		if err != nil {
+			return nil, err
+		}
+		defer os.Remove(tempFile.Name())
+		_, err = tempFile.WriteString(*req.Msg.ParametersSchema)
+		if err != nil {
+			tempFile.Close()
+			return nil, err
+		}
+		err = tempFile.Close()
+		if err != nil {
+			return nil, err
+		}
+		// validate schema
+		compiler := jsonschema.NewCompiler()
+		schema, err := compiler.Compile(tempFile.Name())
+		if err != nil {
+			return nil, err
+		}
+		if schema == nil {
+			return nil, fmt.Errorf("Schema is nil")
+		}
+		parametersSchema = mssql.NVarCharMax(*req.Msg.ParametersSchema)
+	}
+	if req.Msg.ImageName == "" {
+		return nil, fmt.Errorf("ImageName is required")
+	}
+	inputSpecificationIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.InputSpecificationId)
+	if err != nil {
+		return nil, err
+	}
+	outputSpecificationIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.OutputSpecificationId)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	workspaceId, err := database.GetWorkspaceIdBySpecificationId(ctx, model.GetWorkspaceIdBySpecificationIdParams{
+		SpecificationId: inputSpecificationIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceId), authorization.WithWorkspaceRole(api.WorkspaceRole_DEVELOPER)).IsAuthorized(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !authorization {
+		return nil, fmt.Errorf("unauthorized")
+	}
+	cred, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
+	if err != nil {
+		return nil, err
+	}
+	client, err := azcontainerregistry.NewClient(fmt.Sprintf("https://%s.azurecr.io", s.registryName), cred, nil)
+	if err != nil {
+		return nil, err
+	}
+	image, err := client.GetRepositoryProperties(ctx, getScope(workspaceId.String())+"/"+req.Msg.ImageName, nil)
+	if err != nil {
+		return nil, err
+	}
+	if image.Name == nil {
+		return nil, fmt.Errorf("image not found")
+	}
+	_, err = database.CreateModel(ctx, model.CreateModelParams{
+		InputSpecificationId:  inputSpecificationIdBytes,
+		OutputSpecificationId: outputSpecificationIdBytes,
+		Name:                  req.Msg.Name,
+		ParametersSchema:      &parametersSchema,
+		ImageName:             strings.TrimPrefix(*image.Name, getScope(workspaceId.String())+"/"),
+	})
+	if err != nil {
+		return nil, err
+	}
+	model, err := database.GetModelByInputSpecificationIdAndOutputSpecificationIdAndName(ctx, model.GetModelByInputSpecificationIdAndOutputSpecificationIdAndNameParams{
+		InputSpecificationId:  inputSpecificationIdBytes,
+		OutputSpecificationId: outputSpecificationIdBytes,
+		Name:                  req.Msg.Name,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(&api.CreateModelResponse{
+		Id: model.ModelID.String(),
+	}), nil
+}
+
+func (s *Service) GetModels(ctx context.Context, req *connect.Request[api.GetModelsRequest]) (*connect.Response[api.GetModelsResponse], error) {
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	models, err := database.GetModelsByWorkspaceId(ctx, model.GetModelsByWorkspaceIdParams{
+		WorkspaceId: workspaceIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	var modelNames []*api.ModelName
+	for _, model := range models {
+		modelNames = append(modelNames, &api.ModelName{
+			Id:   model.ModelID.String(),
+			Name: model.Name,
+		})
+	}
+	return connect.NewResponse(&api.GetModelsResponse{
+		Models: modelNames,
+	}), nil
+}
+
+func (s *Service) GetModel(ctx context.Context, req *connect.Request[api.GetModelRequest]) (*connect.Response[api.GetModelResponse], error) {
+	if req.Msg.Id == "" {
+		return nil, fmt.Errorf("ModelId is required")
+	}
+	modelIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.Id)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	model, err := database.GetModel(ctx, model.GetModelParams{
+		ModelId: modelIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	var parametersSchema string
+	if model.ParametersSchema != nil {
+		parametersSchema = string(*model.ParametersSchema)
+	}
+	return connect.NewResponse(&api.GetModelResponse{
+		Model: &api.Model{
+			Id:                    model.ModelID.String(),
+			InputSpecificationId:  model.InputSpecificationID.String(),
+			OutputSpecificationId: model.OutputSpecificationID.String(),
+			Name:                  model.Name,
+			ParametersSchema:      &parametersSchema,
+			ImageName:             model.ImageName,
+		},
+	}), nil
+}
+
+func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.CreateModelRunRequest]) (*connect.Response[api.CreateModelRunResponse], error) {
+	if req.Msg.ModelId == "" {
+		return nil, fmt.Errorf("ModelId is required")
+	}
+	if req.Msg.InputFileGroupId == "" {
+		return nil, fmt.Errorf("InputFileGroupId is required")
+	}
+	if req.Msg.Name == "" {
+		return nil, fmt.Errorf("Name is required")
+	}
+	inputFileGroupIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.InputFileGroupId)
+	if err != nil {
+		return nil, err
+	}
+	modelIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.ModelId)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	appModel, err := database.GetModel(ctx, model.GetModelParams{
+		ModelId: modelIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if (appModel.ParametersSchema == nil) != (req.Msg.Parameters == nil) {
+		return nil, fmt.Errorf("Parameters mismatch")
+	}
+	if appModel.ParametersSchema != nil {
+		tempSchemaFile, err := os.CreateTemp("", "temp")
+		if err != nil {
+			return nil, err
+		}
+		defer os.Remove(tempSchemaFile.Name())
+		_, err = tempSchemaFile.WriteString(string(*appModel.ParametersSchema))
+		if err != nil {
+			tempSchemaFile.Close()
+			return nil, err
+		}
+		err = tempSchemaFile.Close()
+		if err != nil {
+			return nil, err
+		}
+		compiler := jsonschema.NewCompiler()
+		schema, err := compiler.Compile(tempSchemaFile.Name())
+		if err != nil {
+			return nil, err
+		}
+		if schema == nil {
+			return nil, fmt.Errorf("Schema is nil")
+		}
+		parameters, err := jsonschema.UnmarshalJSON(strings.NewReader(*req.Msg.Parameters))
+		// validate parameters
+		err = schema.Validate(parameters)
+		if err != nil {
+			return nil, err
+		}
+	}
+	_, err = database.CreateModelRun(ctx, model.CreateModelRunParams{
+		ModelId:          modelIdBytes,
+		StatusName:       "Pending",
+		InputFileGroupId: inputFileGroupIdBytes,
+		Name:             req.Msg.Name,
+	})
+	if err != nil {
+		return nil, err
+	}
+	modelRun, err := database.GetModelRunByModelIdAndName(ctx, model.GetModelRunByModelIdAndNameParams{
+		ModelId: modelIdBytes,
+		Name:    req.Msg.Name,
+	})
+	if err != nil {
+		return nil, err
+	}
+	workspaceId, err := database.GetWorkspaceIdByModelId(ctx, model.GetWorkspaceIdByModelIdParams{
+		ModelId: modelIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	// upload parameters as json to blob storage
+	if appModel.ParametersSchema != nil {
+		cred, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
+		if err != nil {
+			return nil, err
+		}
+		svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
+		if err != nil {
+			return nil, err
+		}
+		containerClient := svcClient.NewContainerClient(s.modelRunsContainerName)
+		blockBlobClient := containerClient.NewBlockBlobClient(getModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunID.String()) + "/parameters.json")
+		_, err = blockBlobClient.UploadBuffer(ctx, []byte(*req.Msg.Parameters), nil)
+		if err != nil {
+			return nil, err
+		}
+	}
+	config, err := clientcmd.BuildConfigFromFlags("", s.kubeconfigPath)
+	if err != nil {
+		return nil, err
+	}
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		return nil, err
+	}
+	job := &batchv1.Job{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: modelRun.ModelRunID.String(),
+		},
+		Spec: batchv1.JobSpec{
+			Template: corev1.PodTemplateSpec{
+				Spec: corev1.PodSpec{
+					RestartPolicy: corev1.RestartPolicyNever,
+					Containers: []corev1.Container{
+						{
+							Name:  appModel.ImageName,
+							Image: fmt.Sprintf("%s.azurecr.io/%s/%s:latest", s.registryName, getScope(workspaceId.String()), appModel.ImageName),
+							VolumeMounts: []corev1.VolumeMount{
+								{
+									Name:      "file-groups-volume",
+									MountPath: "/mnt/input",
+									SubPath:   getFileGroupDirectory(ctx, workspaceId.String(), appModel.InputSpecificationID.String(), req.Msg.InputFileGroupId),
+									ReadOnly:  true,
+								},
+								{
+									Name:      "model-runs-volume",
+									MountPath: "/mnt/parameters",
+									SubPath:   getModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunID.String()),
+									ReadOnly:  true,
+								},
+								{
+									Name:      "model-runs-volume",
+									MountPath: "/mnt/output",
+									SubPath:   getModelRunOutputDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunID.String()),
+								},
+							},
+						},
+					},
+					Volumes: []corev1.Volume{
+						{
+							Name: "file-groups-volume",
+							VolumeSource: corev1.VolumeSource{
+								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+									ClaimName: "pvc-file-groups-iunvi-dev-eastus-001",
+								},
+							},
+						},
+						{
+							Name: "model-runs-volume",
+							VolumeSource: corev1.VolumeSource{
+								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+									ClaimName: "pvc-model-runs-iunvi-dev-eastus-001",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	_, err = clientset.BatchV1().Jobs("default").Create(ctx, job, metav1.CreateOptions{})
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(&api.CreateModelRunResponse{
+		Id: modelRun.ModelRunID.String(),
+	}), nil
 }
 
 func getLandingZoneDirectory(ctx context.Context, workspaceId string) string {
 	tenantId := ctx.Value("TenantDirectoryId").(string)
 	userObjectId := ctx.Value("UserObjectId").(string)
 	return tenantId + "/" + strings.ToLower(workspaceId) + "/" + userObjectId
+}
+
+func getFileGroupDirectory(ctx context.Context, workspaceId string, specificationId string, fileGroupId string) string {
+	tenantId := ctx.Value("TenantDirectoryId").(string)
+	return tenantId + "/" + strings.ToLower(workspaceId) + "/" + strings.ToLower(specificationId) + "/" + strings.ToLower(fileGroupId)
+}
+
+func getModelRunOutputDirectory(ctx context.Context, workspaceId string, modelId string, modelRunId string) string {
+	tenantId := ctx.Value("TenantDirectoryId").(string)
+	return tenantId + "/" + strings.ToLower(workspaceId) + "/" + strings.ToLower(modelId) + "/" + strings.ToLower(modelRunId) + "/output"
+}
+
+func getModelRunParametersDirectory(ctx context.Context, workspaceId string, modelId string, modelRunId string) string {
+	tenantId := ctx.Value("TenantDirectoryId").(string)
+	return tenantId + "/" + strings.ToLower(workspaceId) + "/" + strings.ToLower(modelId) + "/" + strings.ToLower(modelRunId) + "/parameters"
 }
 
 func getScope(workspaceId string) string {

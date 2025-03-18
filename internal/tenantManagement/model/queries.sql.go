@@ -401,3 +401,332 @@ func (q *Queries) GetWorkspaceIdBySpecificationId(ctx context.Context, arg GetWo
 	err := row.Scan(&item)
 	return item, err
 }
+
+const CreateFileGroup = `-- name: CreateFileGroup :execresult
+INSERT INTO app.FileGroups (SpecificationId, CreatedBy, Name, ShareWithWorkspace)
+VALUES (@SpecificationId, @CreatedBy, @Name, @ShareWithWorkspace);
+`
+
+type CreateFileGroupParams struct {
+	SpecificationId    mssql.UniqueIdentifier `db:"SpecificationId"`
+	CreatedBy          mssql.UniqueIdentifier `db:"CreatedBy"`
+	Name               string                 `db:"Name"`
+	ShareWithWorkspace bool                   `db:"ShareWithWorkspace"`
+}
+
+func (q *Queries) CreateFileGroup(ctx context.Context, arg CreateFileGroupParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, CreateFileGroup, sql.Named("SpecificationId", arg.SpecificationId), sql.Named("CreatedBy", arg.CreatedBy), sql.Named("Name", arg.Name), sql.Named("ShareWithWorkspace", arg.ShareWithWorkspace))
+}
+
+const GetFileGroupBySpecificationIdAndName = `-- name: GetFileGroupBySpecificationIdAndName :one
+SELECT FileGroupId,
+	   SpecificationId,
+	   CreatedBy,
+	   Name,
+	   ShareWithWorkspace,
+	   CreatedAt
+FROM app.FileGroups
+WHERE SpecificationId = @SpecificationId
+  AND Name = @Name;
+`
+
+type GetFileGroupBySpecificationIdAndNameParams struct {
+	SpecificationId mssql.UniqueIdentifier `db:"SpecificationId"`
+	Name            string                 `db:"Name"`
+}
+
+func (q *Queries) GetFileGroupBySpecificationIdAndName(ctx context.Context, arg GetFileGroupBySpecificationIdAndNameParams) (AppFileGroup, error) {
+	row := q.db.QueryRowContext(ctx, GetFileGroupBySpecificationIdAndName, sql.Named("SpecificationId", arg.SpecificationId), sql.Named("Name", arg.Name))
+	var item AppFileGroup
+	err := row.Scan(
+		&item.FileGroupID,
+		&item.SpecificationID,
+		&item.CreatedBy,
+		&item.Name,
+		&item.ShareWithWorkspace,
+		&item.CreatedAt,
+	)
+	return item, err
+}
+
+const CreateFile = `-- name: CreateFile :execresult
+INSERT INTO app.Files (FileGroupId, FileSchemaId, Name)
+SELECT @FileGroupId, fs.FileSchemaId, @Name
+FROM app.FileSchemas fs
+WHERE fs.Name = @FileSchemaName;
+`
+
+type CreateFileParams struct {
+	FileGroupId    mssql.UniqueIdentifier `db:"FileGroupId"`
+	FileSchemaName string                 `db:"FileSchemaName"`
+	Name           string                 `db:"Name"`
+}
+
+func (q *Queries) CreateFile(ctx context.Context, arg CreateFileParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, CreateFile, sql.Named("FileGroupId", arg.FileGroupId), sql.Named("FileSchemaName", arg.FileSchemaName), sql.Named("Name", arg.Name))
+}
+
+const GetFileByFileGroupIdAndSchemaName = `-- name: GetFileByFileGroupIdAndSchemaName :one
+SELECT FileId,
+	   FileGroupId,
+	   FileSchemaId,
+	   Name
+FROM app.Files
+JOIN app.FileSchemas fs ON Files.FileSchemaId = fs.FileSchemaId
+WHERE FileGroupId = @FileGroupId
+  AND fs.Name = @FileSchemaName;
+`
+
+type GetFileByFileGroupIdAndSchemaNameParams struct {
+	FileGroupId    mssql.UniqueIdentifier `db:"FileGroupId"`
+	FileSchemaName string                 `db:"FileSchemaName"`
+}
+
+func (q *Queries) GetFileByFileGroupIdAndSchemaName(ctx context.Context, arg GetFileByFileGroupIdAndSchemaNameParams) (AppFile, error) {
+	row := q.db.QueryRowContext(ctx, GetFileByFileGroupIdAndSchemaName, sql.Named("FileGroupId", arg.FileGroupId), sql.Named("FileSchemaName", arg.FileSchemaName))
+	var item AppFile
+	err := row.Scan(
+		&item.FileID,
+		&item.FileGroupID,
+		&item.FileSchemaID,
+		&item.Name,
+	)
+	return item, err
+}
+
+const GetFileGroups = `-- name: GetFileGroups :many
+SELECT fg.FileGroupId,
+	   fg.SpecificationId,
+	   fg.CreatedBy,
+	   fg.Name,
+	   fg.ShareWithWorkspace,
+	   fg.CreatedAt
+FROM app.FileGroups fg
+JOIN app.Specifications s ON fg.SpecificationId = s.SpecificationId
+WHERE s.WorkspaceId = @WorkspaceId;
+`
+
+type GetFileGroupsParams struct {
+	WorkspaceId mssql.UniqueIdentifier `db:"WorkspaceId"`
+}
+
+func (q *Queries) GetFileGroups(ctx context.Context, arg GetFileGroupsParams) ([]AppFileGroup, error) {
+	rows, err := q.db.QueryContext(ctx, GetFileGroups, sql.Named("WorkspaceId", arg.WorkspaceId))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []AppFileGroup
+	for rows.Next() {
+		var i AppFileGroup
+		if err := rows.Scan(
+			&i.FileGroupID,
+			&i.SpecificationID,
+			&i.CreatedBy,
+			&i.Name,
+			&i.ShareWithWorkspace,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const CreateModel = `-- name: CreateModel :execresult
+INSERT INTO app.Models (InputSpecificationId, OutputSpecificationId, Name, ParametersSchema, ImageName)
+VALUES (@InputSpecificationId, @OutputSpecificationId, @Name, @ParametersSchema, @ImageName);
+`
+
+type CreateModelParams struct {
+	InputSpecificationId  mssql.UniqueIdentifier `db:"InputSpecificationId"`
+	OutputSpecificationId mssql.UniqueIdentifier `db:"OutputSpecificationId"`
+	Name                  string                 `db:"Name"`
+	ParametersSchema      *mssql.NVarCharMax     `db:"ParametersSchema"`
+	ImageName             string                 `db:"ImageName"`
+}
+
+func (q *Queries) CreateModel(ctx context.Context, arg CreateModelParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, CreateModel, sql.Named("InputSpecificationId", arg.InputSpecificationId), sql.Named("OutputSpecificationId", arg.OutputSpecificationId), sql.Named("Name", arg.Name), sql.Named("ParametersSchema", arg.ParametersSchema), sql.Named("ImageName", arg.ImageName))
+}
+
+const GetModelByInputSpecificationIdAndOutputSpecificationIdAndName = `-- name: GetModelByInputSpecificationIdAndOutputSpecificationIdAndName :one
+SELECT ModelId,
+	   InputSpecificationId,
+	   OutputSpecificationId,
+	   Name,
+	   ParametersSchema,
+	   ImageName
+FROM app.Models
+WHERE InputSpecificationId = @InputSpecificationId
+  AND OutputSpecificationId = @OutputSpecificationId
+  AND Name = @Name;
+`
+
+type GetModelByInputSpecificationIdAndOutputSpecificationIdAndNameParams struct {
+	InputSpecificationId  mssql.UniqueIdentifier `db:"InputSpecificationId"`
+	OutputSpecificationId mssql.UniqueIdentifier `db:"OutputSpecificationId"`
+	Name                  string                 `db:"Name"`
+}
+
+func (q *Queries) GetModelByInputSpecificationIdAndOutputSpecificationIdAndName(ctx context.Context, arg GetModelByInputSpecificationIdAndOutputSpecificationIdAndNameParams) (AppModel, error) {
+	row := q.db.QueryRowContext(ctx, GetModelByInputSpecificationIdAndOutputSpecificationIdAndName, sql.Named("InputSpecificationId", arg.InputSpecificationId), sql.Named("OutputSpecificationId", arg.OutputSpecificationId), sql.Named("Name", arg.Name))
+	var item AppModel
+	err := row.Scan(
+		&item.ModelID,
+		&item.InputSpecificationID,
+		&item.OutputSpecificationID,
+		&item.Name,
+		&item.ParametersSchema,
+		&item.ImageName,
+	)
+	return item, err
+}
+
+const GetModelsByWorkspaceId = `-- name: GetModelsByWorkspaceId :many
+SELECT m.ModelId,
+	   m.Name
+FROM app.Models m
+JOIN app.Specifications s ON m.InputSpecificationId = s.SpecificationId
+WHERE s.WorkspaceId = @WorkspaceId;
+`
+
+type GetModelsByWorkspaceIdParams struct {
+	WorkspaceId mssql.UniqueIdentifier `db:"WorkspaceId"`
+}
+
+type GetModelsByWorkspaceIdRow struct {
+	ModelID mssql.UniqueIdentifier `db:"ModelId"`
+	Name    string                 `db:"Name"`
+}
+
+func (q *Queries) GetModelsByWorkspaceId(ctx context.Context, arg GetModelsByWorkspaceIdParams) ([]GetModelsByWorkspaceIdRow, error) {
+	rows, err := q.db.QueryContext(ctx, GetModelsByWorkspaceId, sql.Named("WorkspaceId", arg.WorkspaceId))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetModelsByWorkspaceIdRow
+	for rows.Next() {
+		var i GetModelsByWorkspaceIdRow
+		if err := rows.Scan(
+			&i.ModelID,
+			&i.Name,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const GetWorkspaceIdByModelId = `-- name: GetWorkspaceIdByModelId :one
+SELECT s.WorkspaceId
+FROM app.Models m
+JOIN app.Specifications s ON m.InputSpecificationId = s.SpecificationId
+WHERE m.ModelId = @ModelId;
+`
+
+type GetWorkspaceIdByModelIdParams struct {
+	ModelId mssql.UniqueIdentifier `db:"ModelId"`
+}
+
+func (q *Queries) GetWorkspaceIdByModelId(ctx context.Context, arg GetWorkspaceIdByModelIdParams) (mssql.UniqueIdentifier, error) {
+	row := q.db.QueryRowContext(ctx, GetWorkspaceIdByModelId, sql.Named("ModelId", arg.ModelId))
+	var item mssql.UniqueIdentifier
+	err := row.Scan(&item)
+	return item, err
+}
+
+const GetModel = `-- name: GetModel :one
+SELECT ModelId,
+	   InputSpecificationId,
+	   OutputSpecificationId,
+	   Name,
+	   ParametersSchema,
+	   ImageName,
+	   CreatedAt
+FROM app.Models
+WHERE ModelId = @ModelId;
+`
+
+type GetModelParams struct {
+	ModelId mssql.UniqueIdentifier `db:"ModelId"`
+}
+
+func (q *Queries) GetModel(ctx context.Context, arg GetModelParams) (AppModel, error) {
+	row := q.db.QueryRowContext(ctx, GetModel, sql.Named("ModelId", arg.ModelId))
+	var item AppModel
+	err := row.Scan(
+		&item.ModelID,
+		&item.InputSpecificationID,
+		&item.OutputSpecificationID,
+		&item.Name,
+		&item.ParametersSchema,
+		&item.ImageName,
+		&item.CreatedAt,
+	)
+	return item, err
+}
+
+const CreateModelRun = `-- name: CreateModelRun :execresult
+INSERT INTO app.ModelRuns (ModelId, StatusId, InputFileGroupId, Name)
+SELECT @ModelId, mrs.ModelRunStatusId, @InputFileGroupId, @Name
+FROM app.ModelRunStatuses mrs
+WHERE mrs.Name = @StatusName;
+`
+
+type CreateModelRunParams struct {
+	ModelId          mssql.UniqueIdentifier `db:"ModelId"`
+	StatusName       string                 `db:"StatusName"`
+	InputFileGroupId mssql.UniqueIdentifier `db:"InputFileGroup"`
+	Name             string                 `db:"Name"`
+}
+
+func (q *Queries) CreateModelRun(ctx context.Context, arg CreateModelRunParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, CreateModelRun, sql.Named("ModelId", arg.ModelId), sql.Named("StatusName", arg.StatusName), sql.Named("InputFileGroupId", arg.InputFileGroupId))
+}
+
+const GetModelRunByModelIdAndName = `-- name: GetModelRunByModelIdAndName :one
+SELECT ModelRunId,
+	   ModelId,
+	   InputFileGroupId,
+	   OutputFileGroupId,
+	   Name,
+	   CreatedAt
+FROM app.ModelRuns
+WHERE ModelId = @ModelId
+  AND Name = @Name;
+`
+
+type GetModelRunByModelIdAndNameParams struct {
+	ModelId mssql.UniqueIdentifier `db:"ModelId"`
+	Name    string                 `db:"Name"`
+}
+
+func (q *Queries) GetModelRunByModelIdAndName(ctx context.Context, arg GetModelRunByModelIdAndNameParams) (AppModelRun, error) {
+	row := q.db.QueryRowContext(ctx, GetModelRunByModelIdAndName, sql.Named("ModelId", arg.ModelId), sql.Named("Name", arg.Name))
+	var item AppModelRun
+	err := row.Scan(
+		&item.ModelRunID,
+		&item.ModelID,
+		&item.InputFileGroupID,
+		&item.OutputFileGroupID,
+		&item.Name,
+		&item.CreatedAt,
+	)
+	return item, err
+}

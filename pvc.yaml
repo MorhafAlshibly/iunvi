@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-file-groups-iunvi-dev-eastus-001
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+  volumeName: pv-file-groups-iunvi-dev-eastus-001
+  storageClassName: azureblob-fuse-premium

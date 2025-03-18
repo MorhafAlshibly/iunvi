@@ -3,16 +3,16 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { paths } from "@/config/paths";
 import { useWorkspace } from "@/hooks/use-workspace";
-import { getFileGroups } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
+import { getModels } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { useQuery } from "@connectrpc/connect-query";
 import { Info } from "lucide-react";
 import { useNavigate } from "react-router";
 
-const FileGroupsListRoute = () => {
+const ModelsListRoute = () => {
   const navigate = useNavigate();
   const { activeWorkspace } = useWorkspace();
-  const { data: filegroupsData } = useQuery(
-    getFileGroups,
+  const { data: modelsData } = useQuery(
+    getModels,
     {
       workspaceId: activeWorkspace?.id || "",
     },
@@ -29,29 +29,27 @@ const FileGroupsListRoute = () => {
           variant="default"
           className="mb-4"
           onClick={() => {
-            navigate(paths.app.user.fileGroups.create.getHref());
+            navigate(paths.app.developer.models.create.getHref());
           }}
         >
-          Create File Group
+          Create Model
         </Button>
       </div>
       <div className="grid grid-cols-1 col-span-1">
-        {filegroupsData?.fileGroups.map((fileGroup, index) => (
+        {modelsData?.models.map((model, index) => (
           <div
             key={index}
             className="grid grid-cols-2 col-span-1 justify-items-between p-2"
           >
             <div className="grid grid-cols-1 col-span-1 justify-items-start content-center">
-              <Label className="font-normal">{fileGroup.name}</Label>
+              <Label className="font-normal">{model.name}</Label>
             </div>
             <div className="grid grid-cols-1 col-span-1 justify-items-end">
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={() => {
-                  navigate(
-                    paths.app.user.fileGroups.view.getHref(fileGroup.id),
-                  );
+                  navigate(paths.app.developer.models.view.getHref(model.id));
                 }}
               >
                 <Info />
@@ -67,4 +65,4 @@ const FileGroupsListRoute = () => {
   );
 };
 
-export default FileGroupsListRoute;
+export default ModelsListRoute;

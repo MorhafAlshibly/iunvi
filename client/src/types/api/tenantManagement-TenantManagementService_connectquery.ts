@@ -78,3 +78,28 @@ export const getLandingZoneFiles = TenantManagementService.method.getLandingZone
  * @generated from rpc api.TenantManagementService.CreateFileGroup
  */
 export const createFileGroup = TenantManagementService.method.createFileGroup;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetFileGroups
+ */
+export const getFileGroups = TenantManagementService.method.getFileGroups;
+
+/**
+ * @generated from rpc api.TenantManagementService.CreateModel
+ */
+export const createModel = TenantManagementService.method.createModel;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetModels
+ */
+export const getModels = TenantManagementService.method.getModels;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetModel
+ */
+export const getModel = TenantManagementService.method.getModel;
+
+/**
+ * @generated from rpc api.TenantManagementService.CreateModelRun
+ */
+export const createModelRun = TenantManagementService.method.createModelRun;

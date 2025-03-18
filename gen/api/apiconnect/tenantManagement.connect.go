@@ -78,6 +78,21 @@ const (
 	// TenantManagementServiceCreateFileGroupProcedure is the fully-qualified name of the
 	// TenantManagementService's CreateFileGroup RPC.
 	TenantManagementServiceCreateFileGroupProcedure = "/api.TenantManagementService/CreateFileGroup"
+	// TenantManagementServiceGetFileGroupsProcedure is the fully-qualified name of the
+	// TenantManagementService's GetFileGroups RPC.
+	TenantManagementServiceGetFileGroupsProcedure = "/api.TenantManagementService/GetFileGroups"
+	// TenantManagementServiceCreateModelProcedure is the fully-qualified name of the
+	// TenantManagementService's CreateModel RPC.
+	TenantManagementServiceCreateModelProcedure = "/api.TenantManagementService/CreateModel"
+	// TenantManagementServiceGetModelsProcedure is the fully-qualified name of the
+	// TenantManagementService's GetModels RPC.
+	TenantManagementServiceGetModelsProcedure = "/api.TenantManagementService/GetModels"
+	// TenantManagementServiceGetModelProcedure is the fully-qualified name of the
+	// TenantManagementService's GetModel RPC.
+	TenantManagementServiceGetModelProcedure = "/api.TenantManagementService/GetModel"
+	// TenantManagementServiceCreateModelRunProcedure is the fully-qualified name of the
+	// TenantManagementService's CreateModelRun RPC.
+	TenantManagementServiceCreateModelRunProcedure = "/api.TenantManagementService/CreateModelRun"
 )
 
 // TenantManagementServiceClient is a client for the api.TenantManagementService service.
@@ -97,6 +112,11 @@ type TenantManagementServiceClient interface {
 	CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error)
 	GetLandingZoneFiles(context.Context, *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error)
 	CreateFileGroup(context.Context, *connect.Request[api.CreateFileGroupRequest]) (*connect.Response[api.CreateFileGroupResponse], error)
+	GetFileGroups(context.Context, *connect.Request[api.GetFileGroupsRequest]) (*connect.Response[api.GetFileGroupsResponse], error)
+	CreateModel(context.Context, *connect.Request[api.CreateModelRequest]) (*connect.Response[api.CreateModelResponse], error)
+	GetModels(context.Context, *connect.Request[api.GetModelsRequest]) (*connect.Response[api.GetModelsResponse], error)
+	GetModel(context.Context, *connect.Request[api.GetModelRequest]) (*connect.Response[api.GetModelResponse], error)
+	CreateModelRun(context.Context, *connect.Request[api.CreateModelRunRequest]) (*connect.Response[api.CreateModelRunResponse], error)
 }
 
 // NewTenantManagementServiceClient constructs a client for the api.TenantManagementService service.
@@ -200,6 +220,36 @@ func NewTenantManagementServiceClient(httpClient connect.HTTPClient, baseURL str
 			connect.WithSchema(tenantManagementServiceMethods.ByName("CreateFileGroup")),
 			connect.WithClientOptions(opts...),
 		),
+		getFileGroups: connect.NewClient[api.GetFileGroupsRequest, api.GetFileGroupsResponse](
+			httpClient,
+			baseURL+TenantManagementServiceGetFileGroupsProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("GetFileGroups")),
+			connect.WithClientOptions(opts...),
+		),
+		createModel: connect.NewClient[api.CreateModelRequest, api.CreateModelResponse](
+			httpClient,
+			baseURL+TenantManagementServiceCreateModelProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("CreateModel")),
+			connect.WithClientOptions(opts...),
+		),
+		getModels: connect.NewClient[api.GetModelsRequest, api.GetModelsResponse](
+			httpClient,
+			baseURL+TenantManagementServiceGetModelsProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("GetModels")),
+			connect.WithClientOptions(opts...),
+		),
+		getModel: connect.NewClient[api.GetModelRequest, api.GetModelResponse](
+			httpClient,
+			baseURL+TenantManagementServiceGetModelProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("GetModel")),
+			connect.WithClientOptions(opts...),
+		),
+		createModelRun: connect.NewClient[api.CreateModelRunRequest, api.CreateModelRunResponse](
+			httpClient,
+			baseURL+TenantManagementServiceCreateModelRunProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("CreateModelRun")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -220,6 +270,11 @@ type tenantManagementServiceClient struct {
 	createLandingZoneSharedAccessSignature *connect.Client[api.CreateLandingZoneSharedAccessSignatureRequest, api.CreateLandingZoneSharedAccessSignatureResponse]
 	getLandingZoneFiles                    *connect.Client[api.GetLandingZoneFilesRequest, api.GetLandingZoneFilesResponse]
 	createFileGroup                        *connect.Client[api.CreateFileGroupRequest, api.CreateFileGroupResponse]
+	getFileGroups                          *connect.Client[api.GetFileGroupsRequest, api.GetFileGroupsResponse]
+	createModel                            *connect.Client[api.CreateModelRequest, api.CreateModelResponse]
+	getModels                              *connect.Client[api.GetModelsRequest, api.GetModelsResponse]
+	getModel                               *connect.Client[api.GetModelRequest, api.GetModelResponse]
+	createModelRun                         *connect.Client[api.CreateModelRunRequest, api.CreateModelRunResponse]
 }
 
 // CreateWorkspace calls api.TenantManagementService.CreateWorkspace.
@@ -298,6 +353,31 @@ func (c *tenantManagementServiceClient) CreateFileGroup(ctx context.Context, req
 	return c.createFileGroup.CallUnary(ctx, req)
 }
 
+// GetFileGroups calls api.TenantManagementService.GetFileGroups.
+func (c *tenantManagementServiceClient) GetFileGroups(ctx context.Context, req *connect.Request[api.GetFileGroupsRequest]) (*connect.Response[api.GetFileGroupsResponse], error) {
+	return c.getFileGroups.CallUnary(ctx, req)
+}
+
+// CreateModel calls api.TenantManagementService.CreateModel.
+func (c *tenantManagementServiceClient) CreateModel(ctx context.Context, req *connect.Request[api.CreateModelRequest]) (*connect.Response[api.CreateModelResponse], error) {
+	return c.createModel.CallUnary(ctx, req)
+}
+
+// GetModels calls api.TenantManagementService.GetModels.
+func (c *tenantManagementServiceClient) GetModels(ctx context.Context, req *connect.Request[api.GetModelsRequest]) (*connect.Response[api.GetModelsResponse], error) {
+	return c.getModels.CallUnary(ctx, req)
+}
+
+// GetModel calls api.TenantManagementService.GetModel.
+func (c *tenantManagementServiceClient) GetModel(ctx context.Context, req *connect.Request[api.GetModelRequest]) (*connect.Response[api.GetModelResponse], error) {
+	return c.getModel.CallUnary(ctx, req)
+}
+
+// CreateModelRun calls api.TenantManagementService.CreateModelRun.
+func (c *tenantManagementServiceClient) CreateModelRun(ctx context.Context, req *connect.Request[api.CreateModelRunRequest]) (*connect.Response[api.CreateModelRunResponse], error) {
+	return c.createModelRun.CallUnary(ctx, req)
+}
+
 // TenantManagementServiceHandler is an implementation of the api.TenantManagementService service.
 type TenantManagementServiceHandler interface {
 	CreateWorkspace(context.Context, *connect.Request[api.CreateWorkspaceRequest]) (*connect.Response[api.CreateWorkspaceResponse], error)
@@ -315,6 +395,11 @@ type TenantManagementServiceHandler interface {
 	CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error)
 	GetLandingZoneFiles(context.Context, *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error)
 	CreateFileGroup(context.Context, *connect.Request[api.CreateFileGroupRequest]) (*connect.Response[api.CreateFileGroupResponse], error)
+	GetFileGroups(context.Context, *connect.Request[api.GetFileGroupsRequest]) (*connect.Response[api.GetFileGroupsResponse], error)
+	CreateModel(context.Context, *connect.Request[api.CreateModelRequest]) (*connect.Response[api.CreateModelResponse], error)
+	GetModels(context.Context, *connect.Request[api.GetModelsRequest]) (*connect.Response[api.GetModelsResponse], error)
+	GetModel(context.Context, *connect.Request[api.GetModelRequest]) (*connect.Response[api.GetModelResponse], error)
+	CreateModelRun(context.Context, *connect.Request[api.CreateModelRunRequest]) (*connect.Response[api.CreateModelRunResponse], error)
 }
 
 // NewTenantManagementServiceHandler builds an HTTP handler from the service implementation. It
@@ -414,6 +499,36 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 		connect.WithSchema(tenantManagementServiceMethods.ByName("CreateFileGroup")),
 		connect.WithHandlerOptions(opts...),
 	)
+	tenantManagementServiceGetFileGroupsHandler := connect.NewUnaryHandler(
+		TenantManagementServiceGetFileGroupsProcedure,
+		svc.GetFileGroups,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("GetFileGroups")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenantManagementServiceCreateModelHandler := connect.NewUnaryHandler(
+		TenantManagementServiceCreateModelProcedure,
+		svc.CreateModel,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("CreateModel")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenantManagementServiceGetModelsHandler := connect.NewUnaryHandler(
+		TenantManagementServiceGetModelsProcedure,
+		svc.GetModels,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("GetModels")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenantManagementServiceGetModelHandler := connect.NewUnaryHandler(
+		TenantManagementServiceGetModelProcedure,
+		svc.GetModel,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("GetModel")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenantManagementServiceCreateModelRunHandler := connect.NewUnaryHandler(
+		TenantManagementServiceCreateModelRunProcedure,
+		svc.CreateModelRun,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("CreateModelRun")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/api.TenantManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case TenantManagementServiceCreateWorkspaceProcedure:
@@ -446,6 +561,16 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 			tenantManagementServiceGetLandingZoneFilesHandler.ServeHTTP(w, r)
 		case TenantManagementServiceCreateFileGroupProcedure:
 			tenantManagementServiceCreateFileGroupHandler.ServeHTTP(w, r)
+		case TenantManagementServiceGetFileGroupsProcedure:
+			tenantManagementServiceGetFileGroupsHandler.ServeHTTP(w, r)
+		case TenantManagementServiceCreateModelProcedure:
+			tenantManagementServiceCreateModelHandler.ServeHTTP(w, r)
+		case TenantManagementServiceGetModelsProcedure:
+			tenantManagementServiceGetModelsHandler.ServeHTTP(w, r)
+		case TenantManagementServiceGetModelProcedure:
+			tenantManagementServiceGetModelHandler.ServeHTTP(w, r)
+		case TenantManagementServiceCreateModelRunProcedure:
+			tenantManagementServiceCreateModelRunHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -513,4 +638,24 @@ func (UnimplementedTenantManagementServiceHandler) GetLandingZoneFiles(context.C
 
 func (UnimplementedTenantManagementServiceHandler) CreateFileGroup(context.Context, *connect.Request[api.CreateFileGroupRequest]) (*connect.Response[api.CreateFileGroupResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.CreateFileGroup is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) GetFileGroups(context.Context, *connect.Request[api.GetFileGroupsRequest]) (*connect.Response[api.GetFileGroupsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetFileGroups is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) CreateModel(context.Context, *connect.Request[api.CreateModelRequest]) (*connect.Response[api.CreateModelResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.CreateModel is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) GetModels(context.Context, *connect.Request[api.GetModelsRequest]) (*connect.Response[api.GetModelsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetModels is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) GetModel(context.Context, *connect.Request[api.GetModelRequest]) (*connect.Response[api.GetModelResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetModel is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) CreateModelRun(context.Context, *connect.Request[api.CreateModelRunRequest]) (*connect.Response[api.CreateModelRunResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.CreateModelRun is not implemented"))
 }

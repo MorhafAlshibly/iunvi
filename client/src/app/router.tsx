@@ -35,6 +35,11 @@ import {
   ErrorBoundary as AppUserFileGroupsRootErrorBoundary,
 } from "./routes/app/user/file-groups/root";
 
+import {
+  default as AppDeveloperModelsRoot,
+  ErrorBoundary as AppDeveloperModelsRootErrorBoundary,
+} from "./routes/app/developer/models/root";
+
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;
   return {
@@ -124,11 +129,32 @@ export const createAppRouter = (queryClient: QueryClient) =>
                 ),
             },
             {
-              path: paths.app.developer.models.path,
-              lazy: () =>
-                import("./routes/app/developer/models").then(
-                  convert(queryClient),
-                ),
+              path: paths.app.developer.models.root.path,
+              element: <AppDeveloperModelsRoot />,
+              ErrorBoundary: AppDeveloperModelsRootErrorBoundary,
+              children: [
+                {
+                  path: paths.app.developer.models.list.path,
+                  lazy: () =>
+                    import("./routes/app/developer/models/list").then(
+                      convert(queryClient),
+                    ),
+                },
+                {
+                  path: paths.app.developer.models.view.path,
+                  lazy: () =>
+                    import("./routes/app/developer/models/view").then(
+                      convert(queryClient),
+                    ),
+                },
+                {
+                  path: paths.app.developer.models.create.path,
+                  lazy: () =>
+                    import("./routes/app/developer/models/create").then(
+                      convert(queryClient),
+                    ),
+                },
+              ],
             },
           ],
         },

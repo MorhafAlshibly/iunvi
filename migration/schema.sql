@@ -99,7 +99,6 @@ CREATE TABLE app.Files (
     FOREIGN KEY (FileGroupId) REFERENCES app.FileGroups(FileGroupId),
     FOREIGN KEY (FileSchemaId) REFERENCES app.FileSchemas(FileSchemaId),
     CONSTRAINT UQ_appFiles_FileGroupId_FileSchemaId UNIQUE (FileGroupId, FileSchemaId),
-    CONSTRAINT UQ_appFiles_FileGroupId_Name UNIQUE (FileGroupId, Name)
 );
 -- Models (ML/Analytics models)
 CREATE TABLE app.Models (
@@ -107,8 +106,9 @@ CREATE TABLE app.Models (
     InputSpecificationId UNIQUEIDENTIFIER NOT NULL,
     OutputSpecificationId UNIQUEIDENTIFIER NOT NULL,
     Name NVARCHAR(255) NOT NULL,
-    ParametersSchema NVARCHAR(MAX) NOT NULL,
-    ImageId NVARCHAR(255) NOT NULL,
+    ParametersSchema NVARCHAR(MAX) NULL,
+    ImageName NVARCHAR(255) NOT NULL,
+    CreatedAt DATETIME DEFAULT GETUTCDATE(),
     FOREIGN KEY (InputSpecificationId) REFERENCES app.Specifications(SpecificationId),
     FOREIGN KEY (OutputSpecificationId) REFERENCES app.Specifications(SpecificationId),
     CONSTRAINT UQ_appModels_InputSpecificationId_OutputSpecificationId_Name UNIQUE(
@@ -117,30 +117,18 @@ CREATE TABLE app.Models (
         Name
     )
 );
-CREATE TABLE app.ModelRunStatuses (
-    ModelRunStatusId INT PRIMARY KEY,
-    Name NVARCHAR(255) NOT NULL,
-    CONSTRAINT UQ_appModelRunStatuses_Name UNIQUE(Name)
-);
-INSERT INTO app.ModelRunStatuses (ModelRunStatusId, Name)
-VALUES (1, 'Pending'),
-    (2, 'Running'),
-    (3, 'Completed'),
-    (4, 'Failed');
 -- Model Runs (Executions of a model)
 CREATE TABLE app.ModelRuns (
     RunId UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     ModelId UNIQUEIDENTIFIER NOT NULL,
-    StatusId INT NOT NULL,
     InputFileGroupId UNIQUEIDENTIFIER NOT NULL,
-    OutputFileGroupId UNIQUEIDENTIFIER NOT NULL,
-    Parameters NVARCHAR(MAX) NOT NULL,
-    ContainerId NVARCHAR(255) NULL,
+    OutputFileGroupId UNIQUEIDENTIFIER NULL,
+    Name NVARCHAR(255) NOT NULL,
     CreatedAt DATETIME DEFAULT GETUTCDATE(),
     FOREIGN KEY (ModelId) REFERENCES app.Models(ModelId),
-    FOREIGN KEY (StatusId) REFERENCES app.ModelRunStatuses(ModelRunStatusId),
     FOREIGN KEY (InputFileGroupId) REFERENCES app.FileGroups(FileGroupId),
-    FOREIGN KEY (OutputFileGroupId) REFERENCES app.FileGroups(FileGroupId)
+    FOREIGN KEY (OutputFileGroupId) REFERENCES app.FileGroups(FileGroupId),
+    CONSTRAINT UQ_appModelRuns_ModelId_Name UNIQUE(ModelId, Name)
 );
 -- =============================================
 -- Triggers
@@ -311,7 +299,8 @@ UPDATE ON app.Models(
         InputSpecificationId,
         OutputSpecificationId,
         ParametersSchema,
-        ImageId
+        ImageName,
+        CreatedAt
     ) TO WebApp;
 GRANT SELECT ON app.ModelRunStatuses TO WebApp;
 GRANT SELECT,
@@ -321,10 +310,8 @@ DENY
 UPDATE ON app.ModelRuns(
         RunId,
         ModelId,
-        StatusId,
         InputFileGroupId,
         OutputFileGroupId,
-        Parameters,
         CreatedAt
     ) TO WebApp;
 GRANT EXECUTE ON auth.fn_GetSessionTenantId TO WebApp;

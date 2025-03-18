@@ -86,7 +86,7 @@ const navDeveloper = [
   },
   {
     title: "Models",
-    url: paths.app.developer.models.getHref(),
+    url: paths.app.developer.models.list.getHref(),
     icon: Component,
   },
   {

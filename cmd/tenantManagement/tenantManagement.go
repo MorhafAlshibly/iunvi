@@ -20,21 +20,24 @@ import (
 
 var (
 	// Flags set from command line/environment variables
-	fs                     = ff.NewFlagSet("tenantManagement")
-	port                   = fs.Uint('p', "port", 8080, "the default port to listen on")
-	azureSubscriptionId    = fs.StringLong("azureSubscriptionId", "", "Azure subscription ID")
-	azureResourceGroupName = fs.StringLong("azureResourceGroupName", "rg-iunvi-dev-eastus-001", "Azure resource group name")
-	azureAdTenantID        = fs.StringLong("azureAdTenantID", "", "Azure AD tenant ID")
-	azureAdClientID        = fs.StringLong("azureAdClientID", "", "Azure AD client ID")
-	azureAdAudience        = fs.StringLong("azureAdAudience", "", "Azure AD audience")
-	azureAdClientSecret    = fs.StringLong("azureAdClientSecret", "", "Azure AD client secret")
-	azureAdJWKS            = fs.StringLong("azureAdJWKS", "https://login.microsoftonline.com/common/discovery/v2.0/keys", "Azure AD JWKS URL")
-	sqlServer              = fs.StringLong("sqlServer", "", "SQL Server")
-	sqlDatabase            = fs.StringLong("sqlDatabase", "", "SQL Database")
-	registryName           = fs.StringLong("registryName", "criunvideveastus001", "Azure Container Registry URL")
-	registryTokenName      = fs.StringLong("registryTokenName", "webapp", "Azure Container Registry Token Name")
-	storageAccountName     = fs.StringLong("storageAccountName", "saiunvideveastus001", "Azure Storage Account Name")
-	storageContainerName   = fs.StringLong("storageContainerName", "landing-zone", "Azure Storage Container Name")
+	fs                       = ff.NewFlagSet("tenantManagement")
+	port                     = fs.Uint('p', "port", 8080, "the default port to listen on")
+	azureSubscriptionId      = fs.StringLong("azureSubscriptionId", "", "Azure subscription ID")
+	azureResourceGroupName   = fs.StringLong("azureResourceGroupName", "rg-iunvi-dev-eastus-001", "Azure resource group name")
+	azureAdTenantID          = fs.StringLong("azureAdTenantID", "", "Azure AD tenant ID")
+	azureAdClientID          = fs.StringLong("azureAdClientID", "", "Azure AD client ID")
+	azureAdAudience          = fs.StringLong("azureAdAudience", "", "Azure AD audience")
+	azureAdClientSecret      = fs.StringLong("azureAdClientSecret", "", "Azure AD client secret")
+	azureAdJWKS              = fs.StringLong("azureAdJWKS", "https://login.microsoftonline.com/common/discovery/v2.0/keys", "Azure AD JWKS URL")
+	sqlServer                = fs.StringLong("sqlServer", "", "SQL Server")
+	sqlDatabase              = fs.StringLong("sqlDatabase", "", "SQL Database")
+	registryName             = fs.StringLong("registryName", "criunvideveastus001", "Azure Container Registry URL")
+	registryTokenName        = fs.StringLong("registryTokenName", "webapp", "Azure Container Registry Token Name")
+	storageAccountName       = fs.StringLong("storageAccountName", "saiunvideveastus001", "Azure Storage Account Name")
+	landingZoneContainerName = fs.StringLong("landingZoneContainerName", "landing-zone", "Azure Storage Landing Zone Container Name")
+	fileGroupsContainerName  = fs.StringLong("fileGroupsContainerName", "file-groups", "Azure Storage File Groups Container Name")
+	modelRunsContainerName   = fs.StringLong("modelRunsContainerName", "model-runs", "Azure Storage Model Runs Container Name")
+	kubeconfigPath           = fs.StringLong("kubeconfigPath", "", "Kubeconfig Path")
 )
 
 func main() {
@@ -59,7 +62,10 @@ func main() {
 		tenantManagement.WithRegistryName(*registryName),
 		tenantManagement.WithRegistryTokenName(*registryTokenName),
 		tenantManagement.WithStorageAccountName(*storageAccountName),
-		tenantManagement.WithStorageContainerName(*storageContainerName),
+		tenantManagement.WithLandingZoneContainerName(*landingZoneContainerName),
+		tenantManagement.WithFileGroupsContainerName(*fileGroupsContainerName),
+		tenantManagement.WithModelRunsContainerName(*modelRunsContainerName),
+		tenantManagement.WithKubeconfigPath(*kubeconfigPath),
 	)
 	mux := http.NewServeMux()
 	path, handler := apiconnect.NewTenantManagementServiceHandler(service)

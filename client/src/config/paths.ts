@@ -68,8 +68,22 @@ export const paths = {
         getHref: () => "/app/developer/registry",
       },
       models: {
-        path: "models",
-        getHref: () => "/app/developer/models",
+        root: {
+          path: "models",
+          getHref: () => "/app/developer/models",
+        },
+        list: {
+          path: "",
+          getHref: () => "/app/developer/models",
+        },
+        view: {
+          path: ":id",
+          getHref: (id: string) => `/app/developer/models/${id}`,
+        },
+        create: {
+          path: "create",
+          getHref: () => "/app/developer/models/create",
+        },
       },
     },
     user: {

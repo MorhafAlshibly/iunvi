@@ -5,24 +5,20 @@ import {
   UploadResult,
   PluginOpts,
 } from "@uppy/core";
-import { DataLakeFileClient } from "@azure/storage-file-datalake";
+import { BlockBlobClient } from "@azure/storage-blob";
 import { AbortError } from "@azure/abort-controller";
 import { FileProgressStarted } from "@uppy/utils/lib/FileProgress";
 
-interface DataLakePluginOptions extends PluginOpts {
+interface BlobPluginOptions extends PluginOpts {
   getSasUrl: (file: UppyFile<{}, {}>) => Promise<string>;
 }
 
-export default class DataLakePlugin extends BasePlugin<
-  DataLakePluginOptions,
-  {},
-  {}
-> {
+export default class BlobPlugin extends BasePlugin<BlobPluginOptions, {}, {}> {
   #abortControllers: Map<string, AbortController>;
   #uploadHandler: (fileIDs: string[]) => Promise<void>;
   #fileRemovedHandler: (file: UppyFile<{}, {}>) => void;
 
-  constructor(uppy: Uppy, opts: DataLakePluginOptions) {
+  constructor(uppy: Uppy, opts: BlobPluginOptions) {
     const defaultOptions = {
       getSasUrl: async () => {
         throw new Error("getSasUrl not provided");
@@ -30,7 +26,7 @@ export default class DataLakePlugin extends BasePlugin<
     };
 
     super(uppy, { ...defaultOptions, ...opts });
-    this.id = opts.id || "DataLakePlugin";
+    this.id = opts.id || "BlobPlugin";
     this.type = "uploader";
 
     this.#abortControllers = new Map();
@@ -87,9 +83,9 @@ export default class DataLakePlugin extends BasePlugin<
     try {
       // Obtain a SAS URL (with write permissions) for this file.
       const sasUrl = await this.opts.getSasUrl(file);
-      const dataLakeClient = new DataLakeFileClient(sasUrl);
+      const blobClient = new BlockBlobClient(sasUrl);
 
-      await dataLakeClient.upload(file.data, {
+      await blobClient.upload(file.data, file.data.size, {
         abortSignal: this.#abortControllers.get(file.id)?.signal,
         onProgress: (progress) => {
           onProgress({

@@ -1,7 +1,7 @@
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { useMatch } from "react-router-dom";
 import { useQuery } from "@connectrpc/connect-query";
-import { getSpecification } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
+import { getModel } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { paths } from "@/config/paths";
 import { DataMode, TableFieldType } from "@/types/api/tenantManagement_pb";
 import CodeMirror from "@uiw/react-codemirror";
@@ -11,13 +11,12 @@ import { useNavigate } from "react-router";
 import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
-const SpecificationsViewRoute = () => {
+const ModelsViewRoute = () => {
   const navigate = useNavigate();
-  const id = useMatch(
-    paths.app.developer.specifications.root.getHref() + "/:id",
-  )?.params.id;
-  const { data: specificationData } = useQuery(
-    getSpecification,
+  const id = useMatch(paths.app.developer.models.root.getHref() + "/:id")
+    ?.params.id;
+  const { data: modelData } = useQuery(
+    getModel,
     {
       id: id || "",
     },
@@ -26,14 +25,14 @@ const SpecificationsViewRoute = () => {
     },
   );
 
-  const specification = specificationData?.specification;
+  const model = modelData?.model;
 
   return (
     <div className="grid grid-cols-1 gap-4">
       <div className="grid grid-cols-2 col-span-1 justify-items-between">
         <div className="grid grid-cols-1 col-span-1 justify-items-start">
           <Label className="col-span-1 content-center text-lg font-medium">
-            {specification?.name}
+            {model?.name}
           </Label>
         </div>
         <div className="grid grid-cols-1 col-span-1 justify-items-end">
@@ -41,7 +40,7 @@ const SpecificationsViewRoute = () => {
             size="lg"
             variant="outline"
             onClick={() => {
-              navigate(paths.app.developer.specifications.list.getHref());
+              navigate(paths.app.developer.models.list.getHref());
             }}
           >
             <CircleArrowLeft />
@@ -49,13 +48,13 @@ const SpecificationsViewRoute = () => {
           </Button>
         </div>
       </div>
-      {specification ? (
+      {model ? (
         <>
           <Label className="col-span-1 content-center mt-4 text-md font-normal">
             Data tables -{" "}
-            {specificationData?.mode == DataMode.INPUT ? "CSV" : "Parquet"}
+            {modelData?.mode == DataMode.INPUT ? "CSV" : "Parquet"}
           </Label>
-          {specification.tables.map((table, index) => (
+          {model.tables.map((table, index) => (
             <div
               key={index}
               className="grid grid-cols-1 col-span-1 border p-4 gap-4"
@@ -91,4 +90,4 @@ const SpecificationsViewRoute = () => {
   );
 };
 
-export default SpecificationsViewRoute;
+export default ModelsViewRoute;

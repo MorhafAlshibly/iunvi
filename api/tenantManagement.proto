@@ -22,6 +22,11 @@ service TenantManagementService {
   rpc CreateLandingZoneSharedAccessSignature(CreateLandingZoneSharedAccessSignatureRequest) returns (CreateLandingZoneSharedAccessSignatureResponse);
   rpc GetLandingZoneFiles(GetLandingZoneFilesRequest) returns (GetLandingZoneFilesResponse);
   rpc CreateFileGroup(CreateFileGroupRequest) returns (CreateFileGroupResponse);
+  rpc GetFileGroups(GetFileGroupsRequest) returns (GetFileGroupsResponse);
+  rpc CreateModel(CreateModelRequest) returns (CreateModelResponse);
+  rpc GetModels(GetModelsRequest) returns (GetModelsResponse);
+  rpc GetModel(GetModelRequest) returns (GetModelResponse);
+  rpc CreateModelRun(CreateModelRunRequest) returns (CreateModelRunResponse);
 }
 
 message CreateWorkspaceRequest {
@@ -150,11 +155,78 @@ message GetLandingZoneFilesResponse {
 
 message CreateFileGroupRequest {
   string specificationId = 1;
-  repeated SchemaFileMapping schemaFileMappings = 2;
+  string name = 2;
+  repeated SchemaFileMapping schemaFileMappings = 3;
 }
 
 message CreateFileGroupResponse {
   string id = 1;
+}
+
+message GetFileGroupsRequest {
+  string workspaceId = 1;
+}
+
+message GetFileGroupsResponse {
+  repeated FileGroupName fileGroups = 1;
+}
+
+message CreateModelRequest {
+  string inputSpecificationId = 1;
+  string outputSpecificationId = 2;
+  string name = 3;
+  optional string parametersSchema = 4;
+  string imageName = 5;
+}
+
+message CreateModelResponse {
+  string id = 1;
+}
+
+message GetModelsRequest {
+  string workspaceId = 1;
+}
+
+message GetModelsResponse {
+  repeated ModelName models = 1;
+}
+
+message GetModelRequest {
+  string id = 1;
+}
+
+message GetModelResponse {
+  Model model = 1;
+}
+
+message CreateModelRunRequest {
+  string modelId = 1;
+  string inputFileGroupId = 2;
+  optional string parameters = 3;
+  string name = 4;
+}
+
+message CreateModelRunResponse {
+  string id = 1;
+}
+
+message Model {
+  string id = 1;
+  string name = 2;
+  string inputSpecificationId = 3;
+  string outputSpecificationId = 4;
+  optional string parametersSchema = 5;
+  string imageName = 6;
+}
+
+message ModelName {
+  string id = 1;
+  string name = 2;
+}
+
+message FileGroupName {
+  string id = 1;
+  string name = 2;
 }
 
 message SchemaFileMapping {
@@ -217,7 +289,8 @@ enum TableFieldType {
 }
 
 message Image {
-  string name = 1;
+  string scope = 1;
+  string name = 2;
 }
 
 message Workspace {
