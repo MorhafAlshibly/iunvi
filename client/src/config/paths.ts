@@ -85,6 +85,24 @@ export const paths = {
           getHref: () => "/app/developer/models/create",
         },
       },
+      dashboards: {
+        root: {
+          path: "dashboards",
+          getHref: () => "/app/developer/dashboards",
+        },
+        list: {
+          path: "",
+          getHref: () => "/app/developer/dashboards",
+        },
+        view: {
+          path: ":id",
+          getHref: (id: string) => `/app/developer/dashboards/${id}`,
+        },
+        create: {
+          path: "create",
+          getHref: () => "/app/developer/dashboards/create",
+        },
+      },
     },
     user: {
       root: {
@@ -112,6 +130,24 @@ export const paths = {
           path: "create",
           getHref: () => "/app/user/file-groups/create",
         },
+      },
+      runModels: {
+        path: "run-models",
+        getHref: () => "/app/user/run-models",
+      },
+    },
+    viewer: {
+      root: {
+        path: "viewer",
+        getHref: () => "/app/viewer",
+      },
+      runHistory: {
+        path: "run-history",
+        getHref: () => "/app/viewer/run-history",
+      },
+      dashboard: {
+        path: "dashboard",
+        getHref: (id: string) => `/app/viewer/dashboard/${id}`,
       },
     },
   },

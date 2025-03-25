@@ -158,8 +158,6 @@ func (s *Service) CreateWorkspace(ctx context.Context, req *connect.Request[api.
 			Actions: []*string{
 				conversion.ValueToPointer(fmt.Sprintf("repositories/%s/*/%s", scope, "content/read")),
 				conversion.ValueToPointer(fmt.Sprintf("repositories/%s/*/%s", scope, "content/write")),
-				conversion.ValueToPointer(fmt.Sprintf("repositories/%s/*/%s", scope, "metadata/read")),
-				conversion.ValueToPointer(fmt.Sprintf("repositories/%s/*/%s", scope, "metadata/write")),
 			},
 			// Assign the scope to the workspace
 			Description: conversion.ValueToPointer(fmt.Sprintf("Scope for workspace %s", scope)),
@@ -776,10 +774,9 @@ func (s *Service) CreateLandingZoneSharedAccessSignature(ctx context.Context, re
 		Protocol:      sas.ProtocolHTTPS,
 		StartTime:     time.Now().UTC().Add(-10 * time.Second),
 		ExpiryTime:    time.Now().UTC().Add(1 * time.Hour),
-		Permissions:   (&sas.BlobPermissions{Read: true, Create: true, Add: true, Write: true, Delete: true, List: true}).String(),
+		Permissions:   (&sas.BlobPermissions{Write: true}).String(),
 		ContainerName: s.landingZoneContainerName,
-		Directory:     directory,
-		BlobName:      req.Msg.FileName,
+		BlobName:      directory + "/" + req.Msg.FileName,
 	}.SignWithUserDelegation(udc)
 	if err != nil {
 		return nil, err
@@ -1046,9 +1043,18 @@ func (s *Service) GetFileGroups(ctx context.Context, req *connect.Request[api.Ge
 	if err != nil {
 		return nil, err
 	}
+	var specificationIdBytes *mssql.UniqueIdentifier
+	if req.Msg.SpecificationId != nil {
+		specificationId, err := conversion.StringToUniqueIdentifier(*req.Msg.SpecificationId)
+		if err != nil {
+			return nil, err
+		}
+		specificationIdBytes = &specificationId
+	}
 	database := model.New(middleware.GetTx(ctx))
 	fileGroups, err := database.GetFileGroups(ctx, model.GetFileGroupsParams{
-		WorkspaceId: workspaceIdBytes,
+		WorkspaceId:     workspaceIdBytes,
+		SpecificationId: specificationIdBytes,
 	})
 	if err != nil {
 		return nil, err
@@ -1255,10 +1261,11 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 	if err != nil {
 		return nil, err
 	}
-	if (appModel.ParametersSchema == nil) != (req.Msg.Parameters == nil) {
-		return nil, fmt.Errorf("Parameters mismatch")
-	}
-	if appModel.ParametersSchema != nil {
+	if appModel.ParametersSchema != nil && *appModel.ParametersSchema != "" {
+		if req.Msg.Parameters == nil {
+			return nil, fmt.Errorf("Parameters are required")
+		}
+		// create temporary schema file
 		tempSchemaFile, err := os.CreateTemp("", "temp")
 		if err != nil {
 			return nil, err
@@ -1290,7 +1297,6 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 	}
 	_, err = database.CreateModelRun(ctx, model.CreateModelRunParams{
 		ModelId:          modelIdBytes,
-		StatusName:       "Pending",
 		InputFileGroupId: inputFileGroupIdBytes,
 		Name:             req.Msg.Name,
 	})
@@ -1311,7 +1317,7 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 		return nil, err
 	}
 	// upload parameters as json to blob storage
-	if appModel.ParametersSchema != nil {
+	if appModel.ParametersSchema != nil && *appModel.ParametersSchema != "" {
 		cred, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
 		if err != nil {
 			return nil, err
@@ -1321,7 +1327,7 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 			return nil, err
 		}
 		containerClient := svcClient.NewContainerClient(s.modelRunsContainerName)
-		blockBlobClient := containerClient.NewBlockBlobClient(getModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunID.String()) + "/parameters.json")
+		blockBlobClient := containerClient.NewBlockBlobClient(getModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.RunID.String()) + "/parameters.json")
 		_, err = blockBlobClient.UploadBuffer(ctx, []byte(*req.Msg.Parameters), nil)
 		if err != nil {
 			return nil, err
@@ -1337,7 +1343,7 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 	}
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: modelRun.ModelRunID.String(),
+			Name: strings.ToLower(modelRun.RunID.String()),
 		},
 		Spec: batchv1.JobSpec{
 			Template: corev1.PodTemplateSpec{
@@ -1357,13 +1363,13 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 								{
 									Name:      "model-runs-volume",
 									MountPath: "/mnt/parameters",
-									SubPath:   getModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunID.String()),
+									SubPath:   getModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.RunID.String()),
 									ReadOnly:  true,
 								},
 								{
 									Name:      "model-runs-volume",
 									MountPath: "/mnt/output",
-									SubPath:   getModelRunOutputDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunID.String()),
+									SubPath:   getModelRunOutputDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.RunID.String()),
 								},
 							},
 						},
@@ -1395,8 +1401,169 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 		return nil, err
 	}
 	return connect.NewResponse(&api.CreateModelRunResponse{
-		Id: modelRun.ModelRunID.String(),
+		Id: modelRun.RunID.String(),
 	}), nil
+}
+
+func (s *Service) GetModelRuns(ctx context.Context, req *connect.Request[api.GetModelRunsRequest]) (*connect.Response[api.GetModelRunsResponse], error) {
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	modelRuns, err := database.GetModelRunsByWorkspaceId(ctx, model.GetModelRunsByWorkspaceIdParams{
+		WorkspaceId: workspaceIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	var apiModelRuns []*api.ModelRun
+	for _, modelRun := range modelRuns {
+		apiModelRuns = append(apiModelRuns, &api.ModelRun{
+			Id:               modelRun.RunID.String(),
+			ModelId:          modelRun.ModelID.String(),
+			InputFileGroupId: modelRun.InputFileGroupID.String(),
+			Name:             modelRun.Name,
+		})
+	}
+	return connect.NewResponse(&api.GetModelRunsResponse{
+		ModelRuns: apiModelRuns,
+	}), nil
+}
+
+func (s *Service) CreateDashboard(ctx context.Context, req *connect.Request[api.CreateDashboardRequest]) (*connect.Response[api.CreateDashboardResponse], error) {
+	if req.Msg.ModelId == "" {
+		return nil, fmt.Errorf("ModelId is required")
+	}
+	if req.Msg.Name == "" {
+		return nil, fmt.Errorf("Name is required")
+	}
+	if req.Msg.Definition == "" {
+		return nil, fmt.Errorf("Definition is required")
+	}
+	modelIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.ModelId)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	workspaceId, err := database.GetWorkspaceIdByModelId(ctx, model.GetWorkspaceIdByModelIdParams{
+		ModelId: modelIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(workspaceId), authorization.WithWorkspaceRole(api.WorkspaceRole_DEVELOPER)).IsAuthorized(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !authorization {
+		return nil, fmt.Errorf("unauthorized")
+	}
+	_, err = database.CreateDashboard(ctx, model.CreateDashboardParams{
+		ModelId:    modelIdBytes,
+		Name:       req.Msg.Name,
+		Definition: req.Msg.Definition,
+	})
+	if err != nil {
+		return nil, err
+	}
+	dashboard, err := database.GetDashboardByModelIdAndName(ctx, model.GetDashboardByModelIdAndNameParams{
+		ModelId: modelIdBytes,
+		Name:    req.Msg.Name,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(&api.CreateDashboardResponse{
+		Id: dashboard.DashboardID.String(),
+	}), nil
+}
+
+func (s *Service) GetDashboards(ctx context.Context, req *connect.Request[api.GetDashboardsRequest]) (*connect.Response[api.GetDashboardsResponse], error) {
+	if req.Msg.WorkspaceId == "" {
+		return nil, fmt.Errorf("WorkspaceId is required")
+	}
+	workspaceIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.WorkspaceId)
+	if err != nil {
+		return nil, err
+	}
+	var modelIdBytes *mssql.UniqueIdentifier
+	if req.Msg.ModelId != nil {
+		modelId, err := conversion.StringToUniqueIdentifier(*req.Msg.ModelId)
+		if err != nil {
+			return nil, err
+		}
+		modelIdBytes = &modelId
+	}
+	database := model.New(middleware.GetTx(ctx))
+	dashboards, err := database.GetDashboardsByWorkspaceIdAndModelId(ctx, model.GetDashboardsByWorkspaceIdAndModelIdParams{
+		WorkspaceId: workspaceIdBytes,
+		ModelId:     modelIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	var dashboardNames []*api.DashboardName
+	for _, dashboard := range dashboards {
+		dashboardNames = append(dashboardNames, &api.DashboardName{
+			Id:      dashboard.DashboardID.String(),
+			ModelId: dashboard.ModelID.String(),
+			Name:    dashboard.Name,
+		})
+	}
+	return connect.NewResponse(&api.GetDashboardsResponse{
+		Dashboards: dashboardNames,
+	}), nil
+}
+
+func (s *Service) GetDashboard(ctx context.Context, req *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardResponse], error) {
+	if req.Msg.Id == "" {
+		return nil, fmt.Errorf("DashboardId is required")
+	}
+	dashboardIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.Id)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	dashboard, err := database.GetDashboard(ctx, model.GetDashboardParams{
+		DashboardId: dashboardIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(&api.GetDashboardResponse{
+		Dashboard: &api.Dashboard{
+			Id:         dashboard.DashboardID.String(),
+			ModelId:    dashboard.ModelID.String(),
+			Name:       dashboard.Name,
+			Definition: string(dashboard.Definition),
+		},
+	}), nil
+}
+
+func (s *Service) GetModelRunDashboard(ctx context.Context, req *connect.Request[api.GetModelRunDashboardRequest]) (*connect.Response[api.GetModelRunDashboardResponse], error) {
+	if req.Msg.ModelRunId == "" {
+		return nil, fmt.Errorf("ModelRunId is required")
+	}
+	if req.Msg.DashboardId == "" {
+		return nil, fmt.Errorf("DashboardId is required")
+	}
+	modelRunIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.ModelRunId)
+	if err != nil {
+		return nil, err
+	}
+	dashboardIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.DashboardId)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	// check if model dashboard is created in storage
+	// if it is then return the html
+	// if it isnt then start a job in aks to create the dashboard
+	return connect.NewResponse(&api.GetModelRunDashboardResponse{}), nil
 }
 
 func getLandingZoneDirectory(ctx context.Context, workspaceId string) string {

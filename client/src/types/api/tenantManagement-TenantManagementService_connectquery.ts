@@ -103,3 +103,28 @@ export const getModel = TenantManagementService.method.getModel;
  * @generated from rpc api.TenantManagementService.CreateModelRun
  */
 export const createModelRun = TenantManagementService.method.createModelRun;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetModelRuns
+ */
+export const getModelRuns = TenantManagementService.method.getModelRuns;
+
+/**
+ * @generated from rpc api.TenantManagementService.CreateDashboard
+ */
+export const createDashboard = TenantManagementService.method.createDashboard;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetDashboards
+ */
+export const getDashboards = TenantManagementService.method.getDashboards;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetDashboard
+ */
+export const getDashboard = TenantManagementService.method.getDashboard;
+
+/**
+ * @generated from rpc api.TenantManagementService.GetModelRunDashboard
+ */
+export const getModelRunDashboard = TenantManagementService.method.getModelRunDashboard;

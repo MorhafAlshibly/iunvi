@@ -6,6 +6,14 @@ import (
 	mssql "github.com/microsoft/go-mssqldb"
 )
 
+type AppDashboard struct {
+	DashboardID mssql.UniqueIdentifier `db:"DashboardId"`
+	ModelID     mssql.UniqueIdentifier `db:"ModelId"`
+	Name        string                 `db:"Name"`
+	Definition  mssql.NVarCharMax      `db:"Definition"`
+	CreatedAt   time.Time              `db:"CreatedAt"`
+}
+
 type AppFile struct {
 	FileID       mssql.UniqueIdentifier `db:"FileId"`
 	FileGroupID  mssql.UniqueIdentifier `db:"FileGroupId"`
@@ -41,12 +49,12 @@ type AppModel struct {
 }
 
 type AppModelRun struct {
-	ModelRunID        mssql.UniqueIdentifier `db:"ModelRunId"`
-	ModelID           mssql.UniqueIdentifier `db:"ModelId"`
-	InputFileGroupID  mssql.UniqueIdentifier `db:"InputFileGroupId"`
-	OutputFileGroupID mssql.UniqueIdentifier `db:"OutputFileGroupId"`
-	Name              string                 `db:"Name"`
-	CreatedAt         mssql.UniqueIdentifier `db:"CreatedAt"`
+	RunID             mssql.UniqueIdentifier  `db:"RunId"`
+	ModelID           mssql.UniqueIdentifier  `db:"ModelId"`
+	InputFileGroupID  mssql.UniqueIdentifier  `db:"InputFileGroupId"`
+	OutputFileGroupID *mssql.UniqueIdentifier `db:"OutputFileGroupId"`
+	Name              string                  `db:"Name"`
+	CreatedAt         time.Time               `db:"CreatedAt"`
 }
 
 type AppSpecification struct {

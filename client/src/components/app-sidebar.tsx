@@ -4,12 +4,14 @@ import {
   Blocks,
   BookOpen,
   Bot,
+  ChartBarStacked,
   Command,
   Component,
   Files,
   FileStack,
   Frame,
   GalleryVerticalEnd,
+  History,
   Home,
   Map,
   Newspaper,
@@ -17,6 +19,8 @@ import {
   PlaneLanding,
   Settings2,
   SquareTerminal,
+  Terminal,
+  TerminalSquare,
   UploadCloud,
   User as UserIcon,
 } from "lucide-react";
@@ -45,14 +49,9 @@ import { useNavigate } from "react-router";
 const navViewer = [
   {
     title: "Run history",
-    url: "#",
-    icon: Map,
+    url: paths.app.viewer.runHistory.getHref(),
+    icon: History,
     isActive: true,
-  },
-  {
-    title: "Results",
-    url: "#",
-    icon: BookOpen,
   },
 ];
 const navUser = [
@@ -68,8 +67,8 @@ const navUser = [
   },
   {
     title: "Run models",
-    url: "#",
-    icon: PieChart,
+    url: paths.app.user.runModels.getHref(),
+    icon: TerminalSquare,
   },
 ];
 
@@ -90,27 +89,9 @@ const navDeveloper = [
     icon: Component,
   },
   {
-    title: "Charts",
-    url: "#",
-    icon: BookOpen,
-    items: [
-      {
-        title: "Introduction",
-        url: "#",
-      },
-      {
-        title: "Get Started",
-        url: "#",
-      },
-      {
-        title: "Tutorials",
-        url: "#",
-      },
-      {
-        title: "Changelog",
-        url: "#",
-      },
-    ],
+    title: "Dashboards",
+    url: paths.app.developer.dashboards.list.getHref(),
+    icon: PieChart,
   },
 ];
 const navAdmin = [

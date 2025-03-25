@@ -503,15 +503,17 @@ SELECT fg.FileGroupId,
 	   fg.CreatedAt
 FROM app.FileGroups fg
 JOIN app.Specifications s ON fg.SpecificationId = s.SpecificationId
-WHERE s.WorkspaceId = @WorkspaceId;
+WHERE s.WorkspaceId = @WorkspaceId
+  AND (@SpecificationId IS NULL OR fg.SpecificationId = @SpecificationId);
 `
 
 type GetFileGroupsParams struct {
-	WorkspaceId mssql.UniqueIdentifier `db:"WorkspaceId"`
+	WorkspaceId     mssql.UniqueIdentifier  `db:"WorkspaceId"`
+	SpecificationId *mssql.UniqueIdentifier `db:"SpecificationId"`
 }
 
 func (q *Queries) GetFileGroups(ctx context.Context, arg GetFileGroupsParams) ([]AppFileGroup, error) {
-	rows, err := q.db.QueryContext(ctx, GetFileGroups, sql.Named("WorkspaceId", arg.WorkspaceId))
+	rows, err := q.db.QueryContext(ctx, GetFileGroups, sql.Named("WorkspaceId", arg.WorkspaceId), sql.Named("SpecificationId", arg.SpecificationId))
 	if err != nil {
 		return nil, err
 	}
@@ -683,25 +685,22 @@ func (q *Queries) GetModel(ctx context.Context, arg GetModelParams) (AppModel, e
 }
 
 const CreateModelRun = `-- name: CreateModelRun :execresult
-INSERT INTO app.ModelRuns (ModelId, StatusId, InputFileGroupId, Name)
-SELECT @ModelId, mrs.ModelRunStatusId, @InputFileGroupId, @Name
-FROM app.ModelRunStatuses mrs
-WHERE mrs.Name = @StatusName;
+INSERT INTO app.ModelRuns (ModelId, InputFileGroupId, Name)
+VALUES (@ModelId, @InputFileGroupId, @Name);
 `
 
 type CreateModelRunParams struct {
 	ModelId          mssql.UniqueIdentifier `db:"ModelId"`
-	StatusName       string                 `db:"StatusName"`
 	InputFileGroupId mssql.UniqueIdentifier `db:"InputFileGroup"`
 	Name             string                 `db:"Name"`
 }
 
 func (q *Queries) CreateModelRun(ctx context.Context, arg CreateModelRunParams) (sql.Result, error) {
-	return q.db.ExecContext(ctx, CreateModelRun, sql.Named("ModelId", arg.ModelId), sql.Named("StatusName", arg.StatusName), sql.Named("InputFileGroupId", arg.InputFileGroupId))
+	return q.db.ExecContext(ctx, CreateModelRun, sql.Named("ModelId", arg.ModelId), sql.Named("InputFileGroupId", arg.InputFileGroupId), sql.Named("Name", arg.Name))
 }
 
 const GetModelRunByModelIdAndName = `-- name: GetModelRunByModelIdAndName :one
-SELECT ModelRunId,
+SELECT RunId,
 	   ModelId,
 	   InputFileGroupId,
 	   OutputFileGroupId,
@@ -721,11 +720,250 @@ func (q *Queries) GetModelRunByModelIdAndName(ctx context.Context, arg GetModelR
 	row := q.db.QueryRowContext(ctx, GetModelRunByModelIdAndName, sql.Named("ModelId", arg.ModelId), sql.Named("Name", arg.Name))
 	var item AppModelRun
 	err := row.Scan(
-		&item.ModelRunID,
+		&item.RunID,
 		&item.ModelID,
 		&item.InputFileGroupID,
 		&item.OutputFileGroupID,
 		&item.Name,
+		&item.CreatedAt,
+	)
+	return item, err
+}
+
+const GetModelRunsByModelId = `-- name: GetModelRunsByModelId :many
+SELECT RunId,
+	   ModelId,
+	   InputFileGroupId,
+	   OutputFileGroupId,
+	   Name,
+	   CreatedAt
+FROM app.ModelRuns
+WHERE ModelId = @ModelId;
+`
+
+type GetModelRunsByModelIdParams struct {
+	ModelId mssql.UniqueIdentifier `db:"ModelId"`
+}
+
+func (q *Queries) GetModelRunsByModelId(ctx context.Context, arg GetModelRunsByModelIdParams) ([]AppModelRun, error) {
+	rows, err := q.db.QueryContext(ctx, GetModelRunsByModelId, sql.Named("ModelId", arg.ModelId))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []AppModelRun
+	for rows.Next() {
+		var i AppModelRun
+		if err := rows.Scan(
+			&i.RunID,
+			&i.ModelID,
+			&i.InputFileGroupID,
+			&i.OutputFileGroupID,
+			&i.Name,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const GetModelRun = `-- name: GetModelRun :one
+SELECT RunId,
+	   ModelId,
+	   InputFileGroupId,
+	   OutputFileGroupId,
+	   Name,
+	   CreatedAt
+FROM app.ModelRuns
+WHERE RunId = @RunId;
+`
+
+type GetModelRunParams struct {
+	RunId mssql.UniqueIdentifier `db:"RunId"`
+}
+
+func (q *Queries) GetModelRun(ctx context.Context, arg GetModelRunParams) (AppModelRun, error) {
+	row := q.db.QueryRowContext(ctx, GetModelRun, sql.Named("RunId", arg.RunId))
+	var item AppModelRun
+	err := row.Scan(
+		&item.RunID,
+		&item.ModelID,
+		&item.InputFileGroupID,
+		&item.OutputFileGroupID,
+		&item.Name,
+		&item.CreatedAt,
+	)
+	return item, err
+}
+
+const GetModelRunsByWorkspaceId = `-- name: GetModelRunsByWorkspaceId :many
+SELECT mr.RunId,
+	   mr.ModelId,
+	   mr.InputFileGroupId,
+	   mr.OutputFileGroupId,
+	   mr.Name,
+	   mr.CreatedAt
+FROM app.ModelRuns mr
+JOIN app.Models m ON mr.ModelId = m.ModelId
+JOIN app.Specifications s ON m.InputSpecificationId = s.SpecificationId
+WHERE s.WorkspaceId = @WorkspaceId;
+`
+
+type GetModelRunsByWorkspaceIdParams struct {
+	WorkspaceId mssql.UniqueIdentifier `db:"WorkspaceId"`
+}
+
+func (q *Queries) GetModelRunsByWorkspaceId(ctx context.Context, arg GetModelRunsByWorkspaceIdParams) ([]AppModelRun, error) {
+	rows, err := q.db.QueryContext(ctx, GetModelRunsByWorkspaceId, sql.Named("WorkspaceId", arg.WorkspaceId))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []AppModelRun
+	for rows.Next() {
+		var i AppModelRun
+		if err := rows.Scan(
+			&i.RunID,
+			&i.ModelID,
+			&i.InputFileGroupID,
+			&i.OutputFileGroupID,
+			&i.Name,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+type CreateDashboardParams struct {
+	ModelId    mssql.UniqueIdentifier `db:"ModelId"`
+	Name       string                 `db:"Name"`
+	Definition string                 `db:"Definition"`
+}
+
+const CreateDashboard = `-- name: CreateDashboard :execresult
+INSERT INTO app.Dashboards (ModelId, Name, Definition)
+VALUES (@ModelId, @Name, @Definition);
+`
+
+func (q *Queries) CreateDashboard(ctx context.Context, arg CreateDashboardParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, CreateDashboard, sql.Named("ModelId", arg.ModelId), sql.Named("Name", arg.Name), sql.Named("Definition", arg.Definition))
+}
+
+const GetDashboardByModelIdAndName = `-- name: GetDashboardByModelIdAndName :one
+SELECT DashboardId,
+	   ModelId,
+	   Name,
+	   Definition,
+	   CreatedAt
+FROM app.Dashboards
+WHERE ModelId = @ModelId
+  AND Name = @Name;
+`
+
+type GetDashboardByModelIdAndNameParams struct {
+	ModelId mssql.UniqueIdentifier `db:"ModelId"`
+	Name    string                 `db:"Name"`
+}
+
+func (q *Queries) GetDashboardByModelIdAndName(ctx context.Context, arg GetDashboardByModelIdAndNameParams) (AppDashboard, error) {
+	row := q.db.QueryRowContext(ctx, GetDashboardByModelIdAndName, sql.Named("ModelId", arg.ModelId), sql.Named("Name", arg.Name))
+	var item AppDashboard
+	err := row.Scan(
+		&item.DashboardID,
+		&item.ModelID,
+		&item.Name,
+		&item.Definition,
+		&item.CreatedAt,
+	)
+	return item, err
+}
+
+const GetDashboardsByWorkspaceIdAndModelId = `-- name: GetDashboardsByWorkspaceIdAndModelId :many
+SELECT d.DashboardId,
+	   d.ModelId,
+	   d.Name,
+	   d.Definition,
+	   d.CreatedAt
+FROM app.Dashboards d
+JOIN app.Models m ON d.ModelId = m.ModelId
+JOIN app.Specifications s ON m.InputSpecificationId = s.SpecificationId
+WHERE s.WorkspaceId = @WorkspaceId
+ AND (@ModelId IS NULL OR d.ModelId = @ModelId);
+`
+
+type GetDashboardsByWorkspaceIdAndModelIdParams struct {
+	WorkspaceId mssql.UniqueIdentifier  `db:"WorkspaceId"`
+	ModelId     *mssql.UniqueIdentifier `db:"ModelId"`
+}
+
+func (q *Queries) GetDashboardsByWorkspaceIdAndModelId(ctx context.Context, arg GetDashboardsByWorkspaceIdAndModelIdParams) ([]AppDashboard, error) {
+	rows, err := q.db.QueryContext(ctx, GetDashboardsByWorkspaceIdAndModelId, sql.Named("WorkspaceId", arg.WorkspaceId), sql.Named("ModelId", arg.ModelId))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []AppDashboard
+	for rows.Next() {
+		var i AppDashboard
+		if err := rows.Scan(
+			&i.DashboardID,
+			&i.ModelID,
+			&i.Name,
+			&i.Definition,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const GetDashboard = `-- name: GetDashboard :one
+SELECT DashboardId,
+	   ModelId,
+	   Name,
+	   Definition,
+	   CreatedAt
+FROM app.Dashboards
+WHERE DashboardId = @DashboardId;
+`
+
+type GetDashboardParams struct {
+	DashboardId mssql.UniqueIdentifier `db:"DashboardId"`
+}
+
+func (q *Queries) GetDashboard(ctx context.Context, arg GetDashboardParams) (AppDashboard, error) {
+	row := q.db.QueryRowContext(ctx, GetDashboard, sql.Named("DashboardId", arg.DashboardId))
+	var item AppDashboard
+	err := row.Scan(
+		&item.DashboardID,
+		&item.ModelID,
+		&item.Name,
+		&item.Definition,
 		&item.CreatedAt,
 	)
 	return item, err

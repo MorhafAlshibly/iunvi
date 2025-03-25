@@ -2,15 +2,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
-import { createRunModel } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import {
-  CreateRunModelRequest,
-  CreateRunModelRequestSchema,
+  createModelRun,
+  getModel,
+} from "@/types/api/tenantManagement-TenantManagementService_connectquery";
+import {
+  CreateModelRunRequest,
+  CreateModelRunRequestSchema,
   DataMode,
   TableFieldType,
 } from "@/types/api/tenantManagement_pb";
-import { useMutation } from "@connectrpc/connect-query";
-import { useState } from "react";
+import { useMutation, useQuery } from "@connectrpc/connect-query";
+import { createRef, useEffect, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import { Button } from "@/components/ui/button";
@@ -27,130 +30,151 @@ import {
 } from "@/components/ui/select";
 import { SpecificationSelector } from "@/components/specification-selector";
 import { ImageSelector } from "@/components/image-selector";
+import { FileGroupSelector } from "@/components/file-group-selector";
+import { ModelSelector } from "@/components/model-selector";
+import { ContentLayout } from "@/components/layouts/content";
+import Form from "@rjsf/core";
+import { RJSFSchema } from "@rjsf/utils";
+import validator from "@rjsf/validator-ajv8";
 
 const RunModelsCreateRoute = () => {
   const navigate = useNavigate();
   const { activeWorkspace } = useWorkspace();
 
-  const createRunModelMutation = useMutation(createRunModel);
-  const [runmodel, setRunModel] = useState<CreateRunModelRequest>({
-    $typeName: "api.CreateRunModelRequest",
-    inputSpecificationId: "",
-    outputSpecificationId: "",
-    parametersSchema: undefined,
+  const createModelRunMutation = useMutation(createModelRun);
+  const [modelRun, setModelRun] = useState<CreateModelRunRequest>({
+    $typeName: "api.CreateModelRunRequest",
+    modelId: "",
+    inputFileGroupId: "",
+    parameters: undefined,
     name: "",
-    imageName: "",
   });
 
-  const validateRunModel = () => {
-    if (!runmodel.inputSpecificationId) return false;
-    if (!runmodel.outputSpecificationId) return false;
-    if (!runmodel.name) return false;
-    if (!runmodel.imageName) return false;
-    if (runmodel.parametersSchema) {
-      try {
-        JSON.parse(runmodel.parametersSchema);
-      } catch (e) {
-        return false;
-      }
-    }
+  const { data: modelData } = useQuery(
+    getModel,
+    {
+      id: modelRun.modelId,
+    },
+    {
+      enabled: !!modelRun.modelId,
+    },
+  );
+
+  const model = modelData?.model;
+
+  const validateModelRun = () => {
+    if (!modelRun.modelId) return false;
+    if (!modelRun.inputFileGroupId) return false;
+    if (!modelRun.name) return false;
+    if (model && model.parametersSchema && !modelRun.parameters) return false;
+    if (model?.parametersSchema && !formRef.current?.validateForm())
+      return false;
     return true;
   };
 
+  useEffect(() => {
+    // Reset the model run when the model changes
+    setModelRun((modelRun) => ({
+      ...modelRun,
+      inputFileGroupId: "",
+      parameters: undefined,
+    }));
+  }, [modelRun.modelId]);
+
+  const formRef = createRef<Form>();
+
   return (
-    <div className="grid grid-cols-1 gap-4">
-      <div className="grid grid-cols-2 col-span-1 gap-4 justify-items-between mb-4">
-        <div className="grid grid-cols-1 col-span-1 justify-items-start content-center">
-          Use this page to create runmodels based on an input and output.
-          Utilize parameters to create an input form using
-          react-jsonschema-form.
+    <ContentLayout title="Run model">
+      <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-2 col-span-1 gap-4 justify-items-between mb-4">
+          <div className="grid grid-cols-1 col-span-1 justify-items-start content-center">
+            Use this page to run a model.
+          </div>
+          <div className="grid grid-cols-1 col-span-1 justify-items-end">
+            <Button
+              size="lg"
+              variant="default"
+              disabled={!validateModelRun()}
+              onClick={() => {
+                createModelRunMutation.mutate(modelRun);
+                navigate(paths.app.user.landingZone.getHref());
+              }}
+            >
+              Run
+            </Button>
+          </div>
         </div>
-        <div className="grid grid-cols-1 col-span-1 justify-items-end">
-          <Button
-            size="lg"
-            variant="default"
-            disabled={!validateRunModel()}
-            onClick={() => {
-              createRunModelMutation.mutate(runmodel);
-              navigate(paths.app.developer.runmodels.list.getHref());
+        <div className="grid grid-cols-1 col-span-1 mt-4">
+          <ModelSelector
+            selectedModelId={modelRun.modelId}
+            setSelectedModelId={(action) => {
+              setModelRun({
+                ...modelRun,
+                modelId:
+                  (typeof action == "function"
+                    ? action(modelRun.modelId)
+                    : action) ?? "",
+              });
             }}
-          >
-            Create
-          </Button>
+          />
         </div>
+        <div className="grid grid-cols-1 col-span-1">
+          <Input
+            placeholder="Name"
+            className="col-span-1"
+            onChange={(e) => {
+              setModelRun({
+                ...modelRun,
+                name: e.target.value,
+              });
+            }}
+          />
+        </div>
+        {model ? (
+          <>
+            <div className="grid grid-cols-1 col-span-1 mt-4">
+              <FileGroupSelector
+                specificationId={model.inputSpecificationId}
+                selectedFileGroupId={modelRun.inputFileGroupId}
+                setSelectedFileGroupId={(action) => {
+                  setModelRun({
+                    ...modelRun,
+                    inputFileGroupId:
+                      (typeof action == "function"
+                        ? action(modelRun.inputFileGroupId)
+                        : action) ?? "",
+                  });
+                }}
+              />
+            </div>
+            {model.parametersSchema ? (
+              <>
+                <div className="grid grid-cols-1 col-span-1 justify-items-start content-center mt-4">
+                  <Label className="font-medium text-sm">Parameters</Label>
+                </div>
+                <div className="grid grid-cols-1 col-span-1 border">
+                  <Form
+                    schema={JSON.parse(model.parametersSchema)}
+                    validator={validator}
+                    onChange={(e) => {
+                      setModelRun({
+                        ...modelRun,
+                        parameters: JSON.stringify(e.formData),
+                      });
+                    }}
+                    ref={formRef}
+                    onError={() => console.log("errors")}
+                    uiSchema={{
+                      "ui:submitButtonOptions": { norender: true },
+                    }}
+                  />
+                </div>
+              </>
+            ) : null}
+          </>
+        ) : null}
       </div>
-      <div className="grid grid-cols-1 col-span-1">
-        <Input
-          placeholder="Name"
-          className="col-span-1"
-          onChange={(e) => {
-            setRunModel({
-              ...runmodel,
-              name: e.target.value,
-            });
-          }}
-        />
-      </div>
-      <div className="grid grid-cols-1 col-span-1 mt-4">
-        <SpecificationSelector
-          mode={DataMode.INPUT}
-          selectedSpecificationId={runmodel.inputSpecificationId}
-          setSelectedSpecificationId={(action) => {
-            setRunModel({
-              ...runmodel,
-              inputSpecificationId:
-                (typeof action == "function"
-                  ? action(runmodel.inputSpecificationId)
-                  : action) ?? "",
-            });
-          }}
-        />
-      </div>
-      <div className="grid grid-cols-1 col-span-1">
-        <SpecificationSelector
-          mode={DataMode.OUTPUT}
-          selectedSpecificationId={runmodel.outputSpecificationId}
-          setSelectedSpecificationId={(action) => {
-            setRunModel({
-              ...runmodel,
-              outputSpecificationId:
-                (typeof action == "function"
-                  ? action(runmodel.outputSpecificationId)
-                  : action) ?? "",
-            });
-          }}
-        />
-      </div>{" "}
-      <div className="grid grid-cols-1 col-span-1 mt-4">
-        <ImageSelector
-          selectedImageName={runmodel.imageName}
-          setSelectedImageName={(action) => {
-            setRunModel({
-              ...runmodel,
-              imageName:
-                (typeof action == "function"
-                  ? action(runmodel.imageName)
-                  : action) ?? "",
-            });
-          }}
-        />
-      </div>
-      <div className="grid grid-cols-1 col-span-1 justify-items-start content-center mt-4">
-        <Label className="font-medium text-sm">Parameters schema</Label>
-      </div>
-      <div className="grid grid-cols-1 col-span-1 border">
-        <CodeMirror
-          value={runmodel.parametersSchema || ""}
-          onChange={(value) =>
-            setRunModel({
-              ...runmodel,
-              parametersSchema: value.trim() ? value : undefined,
-            })
-          }
-          extensions={[json()]}
-        />
-      </div>
-    </div>
+    </ContentLayout>
   );
 };
 

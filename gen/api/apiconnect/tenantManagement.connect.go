@@ -93,6 +93,21 @@ const (
 	// TenantManagementServiceCreateModelRunProcedure is the fully-qualified name of the
 	// TenantManagementService's CreateModelRun RPC.
 	TenantManagementServiceCreateModelRunProcedure = "/api.TenantManagementService/CreateModelRun"
+	// TenantManagementServiceGetModelRunsProcedure is the fully-qualified name of the
+	// TenantManagementService's GetModelRuns RPC.
+	TenantManagementServiceGetModelRunsProcedure = "/api.TenantManagementService/GetModelRuns"
+	// TenantManagementServiceCreateDashboardProcedure is the fully-qualified name of the
+	// TenantManagementService's CreateDashboard RPC.
+	TenantManagementServiceCreateDashboardProcedure = "/api.TenantManagementService/CreateDashboard"
+	// TenantManagementServiceGetDashboardsProcedure is the fully-qualified name of the
+	// TenantManagementService's GetDashboards RPC.
+	TenantManagementServiceGetDashboardsProcedure = "/api.TenantManagementService/GetDashboards"
+	// TenantManagementServiceGetDashboardProcedure is the fully-qualified name of the
+	// TenantManagementService's GetDashboard RPC.
+	TenantManagementServiceGetDashboardProcedure = "/api.TenantManagementService/GetDashboard"
+	// TenantManagementServiceGetModelRunDashboardProcedure is the fully-qualified name of the
+	// TenantManagementService's GetModelRunDashboard RPC.
+	TenantManagementServiceGetModelRunDashboardProcedure = "/api.TenantManagementService/GetModelRunDashboard"
 )
 
 // TenantManagementServiceClient is a client for the api.TenantManagementService service.
@@ -117,6 +132,11 @@ type TenantManagementServiceClient interface {
 	GetModels(context.Context, *connect.Request[api.GetModelsRequest]) (*connect.Response[api.GetModelsResponse], error)
 	GetModel(context.Context, *connect.Request[api.GetModelRequest]) (*connect.Response[api.GetModelResponse], error)
 	CreateModelRun(context.Context, *connect.Request[api.CreateModelRunRequest]) (*connect.Response[api.CreateModelRunResponse], error)
+	GetModelRuns(context.Context, *connect.Request[api.GetModelRunsRequest]) (*connect.Response[api.GetModelRunsResponse], error)
+	CreateDashboard(context.Context, *connect.Request[api.CreateDashboardRequest]) (*connect.Response[api.CreateDashboardResponse], error)
+	GetDashboards(context.Context, *connect.Request[api.GetDashboardsRequest]) (*connect.Response[api.GetDashboardsResponse], error)
+	GetDashboard(context.Context, *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardResponse], error)
+	GetModelRunDashboard(context.Context, *connect.Request[api.GetModelRunDashboardRequest]) (*connect.Response[api.GetModelRunDashboardResponse], error)
 }
 
 // NewTenantManagementServiceClient constructs a client for the api.TenantManagementService service.
@@ -250,6 +270,36 @@ func NewTenantManagementServiceClient(httpClient connect.HTTPClient, baseURL str
 			connect.WithSchema(tenantManagementServiceMethods.ByName("CreateModelRun")),
 			connect.WithClientOptions(opts...),
 		),
+		getModelRuns: connect.NewClient[api.GetModelRunsRequest, api.GetModelRunsResponse](
+			httpClient,
+			baseURL+TenantManagementServiceGetModelRunsProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("GetModelRuns")),
+			connect.WithClientOptions(opts...),
+		),
+		createDashboard: connect.NewClient[api.CreateDashboardRequest, api.CreateDashboardResponse](
+			httpClient,
+			baseURL+TenantManagementServiceCreateDashboardProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("CreateDashboard")),
+			connect.WithClientOptions(opts...),
+		),
+		getDashboards: connect.NewClient[api.GetDashboardsRequest, api.GetDashboardsResponse](
+			httpClient,
+			baseURL+TenantManagementServiceGetDashboardsProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("GetDashboards")),
+			connect.WithClientOptions(opts...),
+		),
+		getDashboard: connect.NewClient[api.GetDashboardRequest, api.GetDashboardResponse](
+			httpClient,
+			baseURL+TenantManagementServiceGetDashboardProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("GetDashboard")),
+			connect.WithClientOptions(opts...),
+		),
+		getModelRunDashboard: connect.NewClient[api.GetModelRunDashboardRequest, api.GetModelRunDashboardResponse](
+			httpClient,
+			baseURL+TenantManagementServiceGetModelRunDashboardProcedure,
+			connect.WithSchema(tenantManagementServiceMethods.ByName("GetModelRunDashboard")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -275,6 +325,11 @@ type tenantManagementServiceClient struct {
 	getModels                              *connect.Client[api.GetModelsRequest, api.GetModelsResponse]
 	getModel                               *connect.Client[api.GetModelRequest, api.GetModelResponse]
 	createModelRun                         *connect.Client[api.CreateModelRunRequest, api.CreateModelRunResponse]
+	getModelRuns                           *connect.Client[api.GetModelRunsRequest, api.GetModelRunsResponse]
+	createDashboard                        *connect.Client[api.CreateDashboardRequest, api.CreateDashboardResponse]
+	getDashboards                          *connect.Client[api.GetDashboardsRequest, api.GetDashboardsResponse]
+	getDashboard                           *connect.Client[api.GetDashboardRequest, api.GetDashboardResponse]
+	getModelRunDashboard                   *connect.Client[api.GetModelRunDashboardRequest, api.GetModelRunDashboardResponse]
 }
 
 // CreateWorkspace calls api.TenantManagementService.CreateWorkspace.
@@ -378,6 +433,31 @@ func (c *tenantManagementServiceClient) CreateModelRun(ctx context.Context, req 
 	return c.createModelRun.CallUnary(ctx, req)
 }
 
+// GetModelRuns calls api.TenantManagementService.GetModelRuns.
+func (c *tenantManagementServiceClient) GetModelRuns(ctx context.Context, req *connect.Request[api.GetModelRunsRequest]) (*connect.Response[api.GetModelRunsResponse], error) {
+	return c.getModelRuns.CallUnary(ctx, req)
+}
+
+// CreateDashboard calls api.TenantManagementService.CreateDashboard.
+func (c *tenantManagementServiceClient) CreateDashboard(ctx context.Context, req *connect.Request[api.CreateDashboardRequest]) (*connect.Response[api.CreateDashboardResponse], error) {
+	return c.createDashboard.CallUnary(ctx, req)
+}
+
+// GetDashboards calls api.TenantManagementService.GetDashboards.
+func (c *tenantManagementServiceClient) GetDashboards(ctx context.Context, req *connect.Request[api.GetDashboardsRequest]) (*connect.Response[api.GetDashboardsResponse], error) {
+	return c.getDashboards.CallUnary(ctx, req)
+}
+
+// GetDashboard calls api.TenantManagementService.GetDashboard.
+func (c *tenantManagementServiceClient) GetDashboard(ctx context.Context, req *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardResponse], error) {
+	return c.getDashboard.CallUnary(ctx, req)
+}
+
+// GetModelRunDashboard calls api.TenantManagementService.GetModelRunDashboard.
+func (c *tenantManagementServiceClient) GetModelRunDashboard(ctx context.Context, req *connect.Request[api.GetModelRunDashboardRequest]) (*connect.Response[api.GetModelRunDashboardResponse], error) {
+	return c.getModelRunDashboard.CallUnary(ctx, req)
+}
+
 // TenantManagementServiceHandler is an implementation of the api.TenantManagementService service.
 type TenantManagementServiceHandler interface {
 	CreateWorkspace(context.Context, *connect.Request[api.CreateWorkspaceRequest]) (*connect.Response[api.CreateWorkspaceResponse], error)
@@ -400,6 +480,11 @@ type TenantManagementServiceHandler interface {
 	GetModels(context.Context, *connect.Request[api.GetModelsRequest]) (*connect.Response[api.GetModelsResponse], error)
 	GetModel(context.Context, *connect.Request[api.GetModelRequest]) (*connect.Response[api.GetModelResponse], error)
 	CreateModelRun(context.Context, *connect.Request[api.CreateModelRunRequest]) (*connect.Response[api.CreateModelRunResponse], error)
+	GetModelRuns(context.Context, *connect.Request[api.GetModelRunsRequest]) (*connect.Response[api.GetModelRunsResponse], error)
+	CreateDashboard(context.Context, *connect.Request[api.CreateDashboardRequest]) (*connect.Response[api.CreateDashboardResponse], error)
+	GetDashboards(context.Context, *connect.Request[api.GetDashboardsRequest]) (*connect.Response[api.GetDashboardsResponse], error)
+	GetDashboard(context.Context, *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardResponse], error)
+	GetModelRunDashboard(context.Context, *connect.Request[api.GetModelRunDashboardRequest]) (*connect.Response[api.GetModelRunDashboardResponse], error)
 }
 
 // NewTenantManagementServiceHandler builds an HTTP handler from the service implementation. It
@@ -529,6 +614,36 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 		connect.WithSchema(tenantManagementServiceMethods.ByName("CreateModelRun")),
 		connect.WithHandlerOptions(opts...),
 	)
+	tenantManagementServiceGetModelRunsHandler := connect.NewUnaryHandler(
+		TenantManagementServiceGetModelRunsProcedure,
+		svc.GetModelRuns,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("GetModelRuns")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenantManagementServiceCreateDashboardHandler := connect.NewUnaryHandler(
+		TenantManagementServiceCreateDashboardProcedure,
+		svc.CreateDashboard,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("CreateDashboard")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenantManagementServiceGetDashboardsHandler := connect.NewUnaryHandler(
+		TenantManagementServiceGetDashboardsProcedure,
+		svc.GetDashboards,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("GetDashboards")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenantManagementServiceGetDashboardHandler := connect.NewUnaryHandler(
+		TenantManagementServiceGetDashboardProcedure,
+		svc.GetDashboard,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("GetDashboard")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenantManagementServiceGetModelRunDashboardHandler := connect.NewUnaryHandler(
+		TenantManagementServiceGetModelRunDashboardProcedure,
+		svc.GetModelRunDashboard,
+		connect.WithSchema(tenantManagementServiceMethods.ByName("GetModelRunDashboard")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/api.TenantManagementService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case TenantManagementServiceCreateWorkspaceProcedure:
@@ -571,6 +686,16 @@ func NewTenantManagementServiceHandler(svc TenantManagementServiceHandler, opts 
 			tenantManagementServiceGetModelHandler.ServeHTTP(w, r)
 		case TenantManagementServiceCreateModelRunProcedure:
 			tenantManagementServiceCreateModelRunHandler.ServeHTTP(w, r)
+		case TenantManagementServiceGetModelRunsProcedure:
+			tenantManagementServiceGetModelRunsHandler.ServeHTTP(w, r)
+		case TenantManagementServiceCreateDashboardProcedure:
+			tenantManagementServiceCreateDashboardHandler.ServeHTTP(w, r)
+		case TenantManagementServiceGetDashboardsProcedure:
+			tenantManagementServiceGetDashboardsHandler.ServeHTTP(w, r)
+		case TenantManagementServiceGetDashboardProcedure:
+			tenantManagementServiceGetDashboardHandler.ServeHTTP(w, r)
+		case TenantManagementServiceGetModelRunDashboardProcedure:
+			tenantManagementServiceGetModelRunDashboardHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -658,4 +783,24 @@ func (UnimplementedTenantManagementServiceHandler) GetModel(context.Context, *co
 
 func (UnimplementedTenantManagementServiceHandler) CreateModelRun(context.Context, *connect.Request[api.CreateModelRunRequest]) (*connect.Response[api.CreateModelRunResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.CreateModelRun is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) GetModelRuns(context.Context, *connect.Request[api.GetModelRunsRequest]) (*connect.Response[api.GetModelRunsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetModelRuns is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) CreateDashboard(context.Context, *connect.Request[api.CreateDashboardRequest]) (*connect.Response[api.CreateDashboardResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.CreateDashboard is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) GetDashboards(context.Context, *connect.Request[api.GetDashboardsRequest]) (*connect.Response[api.GetDashboardsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetDashboards is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) GetDashboard(context.Context, *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetDashboard is not implemented"))
+}
+
+func (UnimplementedTenantManagementServiceHandler) GetModelRunDashboard(context.Context, *connect.Request[api.GetModelRunDashboardRequest]) (*connect.Response[api.GetModelRunDashboardResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantManagementService.GetModelRunDashboard is not implemented"))
 }

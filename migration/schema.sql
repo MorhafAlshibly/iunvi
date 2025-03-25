@@ -117,6 +117,16 @@ CREATE TABLE app.Models (
         Name
     )
 );
+-- Dashboards (Visualizations of model runs)
+CREATE TABLE app.Dashboards (
+    DashboardId UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    ModelId UNIQUEIDENTIFIER NOT NULL,
+    Name NVARCHAR(255) NOT NULL,
+    Definition NVARCHAR(MAX) NOT NULL,
+    CreatedAt DATETIME DEFAULT GETUTCDATE(),
+    FOREIGN KEY (ModelId) REFERENCES app.Models(ModelId),
+    CONSTRAINT UQ_appDashboards_ModelId_Name UNIQUE(ModelId, Name)
+);
 -- Model Runs (Executions of a model)
 CREATE TABLE app.ModelRuns (
     RunId UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
@@ -302,7 +312,11 @@ UPDATE ON app.Models(
         ImageName,
         CreatedAt
     ) TO WebApp;
-GRANT SELECT ON app.ModelRunStatuses TO WebApp;
+GRANT SELECT,
+    INSERT,
+    DELETE ON app.Dashboards TO WebApp;
+DENY
+UPDATE ON app.Dashboards(DashboardId, ModelId, Definition, CreatedAt) TO WebApp;
 GRANT SELECT,
     INSERT,
     DELETE ON app.ModelRuns TO WebApp;
@@ -592,6 +606,37 @@ GO;
 CREATE SECURITY POLICY app.ModelsPolicy
 ADD FILTER PREDICATE app.fn_Models_Filter(InputSpecificationId) ON app.Models,
     ADD BLOCK PREDICATE app.fn_Models_Block(InputSpecificationId) ON app.Models WITH (STATE = ON);
+-- =============================================
+GO;
+CREATE FUNCTION app.fn_Dashboards_Filter(@ModelId UNIQUEIDENTIFIER) RETURNS TABLE WITH SCHEMABINDING AS RETURN (
+    WITH AssignedModel AS (
+        SELECT InputSpecificationId
+        FROM app.Models
+        WHERE ModelId = @ModelId
+    )
+    SELECT 1 AS Result
+    FROM AssignedModel
+        CROSS APPLY app.fn_Models_Filter(
+            AssignedModel.InputSpecificationId
+        ) AS f
+);
+GO;
+CREATE FUNCTION app.fn_Dashboards_Block(@ModelId UNIQUEIDENTIFIER) RETURNS TABLE WITH SCHEMABINDING AS RETURN (
+    WITH AssignedModel AS (
+        SELECT InputSpecificationId
+        FROM app.Models
+        WHERE ModelId = @ModelId
+    )
+    SELECT 1 AS Result
+    FROM AssignedModel
+        CROSS APPLY app.fn_Models_Block(
+            AssignedModel.InputSpecificationId
+        ) AS f
+);
+GO;
+CREATE SECURITY POLICY app.DashboardsPolicy
+ADD FILTER PREDICATE app.fn_Dashboards_Filter(ModelId) ON app.Dashboards,
+    ADD BLOCK PREDICATE app.fn_Dashboards_Block(ModelId) ON app.Dashboards WITH (STATE = ON);
 -- =============================================
 GO;
 CREATE FUNCTION app.fn_ModelRuns_Filter(@ModelId UNIQUEIDENTIFIER) RETURNS TABLE WITH SCHEMABINDING AS RETURN (

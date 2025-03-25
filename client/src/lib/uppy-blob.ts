@@ -83,9 +83,8 @@ export default class BlobPlugin extends BasePlugin<BlobPluginOptions, {}, {}> {
     try {
       // Obtain a SAS URL (with write permissions) for this file.
       const sasUrl = await this.opts.getSasUrl(file);
-      const blobClient = new BlockBlobClient(sasUrl);
-
-      await blobClient.upload(file.data, file.data.size, {
+      const blockBlobClient = new BlockBlobClient(sasUrl);
+      await blockBlobClient.uploadData(file.data, {
         abortSignal: this.#abortControllers.get(file.id)?.signal,
         onProgress: (progress) => {
           onProgress({

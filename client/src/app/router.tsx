@@ -40,6 +40,16 @@ import {
   ErrorBoundary as AppDeveloperModelsRootErrorBoundary,
 } from "./routes/app/developer/models/root";
 
+import {
+  default as AppDeveloperDashboardRoot,
+  ErrorBoundary as AppDeveloperDashboardsRootErrorBoundary,
+} from "./routes/app/developer/dashboards/root";
+
+import {
+  default as AppViewerRoot,
+  ErrorBoundary as AppViewerRootErrorBoundary,
+} from "./routes/app/viewer/root";
+
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;
   return {
@@ -156,6 +166,34 @@ export const createAppRouter = (queryClient: QueryClient) =>
                 },
               ],
             },
+            {
+              path: paths.app.developer.dashboards.root.path,
+              element: <AppDeveloperDashboardRoot />,
+              ErrorBoundary: AppDeveloperDashboardsRootErrorBoundary,
+              children: [
+                {
+                  path: paths.app.developer.dashboards.list.path,
+                  lazy: () =>
+                    import("./routes/app/developer/dashboards/list").then(
+                      convert(queryClient),
+                    ),
+                },
+                {
+                  path: paths.app.developer.dashboards.view.path,
+                  lazy: () =>
+                    import("./routes/app/developer/dashboards/view").then(
+                      convert(queryClient),
+                    ),
+                },
+                {
+                  path: paths.app.developer.dashboards.create.path,
+                  lazy: () =>
+                    import("./routes/app/developer/dashboards/create").then(
+                      convert(queryClient),
+                    ),
+                },
+              ],
+            },
           ],
         },
         {
@@ -197,6 +235,34 @@ export const createAppRouter = (queryClient: QueryClient) =>
                     ),
                 },
               ],
+            },
+            {
+              path: paths.app.user.runModels.path,
+              lazy: () =>
+                import("./routes/app/user/run-models").then(
+                  convert(queryClient),
+                ),
+            },
+          ],
+        },
+        {
+          path: paths.app.viewer.root.path,
+          element: <AppViewerRoot />,
+          ErrorBoundary: AppViewerRootErrorBoundary,
+          children: [
+            {
+              path: paths.app.viewer.runHistory.path,
+              lazy: () =>
+                import("./routes/app/viewer/run-history").then(
+                  convert(queryClient),
+                ),
+            },
+            {
+              path: paths.app.viewer.dashboard.path,
+              lazy: () =>
+                import("./routes/app/viewer/dashboard").then(
+                  convert(queryClient),
+                ),
             },
           ],
         },

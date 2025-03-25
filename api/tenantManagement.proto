@@ -27,6 +27,11 @@ service TenantManagementService {
   rpc GetModels(GetModelsRequest) returns (GetModelsResponse);
   rpc GetModel(GetModelRequest) returns (GetModelResponse);
   rpc CreateModelRun(CreateModelRunRequest) returns (CreateModelRunResponse);
+  rpc GetModelRuns(GetModelRunsRequest) returns (GetModelRunsResponse);
+  rpc CreateDashboard(CreateDashboardRequest) returns (CreateDashboardResponse);
+  rpc GetDashboards(GetDashboardsRequest) returns (GetDashboardsResponse);
+  rpc GetDashboard(GetDashboardRequest) returns (GetDashboardResponse);
+  rpc GetModelRunDashboard(GetModelRunDashboardRequest) returns (GetModelRunDashboardResponse); 
 }
 
 message CreateWorkspaceRequest {
@@ -165,6 +170,7 @@ message CreateFileGroupResponse {
 
 message GetFileGroupsRequest {
   string workspaceId = 1;
+  optional string specificationId = 2;
 }
 
 message GetFileGroupsResponse {
@@ -208,6 +214,71 @@ message CreateModelRunRequest {
 
 message CreateModelRunResponse {
   string id = 1;
+}
+
+message GetModelRunsRequest {
+  string workspaceId = 1;
+}
+
+message GetModelRunsResponse {
+  repeated ModelRun modelRuns = 1;
+}
+
+message CreateDashboardRequest {
+  string modelId = 1;
+  string name = 2;
+  string definition = 3;
+}
+
+message CreateDashboardResponse {
+  string id = 1;
+}
+
+message GetDashboardsRequest {
+  string workspaceId = 1;
+  optional string modelId = 2;
+}
+
+message GetDashboardsResponse {
+  repeated DashboardName dashboards = 1;
+}
+
+message GetDashboardRequest {
+  string id = 1;
+}
+
+message GetDashboardResponse {
+  Dashboard dashboard = 1;
+}
+
+message GetModelRunDashboardRequest {
+  string modelRunId = 1;
+  string dashboardId = 2;
+}
+
+message GetModelRunDashboardResponse {
+  string dashboardHtml = 1;
+}
+
+message ModelRun {
+  string id = 1;
+  string modelId = 2;
+  string inputFileGroupId = 3;
+  optional string outputFileGroupId = 4;
+  string name = 5;
+}
+
+message DashboardName {
+  string id = 1;
+  string modelId = 2;
+  string name = 3;
+}
+
+message Dashboard {
+  string id = 1;
+  string modelId = 2;
+  string name = 3;
+  string definition = 4;
 }
 
 message Model {
