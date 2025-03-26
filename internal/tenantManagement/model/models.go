@@ -10,7 +10,6 @@ type AppDashboard struct {
 	DashboardID mssql.UniqueIdentifier `db:"DashboardId"`
 	ModelID     mssql.UniqueIdentifier `db:"ModelId"`
 	Name        string                 `db:"Name"`
-	Definition  mssql.NVarCharMax      `db:"Definition"`
 	CreatedAt   time.Time              `db:"CreatedAt"`
 }
 
@@ -49,7 +48,7 @@ type AppModel struct {
 }
 
 type AppModelRun struct {
-	RunID             mssql.UniqueIdentifier  `db:"RunId"`
+	ModelRunId        mssql.UniqueIdentifier  `db:"ModelRunId"`
 	ModelID           mssql.UniqueIdentifier  `db:"ModelId"`
 	InputFileGroupID  mssql.UniqueIdentifier  `db:"InputFileGroupId"`
 	OutputFileGroupID *mssql.UniqueIdentifier `db:"OutputFileGroupId"`

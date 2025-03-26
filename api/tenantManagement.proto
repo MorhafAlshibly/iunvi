@@ -237,10 +237,11 @@ message CreateDashboardResponse {
 message GetDashboardsRequest {
   string workspaceId = 1;
   optional string modelId = 2;
+  optional string modelRunId = 3;
 }
 
 message GetDashboardsResponse {
-  repeated DashboardName dashboards = 1;
+  repeated Dashboard dashboards = 1;
 }
 
 message GetDashboardRequest {
@@ -268,17 +269,10 @@ message ModelRun {
   string name = 5;
 }
 
-message DashboardName {
-  string id = 1;
-  string modelId = 2;
-  string name = 3;
-}
-
 message Dashboard {
   string id = 1;
   string modelId = 2;
   string name = 3;
-  string definition = 4;
 }
 
 message Model {

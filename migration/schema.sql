@@ -122,14 +122,13 @@ CREATE TABLE app.Dashboards (
     DashboardId UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     ModelId UNIQUEIDENTIFIER NOT NULL,
     Name NVARCHAR(255) NOT NULL,
-    Definition NVARCHAR(MAX) NOT NULL,
     CreatedAt DATETIME DEFAULT GETUTCDATE(),
     FOREIGN KEY (ModelId) REFERENCES app.Models(ModelId),
     CONSTRAINT UQ_appDashboards_ModelId_Name UNIQUE(ModelId, Name)
 );
 -- Model Runs (Executions of a model)
 CREATE TABLE app.ModelRuns (
-    RunId UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    ModelRunId UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     ModelId UNIQUEIDENTIFIER NOT NULL,
     InputFileGroupId UNIQUEIDENTIFIER NOT NULL,
     OutputFileGroupId UNIQUEIDENTIFIER NULL,
@@ -316,7 +315,7 @@ GRANT SELECT,
     INSERT,
     DELETE ON app.Dashboards TO WebApp;
 DENY
-UPDATE ON app.Dashboards(DashboardId, ModelId, Definition, CreatedAt) TO WebApp;
+UPDATE ON app.Dashboards(DashboardId, ModelId, CreatedAt) TO WebApp;
 GRANT SELECT,
     INSERT,
     DELETE ON app.ModelRuns TO WebApp;

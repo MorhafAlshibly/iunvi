@@ -39,18 +39,20 @@ import (
 )
 
 type Service struct {
-	subscriptionId           string
-	resourceGroupName        string
-	tenantId                 string
-	clientId                 string
-	clientSecret             string
-	registryName             string
-	registryTokenName        string
-	storageAccountName       string
-	landingZoneContainerName string
-	fileGroupsContainerName  string
-	modelRunsContainerName   string
-	kubeconfigPath           string
+	subscriptionId                  string
+	resourceGroupName               string
+	tenantId                        string
+	clientId                        string
+	clientSecret                    string
+	registryName                    string
+	registryTokenName               string
+	storageAccountName              string
+	landingZoneContainerName        string
+	fileGroupsContainerName         string
+	modelRunsContainerName          string
+	dashboardsContainerName         string
+	modelRunDashboardsContainerName string
+	kubeconfigPath                  string
 }
 
 func WithSubscriptionId(subscriptionId string) func(*Service) {
@@ -116,6 +118,18 @@ func WithFileGroupsContainerName(fileGroupsContainerName string) func(*Service) 
 func WithModelRunsContainerName(modelRunsContainerName string) func(*Service) {
 	return func(input *Service) {
 		input.modelRunsContainerName = modelRunsContainerName
+	}
+}
+
+func WithDashboardsContainerName(dashboardsContainerName string) func(*Service) {
+	return func(input *Service) {
+		input.dashboardsContainerName = dashboardsContainerName
+	}
+}
+
+func WithModelRunDashboardsContainerName(modelRunDashboardsContainerName string) func(*Service) {
+	return func(input *Service) {
+		input.modelRunDashboardsContainerName = modelRunDashboardsContainerName
 	}
 }
 
@@ -1327,7 +1341,7 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 			return nil, err
 		}
 		containerClient := svcClient.NewContainerClient(s.modelRunsContainerName)
-		blockBlobClient := containerClient.NewBlockBlobClient(getModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.RunID.String()) + "/parameters.json")
+		blockBlobClient := containerClient.NewBlockBlobClient(getModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunId.String()) + "/parameters.json")
 		_, err = blockBlobClient.UploadBuffer(ctx, []byte(*req.Msg.Parameters), nil)
 		if err != nil {
 			return nil, err
@@ -1343,7 +1357,7 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 	}
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: strings.ToLower(modelRun.RunID.String()),
+			Name: strings.ToLower(modelRun.ModelRunId.String()),
 		},
 		Spec: batchv1.JobSpec{
 			Template: corev1.PodTemplateSpec{
@@ -1363,13 +1377,13 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 								{
 									Name:      "model-runs-volume",
 									MountPath: "/mnt/parameters",
-									SubPath:   getModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.RunID.String()),
+									SubPath:   getModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunId.String()),
 									ReadOnly:  true,
 								},
 								{
 									Name:      "model-runs-volume",
 									MountPath: "/mnt/output",
-									SubPath:   getModelRunOutputDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.RunID.String()),
+									SubPath:   getModelRunOutputDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunId.String()),
 								},
 							},
 						},
@@ -1401,7 +1415,7 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 		return nil, err
 	}
 	return connect.NewResponse(&api.CreateModelRunResponse{
-		Id: modelRun.RunID.String(),
+		Id: modelRun.ModelRunId.String(),
 	}), nil
 }
 
@@ -1423,7 +1437,7 @@ func (s *Service) GetModelRuns(ctx context.Context, req *connect.Request[api.Get
 	var apiModelRuns []*api.ModelRun
 	for _, modelRun := range modelRuns {
 		apiModelRuns = append(apiModelRuns, &api.ModelRun{
-			Id:               modelRun.RunID.String(),
+			Id:               modelRun.ModelRunId.String(),
 			ModelId:          modelRun.ModelID.String(),
 			InputFileGroupId: modelRun.InputFileGroupID.String(),
 			Name:             modelRun.Name,
@@ -1440,9 +1454,6 @@ func (s *Service) CreateDashboard(ctx context.Context, req *connect.Request[api.
 	}
 	if req.Msg.Name == "" {
 		return nil, fmt.Errorf("Name is required")
-	}
-	if req.Msg.Definition == "" {
-		return nil, fmt.Errorf("Definition is required")
 	}
 	modelIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.ModelId)
 	if err != nil {
@@ -1463,9 +1474,8 @@ func (s *Service) CreateDashboard(ctx context.Context, req *connect.Request[api.
 		return nil, fmt.Errorf("unauthorized")
 	}
 	_, err = database.CreateDashboard(ctx, model.CreateDashboardParams{
-		ModelId:    modelIdBytes,
-		Name:       req.Msg.Name,
-		Definition: req.Msg.Definition,
+		ModelId: modelIdBytes,
+		Name:    req.Msg.Name,
 	})
 	if err != nil {
 		return nil, err
@@ -1474,6 +1484,20 @@ func (s *Service) CreateDashboard(ctx context.Context, req *connect.Request[api.
 		ModelId: modelIdBytes,
 		Name:    req.Msg.Name,
 	})
+	if err != nil {
+		return nil, err
+	}
+	cred, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
+	if err != nil {
+		return nil, err
+	}
+	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
+	if err != nil {
+		return nil, err
+	}
+	containerClient := svcClient.NewContainerClient(s.dashboardsContainerName)
+	blockBlobClient := containerClient.NewBlockBlobClient(getDashboardDirectory(ctx, workspaceId.String(), modelIdBytes.String(), dashboard.DashboardID.String()) + "/index.md")
+	_, err = blockBlobClient.UploadBuffer(ctx, []byte(req.Msg.Definition), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1498,17 +1522,26 @@ func (s *Service) GetDashboards(ctx context.Context, req *connect.Request[api.Ge
 		}
 		modelIdBytes = &modelId
 	}
+	var modelRunIdBytes *mssql.UniqueIdentifier
+	if req.Msg.ModelRunId != nil {
+		modelRunId, err := conversion.StringToUniqueIdentifier(*req.Msg.ModelRunId)
+		if err != nil {
+			return nil, err
+		}
+		modelRunIdBytes = &modelRunId
+	}
 	database := model.New(middleware.GetTx(ctx))
 	dashboards, err := database.GetDashboardsByWorkspaceIdAndModelId(ctx, model.GetDashboardsByWorkspaceIdAndModelIdParams{
 		WorkspaceId: workspaceIdBytes,
 		ModelId:     modelIdBytes,
+		ModelRunId:  modelRunIdBytes,
 	})
 	if err != nil {
 		return nil, err
 	}
-	var dashboardNames []*api.DashboardName
+	var dashboardNames []*api.Dashboard
 	for _, dashboard := range dashboards {
-		dashboardNames = append(dashboardNames, &api.DashboardName{
+		dashboardNames = append(dashboardNames, &api.Dashboard{
 			Id:      dashboard.DashboardID.String(),
 			ModelId: dashboard.ModelID.String(),
 			Name:    dashboard.Name,
@@ -1536,10 +1569,9 @@ func (s *Service) GetDashboard(ctx context.Context, req *connect.Request[api.Get
 	}
 	return connect.NewResponse(&api.GetDashboardResponse{
 		Dashboard: &api.Dashboard{
-			Id:         dashboard.DashboardID.String(),
-			ModelId:    dashboard.ModelID.String(),
-			Name:       dashboard.Name,
-			Definition: string(dashboard.Definition),
+			Id:      dashboard.DashboardID.String(),
+			ModelId: dashboard.ModelID.String(),
+			Name:    dashboard.Name,
 		},
 	}), nil
 }
@@ -1560,10 +1592,150 @@ func (s *Service) GetModelRunDashboard(ctx context.Context, req *connect.Request
 		return nil, err
 	}
 	database := model.New(middleware.GetTx(ctx))
+	res, err := database.GetWorkspaceIdAndModelIdByModelRunIdAndDashboardId(ctx, model.GetWorkspaceIdAndModelIdByModelRunIdAndDashboardIdParams{
+		ModelRunId:  modelRunIdBytes,
+		DashboardId: dashboardIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := authorization.NewAuthorization(authorization.WithWorkspaceID(res.WorkspaceID), authorization.WithWorkspaceRole(api.WorkspaceRole_VIEWER)).IsAuthorized(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !authorization {
+		return nil, fmt.Errorf("unauthorized")
+	}
 	// check if model dashboard is created in storage
-	// if it is then return the html
-	// if it isnt then start a job in aks to create the dashboard
-	return connect.NewResponse(&api.GetModelRunDashboardResponse{}), nil
+	cred, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
+	if err != nil {
+		return nil, err
+	}
+	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
+	if err != nil {
+		return nil, err
+	}
+	dashboardsContainerClient := svcClient.NewContainerClient(s.dashboardsContainerName)
+	blockBlobClient := dashboardsContainerClient.NewBlockBlobClient(getModelRunDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId, req.Msg.DashboardId) + "/index.html")
+	var dashboardHtml []byte
+	_, err = blockBlobClient.DownloadBuffer(ctx, dashboardHtml, nil)
+	if err != nil {
+		// if it is not then start a job in aks to create the dashboard
+		// list output files in model run directory
+		modelRunsContainerClient := svcClient.NewContainerClient(s.modelRunsContainerName)
+		pager := modelRunsContainerClient.NewListBlobsFlatPager(&container.ListBlobsFlatOptions{
+			Prefix: conversion.ValueToPointer(getModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId) + "/"),
+		})
+		var outputFiles []string
+		for pager.More() {
+			page, err := pager.NextPage(ctx)
+			if err != nil {
+				return nil, err
+			}
+			for _, blob := range page.Segment.BlobItems {
+				if blob.Name == nil {
+					continue
+				}
+				outputFiles = append(outputFiles, "static/data/parquets/"+strings.TrimPrefix(*blob.Name, getModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId)+"/"))
+			}
+		}
+		// list dashboard files in dashboard directory
+		manifestJson := map[string]interface{}{
+			"renderedFiles": map[string]interface{}{
+				"parquets": outputFiles,
+			},
+		}
+		manifestJsonBytes, err := json.Marshal(manifestJson)
+		if err != nil {
+			return nil, err
+		}
+		config, err := clientcmd.BuildConfigFromFlags("", s.kubeconfigPath)
+		if err != nil {
+			return nil, err
+		}
+		clientset, err := kubernetes.NewForConfig(config)
+		if err != nil {
+			return nil, err
+		}
+		job := &batchv1.Job{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: strings.ToLower(req.Msg.ModelRunId)[:30] + "-" + strings.ToLower(req.Msg.DashboardId)[:30],
+			},
+			Spec: batchv1.JobSpec{
+				Template: corev1.PodTemplateSpec{
+					Spec: corev1.PodSpec{
+						RestartPolicy: corev1.RestartPolicyNever,
+						Containers: []corev1.Container{
+							{
+								Name:  "apply-dashboard",
+								Image: fmt.Sprintf("%s.azurecr.io/apply-dashboard:latest", s.registryName),
+								Command: []string{
+									"/bin/sh",
+									"-c",
+								},
+								Args: []string{
+									"echo '" + string(manifestJsonBytes) + "' > /app/.evidence/template/static/data/manifest.json && npm run build",
+								},
+								VolumeMounts: []corev1.VolumeMount{
+									{
+										Name:      "model-runs-volume",
+										MountPath: "/app/.evidence/template/static/data/parquets",
+										SubPath:   getModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId),
+										// ReadOnly:  true,
+									},
+									{
+										Name:      "dashboards-volume",
+										MountPath: "/app/pages",
+										SubPath:   getDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.DashboardId),
+										ReadOnly:  true,
+									},
+									{
+										Name:      "model-run-dashboards-volume",
+										MountPath: "/app/build",
+										SubPath:   getModelRunDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId, req.Msg.DashboardId),
+									},
+								},
+							},
+						},
+						Volumes: []corev1.Volume{
+							{
+								Name: "model-runs-volume",
+								VolumeSource: corev1.VolumeSource{
+									PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+										ClaimName: "pvc-model-runs-iunvi-dev-eastus-001",
+									},
+								},
+							}, {
+								Name: "dashboards-volume",
+								VolumeSource: corev1.VolumeSource{
+									PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+										ClaimName: "pvc-dashboards-iunvi-dev-eastus-001",
+									},
+								},
+							}, {
+								Name: "model-run-dashboards-volume",
+								VolumeSource: corev1.VolumeSource{
+									PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+										ClaimName: "pvc-model-run-dashboards-iunvi-dev-eastus-001",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		}
+		_, err = clientset.BatchV1().Jobs("default").Create(ctx, job, metav1.CreateOptions{})
+		if err != nil {
+			return nil, err
+		}
+		return connect.NewResponse(&api.GetModelRunDashboardResponse{
+			DashboardHtml: "",
+		}), nil
+	}
+	return connect.NewResponse(&api.GetModelRunDashboardResponse{
+		DashboardHtml: string(dashboardHtml),
+	}), nil
 }
 
 func getLandingZoneDirectory(ctx context.Context, workspaceId string) string {
@@ -1585,6 +1757,16 @@ func getModelRunOutputDirectory(ctx context.Context, workspaceId string, modelId
 func getModelRunParametersDirectory(ctx context.Context, workspaceId string, modelId string, modelRunId string) string {
 	tenantId := ctx.Value("TenantDirectoryId").(string)
 	return tenantId + "/" + strings.ToLower(workspaceId) + "/" + strings.ToLower(modelId) + "/" + strings.ToLower(modelRunId) + "/parameters"
+}
+
+func getDashboardDirectory(ctx context.Context, workspaceId string, modelId string, dashboardId string) string {
+	tenantId := ctx.Value("TenantDirectoryId").(string)
+	return tenantId + "/" + strings.ToLower(workspaceId) + "/" + strings.ToLower(modelId) + "/" + strings.ToLower(dashboardId)
+}
+
+func getModelRunDashboardDirectory(ctx context.Context, workspaceId string, modelId string, modelRunId string, dashboardId string) string {
+	tenantId := ctx.Value("TenantDirectoryId").(string)
+	return tenantId + "/" + strings.ToLower(workspaceId) + "/" + strings.ToLower(modelId) + "/" + strings.ToLower(modelRunId) + "/" + strings.ToLower(dashboardId)
 }
 
 func getScope(workspaceId string) string {

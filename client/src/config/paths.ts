@@ -146,7 +146,7 @@ export const paths = {
         getHref: () => "/app/viewer/run-history",
       },
       dashboard: {
-        path: "dashboard",
+        path: "dashboard/:id",
         getHref: (id: string) => `/app/viewer/dashboard/${id}`,
       },
     },

@@ -1,7 +1,10 @@
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { useMatch } from "react-router-dom";
 import { useQuery } from "@connectrpc/connect-query";
-import { getSpecification } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
+import {
+  getModelRunDashboard,
+  getSpecification,
+} from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { paths } from "@/config/paths";
 import { DataMode, TableFieldType } from "@/types/api/tenantManagement_pb";
 import CodeMirror from "@uiw/react-codemirror";
@@ -10,82 +13,40 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import { DashboardSelector } from "@/components/dashboard-selector";
+import { ContentLayout } from "@/components/layouts/content";
 
 const DashboardRoute = () => {
   const navigate = useNavigate();
   const id = useMatch(paths.app.viewer.dashboard.getHref(":id"))?.params.id;
-  const { data: modelRunData } = useQuery(
-    getModelRun,
+
+  const [dashboardId, setDashboardId] = useState<string | null>(null);
+
+  const { data: dashboardData } = useQuery(
+    getModelRunDashboard,
     {
-      id: id || "",
+      modelRunId: id || "",
+      dashboardId: dashboardId || "",
     },
     {
-      enabled: !!id,
+      enabled: !!id && !!dashboardId,
     },
   );
 
-  const specification = specificationData?.specification;
-
   return (
-    <div className="grid grid-cols-1 gap-4">
-      <div className="grid grid-cols-2 col-span-1 justify-items-between">
+    <ContentLayout title="Dashboard">
+      <div className="grid grid-cols-1 gap-4">
         <div className="grid grid-cols-1 col-span-1 justify-items-start">
-          <Label className="col-span-1 content-center text-lg font-medium">
-            {specification?.name}
-          </Label>
+          <DashboardSelector
+            modelRunId={id || ""}
+            selectedDashboardId={dashboardId}
+            setSelectedDashboardId={setDashboardId}
+          />
         </div>
-        <div className="grid grid-cols-1 col-span-1 justify-items-end">
-          <Button
-            size="lg"
-            variant="outline"
-            onClick={() => {
-              navigate(paths.app.developer.specifications.list.getHref());
-            }}
-          >
-            <CircleArrowLeft />
-            Back
-          </Button>
-        </div>
+        <div className="grid grid-cols-1 col-span-1"></div>
       </div>
-      {specification ? (
-        <>
-          <Label className="col-span-1 content-center mt-4 text-md font-normal">
-            Data tables -{" "}
-            {specificationData?.mode == DataMode.INPUT ? "CSV" : "Parquet"}
-          </Label>
-          {specification.tables.map((table, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-1 col-span-1 border p-4 gap-4"
-            >
-              <Label className="col-span-1 content-center font-normal">
-                {table.name}
-              </Label>
-              <div className="grid grid-cols-1 col-span-1 gap-2">
-                {table.fields.map((field, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-2 col-span-1 justify-items-between"
-                  >
-                    <div className="grid grid-cols-1 col-span-1 justify-items-start content-center">
-                      <Label className="text-sm font-light">{field.name}</Label>
-                    </div>
-                    <div className="grid grid-cols-1 col-span-1 justify-items-end content-center">
-                      <Label className="text-sm font-medium">
-                        {TableFieldType[field.type]}
-                      </Label>
-                    </div>
-                    <div className="col-span-2">
-                      <Separator className="mt-2" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </>
-      ) : null}
-    </div>
+    </ContentLayout>
   );
 };
 

@@ -2361,6 +2361,7 @@ type GetDashboardsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	WorkspaceId   string                 `protobuf:"bytes,1,opt,name=workspaceId,proto3" json:"workspaceId,omitempty"`
 	ModelId       *string                `protobuf:"bytes,2,opt,name=modelId,proto3,oneof" json:"modelId,omitempty"`
+	ModelRunId    *string                `protobuf:"bytes,3,opt,name=modelRunId,proto3,oneof" json:"modelRunId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2409,9 +2410,16 @@ func (x *GetDashboardsRequest) GetModelId() string {
 	return ""
 }
 
+func (x *GetDashboardsRequest) GetModelRunId() string {
+	if x != nil && x.ModelRunId != nil {
+		return *x.ModelRunId
+	}
+	return ""
+}
+
 type GetDashboardsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Dashboards    []*DashboardName       `protobuf:"bytes,1,rep,name=dashboards,proto3" json:"dashboards,omitempty"`
+	Dashboards    []*Dashboard           `protobuf:"bytes,1,rep,name=dashboards,proto3" json:"dashboards,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2446,7 +2454,7 @@ func (*GetDashboardsResponse) Descriptor() ([]byte, []int) {
 	return file_api_tenantManagement_proto_rawDescGZIP(), []int{45}
 }
 
-func (x *GetDashboardsResponse) GetDashboards() []*DashboardName {
+func (x *GetDashboardsResponse) GetDashboards() []*Dashboard {
 	if x != nil {
 		return x.Dashboards
 	}
@@ -2713,79 +2721,18 @@ func (x *ModelRun) GetName() string {
 	return ""
 }
 
-type DashboardName struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	ModelId       string                 `protobuf:"bytes,2,opt,name=modelId,proto3" json:"modelId,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DashboardName) Reset() {
-	*x = DashboardName{}
-	mi := &file_api_tenantManagement_proto_msgTypes[51]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DashboardName) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DashboardName) ProtoMessage() {}
-
-func (x *DashboardName) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[51]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DashboardName.ProtoReflect.Descriptor instead.
-func (*DashboardName) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{51}
-}
-
-func (x *DashboardName) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *DashboardName) GetModelId() string {
-	if x != nil {
-		return x.ModelId
-	}
-	return ""
-}
-
-func (x *DashboardName) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
 type Dashboard struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	ModelId       string                 `protobuf:"bytes,2,opt,name=modelId,proto3" json:"modelId,omitempty"`
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Definition    string                 `protobuf:"bytes,4,opt,name=definition,proto3" json:"definition,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Dashboard) Reset() {
 	*x = Dashboard{}
-	mi := &file_api_tenantManagement_proto_msgTypes[52]
+	mi := &file_api_tenantManagement_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2797,7 +2744,7 @@ func (x *Dashboard) String() string {
 func (*Dashboard) ProtoMessage() {}
 
 func (x *Dashboard) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[52]
+	mi := &file_api_tenantManagement_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2810,7 +2757,7 @@ func (x *Dashboard) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Dashboard.ProtoReflect.Descriptor instead.
 func (*Dashboard) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{52}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *Dashboard) GetId() string {
@@ -2834,13 +2781,6 @@ func (x *Dashboard) GetName() string {
 	return ""
 }
 
-func (x *Dashboard) GetDefinition() string {
-	if x != nil {
-		return x.Definition
-	}
-	return ""
-}
-
 type Model struct {
 	state                 protoimpl.MessageState `protogen:"open.v1"`
 	Id                    string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -2855,7 +2795,7 @@ type Model struct {
 
 func (x *Model) Reset() {
 	*x = Model{}
-	mi := &file_api_tenantManagement_proto_msgTypes[53]
+	mi := &file_api_tenantManagement_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2867,7 +2807,7 @@ func (x *Model) String() string {
 func (*Model) ProtoMessage() {}
 
 func (x *Model) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[53]
+	mi := &file_api_tenantManagement_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2880,7 +2820,7 @@ func (x *Model) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Model.ProtoReflect.Descriptor instead.
 func (*Model) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{53}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *Model) GetId() string {
@@ -2935,7 +2875,7 @@ type ModelName struct {
 
 func (x *ModelName) Reset() {
 	*x = ModelName{}
-	mi := &file_api_tenantManagement_proto_msgTypes[54]
+	mi := &file_api_tenantManagement_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2947,7 +2887,7 @@ func (x *ModelName) String() string {
 func (*ModelName) ProtoMessage() {}
 
 func (x *ModelName) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[54]
+	mi := &file_api_tenantManagement_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2960,7 +2900,7 @@ func (x *ModelName) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ModelName.ProtoReflect.Descriptor instead.
 func (*ModelName) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{54}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *ModelName) GetId() string {
@@ -2987,7 +2927,7 @@ type FileGroupName struct {
 
 func (x *FileGroupName) Reset() {
 	*x = FileGroupName{}
-	mi := &file_api_tenantManagement_proto_msgTypes[55]
+	mi := &file_api_tenantManagement_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2999,7 +2939,7 @@ func (x *FileGroupName) String() string {
 func (*FileGroupName) ProtoMessage() {}
 
 func (x *FileGroupName) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[55]
+	mi := &file_api_tenantManagement_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3012,7 +2952,7 @@ func (x *FileGroupName) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FileGroupName.ProtoReflect.Descriptor instead.
 func (*FileGroupName) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{55}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *FileGroupName) GetId() string {
@@ -3039,7 +2979,7 @@ type SchemaFileMapping struct {
 
 func (x *SchemaFileMapping) Reset() {
 	*x = SchemaFileMapping{}
-	mi := &file_api_tenantManagement_proto_msgTypes[56]
+	mi := &file_api_tenantManagement_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3051,7 +2991,7 @@ func (x *SchemaFileMapping) String() string {
 func (*SchemaFileMapping) ProtoMessage() {}
 
 func (x *SchemaFileMapping) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[56]
+	mi := &file_api_tenantManagement_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3064,7 +3004,7 @@ func (x *SchemaFileMapping) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SchemaFileMapping.ProtoReflect.Descriptor instead.
 func (*SchemaFileMapping) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{56}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *SchemaFileMapping) GetSchemaName() string {
@@ -3092,7 +3032,7 @@ type LandingZoneFile struct {
 
 func (x *LandingZoneFile) Reset() {
 	*x = LandingZoneFile{}
-	mi := &file_api_tenantManagement_proto_msgTypes[57]
+	mi := &file_api_tenantManagement_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3104,7 +3044,7 @@ func (x *LandingZoneFile) String() string {
 func (*LandingZoneFile) ProtoMessage() {}
 
 func (x *LandingZoneFile) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[57]
+	mi := &file_api_tenantManagement_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3117,7 +3057,7 @@ func (x *LandingZoneFile) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LandingZoneFile.ProtoReflect.Descriptor instead.
 func (*LandingZoneFile) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{57}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *LandingZoneFile) GetName() string {
@@ -3152,7 +3092,7 @@ type SpecificationName struct {
 
 func (x *SpecificationName) Reset() {
 	*x = SpecificationName{}
-	mi := &file_api_tenantManagement_proto_msgTypes[58]
+	mi := &file_api_tenantManagement_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3164,7 +3104,7 @@ func (x *SpecificationName) String() string {
 func (*SpecificationName) ProtoMessage() {}
 
 func (x *SpecificationName) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[58]
+	mi := &file_api_tenantManagement_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3177,7 +3117,7 @@ func (x *SpecificationName) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SpecificationName.ProtoReflect.Descriptor instead.
 func (*SpecificationName) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{58}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *SpecificationName) GetId() string {
@@ -3212,7 +3152,7 @@ type Specification struct {
 
 func (x *Specification) Reset() {
 	*x = Specification{}
-	mi := &file_api_tenantManagement_proto_msgTypes[59]
+	mi := &file_api_tenantManagement_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3224,7 +3164,7 @@ func (x *Specification) String() string {
 func (*Specification) ProtoMessage() {}
 
 func (x *Specification) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[59]
+	mi := &file_api_tenantManagement_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3237,7 +3177,7 @@ func (x *Specification) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Specification.ProtoReflect.Descriptor instead.
 func (*Specification) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{59}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *Specification) GetId() string {
@@ -3271,7 +3211,7 @@ type TableSchema struct {
 
 func (x *TableSchema) Reset() {
 	*x = TableSchema{}
-	mi := &file_api_tenantManagement_proto_msgTypes[60]
+	mi := &file_api_tenantManagement_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3283,7 +3223,7 @@ func (x *TableSchema) String() string {
 func (*TableSchema) ProtoMessage() {}
 
 func (x *TableSchema) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[60]
+	mi := &file_api_tenantManagement_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3296,7 +3236,7 @@ func (x *TableSchema) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TableSchema.ProtoReflect.Descriptor instead.
 func (*TableSchema) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{60}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *TableSchema) GetName() string {
@@ -3323,7 +3263,7 @@ type TableField struct {
 
 func (x *TableField) Reset() {
 	*x = TableField{}
-	mi := &file_api_tenantManagement_proto_msgTypes[61]
+	mi := &file_api_tenantManagement_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3335,7 +3275,7 @@ func (x *TableField) String() string {
 func (*TableField) ProtoMessage() {}
 
 func (x *TableField) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[61]
+	mi := &file_api_tenantManagement_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3348,7 +3288,7 @@ func (x *TableField) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TableField.ProtoReflect.Descriptor instead.
 func (*TableField) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{61}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *TableField) GetName() string {
@@ -3375,7 +3315,7 @@ type Image struct {
 
 func (x *Image) Reset() {
 	*x = Image{}
-	mi := &file_api_tenantManagement_proto_msgTypes[62]
+	mi := &file_api_tenantManagement_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3387,7 +3327,7 @@ func (x *Image) String() string {
 func (*Image) ProtoMessage() {}
 
 func (x *Image) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[62]
+	mi := &file_api_tenantManagement_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3400,7 +3340,7 @@ func (x *Image) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Image.ProtoReflect.Descriptor instead.
 func (*Image) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{62}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *Image) GetScope() string {
@@ -3427,7 +3367,7 @@ type Workspace struct {
 
 func (x *Workspace) Reset() {
 	*x = Workspace{}
-	mi := &file_api_tenantManagement_proto_msgTypes[63]
+	mi := &file_api_tenantManagement_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3439,7 +3379,7 @@ func (x *Workspace) String() string {
 func (*Workspace) ProtoMessage() {}
 
 func (x *Workspace) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[63]
+	mi := &file_api_tenantManagement_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3452,7 +3392,7 @@ func (x *Workspace) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Workspace.ProtoReflect.Descriptor instead.
 func (*Workspace) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{63}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *Workspace) GetId() string {
@@ -3480,7 +3420,7 @@ type User struct {
 
 func (x *User) Reset() {
 	*x = User{}
-	mi := &file_api_tenantManagement_proto_msgTypes[64]
+	mi := &file_api_tenantManagement_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3492,7 +3432,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_api_tenantManagement_proto_msgTypes[64]
+	mi := &file_api_tenantManagement_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3505,7 +3445,7 @@ func (x *User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use User.ProtoReflect.Descriptor instead.
 func (*User) Descriptor() ([]byte, []int) {
-	return file_api_tenantManagement_proto_rawDescGZIP(), []int{64}
+	return file_api_tenantManagement_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *User) GetId() string {
@@ -3667,15 +3607,19 @@ const file_api_tenantManagement_proto_rawDesc = "" +
 	"definition\x18\x03 \x01(\tR\n" +
 	"definition\")\n" +
 	"\x17CreateDashboardResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"c\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\x97\x01\n" +
 	"\x14GetDashboardsRequest\x12 \n" +
 	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\x12\x1d\n" +
-	"\amodelId\x18\x02 \x01(\tH\x00R\amodelId\x88\x01\x01B\n" +
+	"\amodelId\x18\x02 \x01(\tH\x00R\amodelId\x88\x01\x01\x12#\n" +
 	"\n" +
-	"\b_modelId\"K\n" +
-	"\x15GetDashboardsResponse\x122\n" +
+	"modelRunId\x18\x03 \x01(\tH\x01R\n" +
+	"modelRunId\x88\x01\x01B\n" +
 	"\n" +
-	"dashboards\x18\x01 \x03(\v2\x12.api.DashboardNameR\n" +
+	"\b_modelIdB\r\n" +
+	"\v_modelRunId\"G\n" +
+	"\x15GetDashboardsResponse\x12.\n" +
+	"\n" +
+	"dashboards\x18\x01 \x03(\v2\x0e.api.DashboardR\n" +
 	"dashboards\"%\n" +
 	"\x13GetDashboardRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"D\n" +
@@ -3694,18 +3638,11 @@ const file_api_tenantManagement_proto_rawDesc = "" +
 	"\x10inputFileGroupId\x18\x03 \x01(\tR\x10inputFileGroupId\x121\n" +
 	"\x11outputFileGroupId\x18\x04 \x01(\tH\x00R\x11outputFileGroupId\x88\x01\x01\x12\x12\n" +
 	"\x04name\x18\x05 \x01(\tR\x04nameB\x14\n" +
-	"\x12_outputFileGroupId\"M\n" +
-	"\rDashboardName\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
-	"\amodelId\x18\x02 \x01(\tR\amodelId\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\"i\n" +
+	"\x12_outputFileGroupId\"I\n" +
 	"\tDashboard\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
 	"\amodelId\x18\x02 \x01(\tR\amodelId\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1e\n" +
-	"\n" +
-	"definition\x18\x04 \x01(\tR\n" +
-	"definition\"\xf9\x01\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\"\xf9\x01\n" +
 	"\x05Model\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x122\n" +
@@ -3832,7 +3769,7 @@ func file_api_tenantManagement_proto_rawDescGZIP() []byte {
 }
 
 var file_api_tenantManagement_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_api_tenantManagement_proto_msgTypes = make([]protoimpl.MessageInfo, 65)
+var file_api_tenantManagement_proto_msgTypes = make([]protoimpl.MessageInfo, 64)
 var file_api_tenantManagement_proto_goTypes = []any{
 	(TableFieldType)(0),                                    // 0: api.TableFieldType
 	(WorkspaceRole)(0),                                     // 1: api.WorkspaceRole
@@ -3888,49 +3825,48 @@ var file_api_tenantManagement_proto_goTypes = []any{
 	(*GetModelRunDashboardRequest)(nil),                    // 51: api.GetModelRunDashboardRequest
 	(*GetModelRunDashboardResponse)(nil),                   // 52: api.GetModelRunDashboardResponse
 	(*ModelRun)(nil),                                       // 53: api.ModelRun
-	(*DashboardName)(nil),                                  // 54: api.DashboardName
-	(*Dashboard)(nil),                                      // 55: api.Dashboard
-	(*Model)(nil),                                          // 56: api.Model
-	(*ModelName)(nil),                                      // 57: api.ModelName
-	(*FileGroupName)(nil),                                  // 58: api.FileGroupName
-	(*SchemaFileMapping)(nil),                              // 59: api.SchemaFileMapping
-	(*LandingZoneFile)(nil),                                // 60: api.LandingZoneFile
-	(*SpecificationName)(nil),                              // 61: api.SpecificationName
-	(*Specification)(nil),                                  // 62: api.Specification
-	(*TableSchema)(nil),                                    // 63: api.TableSchema
-	(*TableField)(nil),                                     // 64: api.TableField
-	(*Image)(nil),                                          // 65: api.Image
-	(*Workspace)(nil),                                      // 66: api.Workspace
-	(*User)(nil),                                           // 67: api.User
-	(*timestamppb.Timestamp)(nil),                          // 68: google.protobuf.Timestamp
+	(*Dashboard)(nil),                                      // 54: api.Dashboard
+	(*Model)(nil),                                          // 55: api.Model
+	(*ModelName)(nil),                                      // 56: api.ModelName
+	(*FileGroupName)(nil),                                  // 57: api.FileGroupName
+	(*SchemaFileMapping)(nil),                              // 58: api.SchemaFileMapping
+	(*LandingZoneFile)(nil),                                // 59: api.LandingZoneFile
+	(*SpecificationName)(nil),                              // 60: api.SpecificationName
+	(*Specification)(nil),                                  // 61: api.Specification
+	(*TableSchema)(nil),                                    // 62: api.TableSchema
+	(*TableField)(nil),                                     // 63: api.TableField
+	(*Image)(nil),                                          // 64: api.Image
+	(*Workspace)(nil),                                      // 65: api.Workspace
+	(*User)(nil),                                           // 66: api.User
+	(*timestamppb.Timestamp)(nil),                          // 67: google.protobuf.Timestamp
 }
 var file_api_tenantManagement_proto_depIdxs = []int32{
-	66, // 0: api.GetWorkspacesResponse.workspaces:type_name -> api.Workspace
-	67, // 1: api.GetUsersResponse.users:type_name -> api.User
+	65, // 0: api.GetWorkspacesResponse.workspaces:type_name -> api.Workspace
+	66, // 1: api.GetUsersResponse.users:type_name -> api.User
 	1,  // 2: api.GetUserWorkspaceAssignmentResponse.role:type_name -> api.WorkspaceRole
 	1,  // 3: api.AssignUserToWorkspaceRequest.role:type_name -> api.WorkspaceRole
-	68, // 4: api.GetRegistryTokenPasswordsResponse.password1:type_name -> google.protobuf.Timestamp
-	68, // 5: api.GetRegistryTokenPasswordsResponse.password2:type_name -> google.protobuf.Timestamp
-	68, // 6: api.CreateRegistryTokenPasswordResponse.createdAt:type_name -> google.protobuf.Timestamp
-	65, // 7: api.GetImagesResponse.images:type_name -> api.Image
+	67, // 4: api.GetRegistryTokenPasswordsResponse.password1:type_name -> google.protobuf.Timestamp
+	67, // 5: api.GetRegistryTokenPasswordsResponse.password2:type_name -> google.protobuf.Timestamp
+	67, // 6: api.CreateRegistryTokenPasswordResponse.createdAt:type_name -> google.protobuf.Timestamp
+	64, // 7: api.GetImagesResponse.images:type_name -> api.Image
 	2,  // 8: api.CreateSpecificationRequest.mode:type_name -> api.DataMode
-	63, // 9: api.CreateSpecificationRequest.tables:type_name -> api.TableSchema
+	62, // 9: api.CreateSpecificationRequest.tables:type_name -> api.TableSchema
 	2,  // 10: api.GetSpecificationsRequest.mode:type_name -> api.DataMode
-	61, // 11: api.GetSpecificationsResponse.specifications:type_name -> api.SpecificationName
-	62, // 12: api.GetSpecificationResponse.specification:type_name -> api.Specification
+	60, // 11: api.GetSpecificationsResponse.specifications:type_name -> api.SpecificationName
+	61, // 12: api.GetSpecificationResponse.specification:type_name -> api.Specification
 	2,  // 13: api.GetSpecificationResponse.mode:type_name -> api.DataMode
-	60, // 14: api.GetLandingZoneFilesResponse.files:type_name -> api.LandingZoneFile
-	59, // 15: api.CreateFileGroupRequest.schemaFileMappings:type_name -> api.SchemaFileMapping
-	58, // 16: api.GetFileGroupsResponse.fileGroups:type_name -> api.FileGroupName
-	57, // 17: api.GetModelsResponse.models:type_name -> api.ModelName
-	56, // 18: api.GetModelResponse.model:type_name -> api.Model
+	59, // 14: api.GetLandingZoneFilesResponse.files:type_name -> api.LandingZoneFile
+	58, // 15: api.CreateFileGroupRequest.schemaFileMappings:type_name -> api.SchemaFileMapping
+	57, // 16: api.GetFileGroupsResponse.fileGroups:type_name -> api.FileGroupName
+	56, // 17: api.GetModelsResponse.models:type_name -> api.ModelName
+	55, // 18: api.GetModelResponse.model:type_name -> api.Model
 	53, // 19: api.GetModelRunsResponse.modelRuns:type_name -> api.ModelRun
-	54, // 20: api.GetDashboardsResponse.dashboards:type_name -> api.DashboardName
-	55, // 21: api.GetDashboardResponse.dashboard:type_name -> api.Dashboard
-	68, // 22: api.LandingZoneFile.lastModified:type_name -> google.protobuf.Timestamp
+	54, // 20: api.GetDashboardsResponse.dashboards:type_name -> api.Dashboard
+	54, // 21: api.GetDashboardResponse.dashboard:type_name -> api.Dashboard
+	67, // 22: api.LandingZoneFile.lastModified:type_name -> google.protobuf.Timestamp
 	2,  // 23: api.SpecificationName.mode:type_name -> api.DataMode
-	63, // 24: api.Specification.tables:type_name -> api.TableSchema
-	64, // 25: api.TableSchema.fields:type_name -> api.TableField
+	62, // 24: api.Specification.tables:type_name -> api.TableSchema
+	63, // 25: api.TableSchema.fields:type_name -> api.TableField
 	0,  // 26: api.TableField.type:type_name -> api.TableFieldType
 	3,  // 27: api.TenantManagementService.CreateWorkspace:input_type -> api.CreateWorkspaceRequest
 	5,  // 28: api.TenantManagementService.GetWorkspaces:input_type -> api.GetWorkspacesRequest
@@ -4003,14 +3939,14 @@ func file_api_tenantManagement_proto_init() {
 	file_api_tenantManagement_proto_msgTypes[38].OneofWrappers = []any{}
 	file_api_tenantManagement_proto_msgTypes[44].OneofWrappers = []any{}
 	file_api_tenantManagement_proto_msgTypes[50].OneofWrappers = []any{}
-	file_api_tenantManagement_proto_msgTypes[53].OneofWrappers = []any{}
+	file_api_tenantManagement_proto_msgTypes[52].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_tenantManagement_proto_rawDesc), len(file_api_tenantManagement_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   65,
+			NumMessages:   64,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
