@@ -37,7 +37,7 @@ import {
   PlusCircle,
 } from "lucide-react";
 import { paths } from "@/config/paths";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import CreateDataTable from "@/components/create-data-table";
 import {
   Select,

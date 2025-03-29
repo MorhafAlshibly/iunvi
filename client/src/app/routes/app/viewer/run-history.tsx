@@ -7,7 +7,7 @@ import { useWorkspace } from "@/hooks/use-workspace";
 import { getModelRuns } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { useQuery } from "@connectrpc/connect-query";
 import { Info } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const RunHistoryRoute = () => {
   const navigate = useNavigate();

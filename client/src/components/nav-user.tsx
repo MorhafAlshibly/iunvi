@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useLogout, useUser } from "@/lib/authentication";
 import { ActiveUser } from "@/types/user";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { paths } from "@/config/paths";
 
 export function NavUser() {

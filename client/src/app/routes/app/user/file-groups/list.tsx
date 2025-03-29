@@ -6,7 +6,7 @@ import { useWorkspace } from "@/hooks/use-workspace";
 import { getFileGroups } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { useQuery } from "@connectrpc/connect-query";
 import { Info } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const FileGroupsListRoute = () => {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 
 import { Authorization, POLICIES } from "@/lib/authorization";
 import { useUser } from "@/lib/authentication";

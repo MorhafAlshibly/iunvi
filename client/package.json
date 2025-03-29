@@ -21,6 +21,7 @@
     "@connectrpc/connect": "^2.0.1",
     "@connectrpc/connect-query": "^2.0.1",
     "@connectrpc/connect-web": "^2.0.1",
+    "@metabase/embedding-sdk-react": "^0.53.12",
     "@radix-ui/react-avatar": "^1.1.3",
     "@radix-ui/react-collapsible": "^1.1.3",
     "@radix-ui/react-dialog": "^1.1.6",

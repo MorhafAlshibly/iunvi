@@ -30,10 +30,10 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/blob"
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/service"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/blob"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/container"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/sas"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/service"
 	_ "github.com/marcboeker/go-duckdb"
 	"github.com/santhosh-tekuri/jsonschema/v6"
 )
@@ -1615,126 +1615,139 @@ func (s *Service) GetModelRunDashboard(ctx context.Context, req *connect.Request
 	if err != nil {
 		return nil, err
 	}
-	dashboardsContainerClient := svcClient.NewContainerClient(s.dashboardsContainerName)
-	blockBlobClient := dashboardsContainerClient.NewBlockBlobClient(getModelRunDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId, req.Msg.DashboardId) + "/index.html")
-	var dashboardHtml []byte
-	_, err = blockBlobClient.DownloadBuffer(ctx, dashboardHtml, nil)
-	if err != nil {
-		// if it is not then start a job in aks to create the dashboard
-		// list output files in model run directory
-		modelRunsContainerClient := svcClient.NewContainerClient(s.modelRunsContainerName)
-		pager := modelRunsContainerClient.NewListBlobsFlatPager(&container.ListBlobsFlatOptions{
-			Prefix: conversion.ValueToPointer(getModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId) + "/"),
+	modelRunsDashboardsContainerClient := svcClient.NewContainerClient(s.modelRunDashboardsContainerName)
+	blockBlobClient := modelRunsDashboardsContainerClient.NewBlockBlobClient(getModelRunDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId, req.Msg.DashboardId) + "/index.html")
+	properties, err := blockBlobClient.GetProperties(ctx, nil)
+	if err == nil {
+		if properties.ContentLength == nil {
+			return nil, fmt.Errorf("ContentLength is nil")
+		}
+		dashboardHtml := make([]byte, *properties.ContentLength)
+		_, err = blockBlobClient.DownloadBuffer(ctx, dashboardHtml, &blob.DownloadBufferOptions{
+			Range: blob.HTTPRange{
+				Offset: 0,
+				Count:  *properties.ContentLength,
+			},
 		})
-		var outputFiles []string
-		for pager.More() {
-			page, err := pager.NextPage(ctx)
-			if err != nil {
-				return nil, err
+		if err != nil {
+			return nil, err
+		}
+		return connect.NewResponse(&api.GetModelRunDashboardResponse{
+			DashboardHtml: string(dashboardHtml),
+		}), nil
+	}
+	// if it is not then start a job in aks to create the dashboard
+	// list output files in model run directory
+	modelRunsContainerClient := svcClient.NewContainerClient(s.modelRunsContainerName)
+	pager := modelRunsContainerClient.NewListBlobsFlatPager(&container.ListBlobsFlatOptions{
+		Prefix: conversion.ValueToPointer(getModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId) + "/"),
+	})
+	var outputFiles []string
+	for pager.More() {
+		page, err := pager.NextPage(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, blob := range page.Segment.BlobItems {
+			if blob.Name == nil {
+				continue
 			}
-			for _, blob := range page.Segment.BlobItems {
-				if blob.Name == nil {
-					continue
-				}
-				outputFiles = append(outputFiles, "static/data/parquets/"+strings.TrimPrefix(*blob.Name, getModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId)+"/"))
-			}
+			outputFiles = append(outputFiles, "static/data/parquets/"+strings.TrimPrefix(*blob.Name, getModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId)+"/"))
 		}
-		// list dashboard files in dashboard directory
-		manifestJson := map[string]interface{}{
-			"renderedFiles": map[string]interface{}{
-				"parquets": outputFiles,
-			},
-		}
-		manifestJsonBytes, err := json.Marshal(manifestJson)
-		if err != nil {
-			return nil, err
-		}
-		config, err := clientcmd.BuildConfigFromFlags("", s.kubeconfigPath)
-		if err != nil {
-			return nil, err
-		}
-		clientset, err := kubernetes.NewForConfig(config)
-		if err != nil {
-			return nil, err
-		}
-		job := &batchv1.Job{
-			ObjectMeta: metav1.ObjectMeta{
-				Name: strings.ToLower(req.Msg.ModelRunId)[:30] + "-" + strings.ToLower(req.Msg.DashboardId)[:30],
-			},
-			Spec: batchv1.JobSpec{
-				Template: corev1.PodTemplateSpec{
-					Spec: corev1.PodSpec{
-						RestartPolicy: corev1.RestartPolicyNever,
-						Containers: []corev1.Container{
-							{
-								Name:  "apply-dashboard",
-								Image: fmt.Sprintf("%s.azurecr.io/apply-dashboard:latest", s.registryName),
-								Command: []string{
-									"/bin/sh",
-									"-c",
+	}
+	// list dashboard files in dashboard directory
+	manifestJson := map[string]interface{}{
+		"renderedFiles": map[string]interface{}{
+			"parquets": outputFiles,
+		},
+	}
+	manifestJsonBytes, err := json.Marshal(manifestJson)
+	if err != nil {
+		return nil, err
+	}
+	config, err := clientcmd.BuildConfigFromFlags("", s.kubeconfigPath)
+	if err != nil {
+		return nil, err
+	}
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		return nil, err
+	}
+	job := &batchv1.Job{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: strings.ToLower(req.Msg.ModelRunId)[:30] + "-" + strings.ToLower(req.Msg.DashboardId)[:30],
+		},
+		Spec: batchv1.JobSpec{
+			Template: corev1.PodTemplateSpec{
+				Spec: corev1.PodSpec{
+					RestartPolicy: corev1.RestartPolicyNever,
+					Containers: []corev1.Container{
+						{
+							Name:  "apply-dashboard",
+							Image: fmt.Sprintf("%s.azurecr.io/apply-dashboard:latest", s.registryName),
+							Command: []string{
+								"/bin/sh",
+								"-c",
+							},
+							Args: []string{
+								"echo '" + string(manifestJsonBytes) + "' > /app/.evidence/template/static/data/manifest.json && " +
+									"echo -e '\n\ndeployment:\n  basePath: /" + s.modelRunDashboardsContainerName + "/" + getModelRunDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId, req.Msg.DashboardId) + "' >> /app/evidence.config.yaml && " +
+									"npm run build"},
+							VolumeMounts: []corev1.VolumeMount{
+								{
+									Name:      "model-runs-volume",
+									MountPath: "/app/.evidence/template/static/data/parquets",
+									SubPath:   getModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId),
+									// ReadOnly:  true,
 								},
-								Args: []string{
-									"echo '" + string(manifestJsonBytes) + "' > /app/.evidence/template/static/data/manifest.json && npm run build",
+								{
+									Name:      "dashboards-volume",
+									MountPath: "/app/pages",
+									SubPath:   getDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.DashboardId),
+									ReadOnly:  true,
 								},
-								VolumeMounts: []corev1.VolumeMount{
-									{
-										Name:      "model-runs-volume",
-										MountPath: "/app/.evidence/template/static/data/parquets",
-										SubPath:   getModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId),
-										// ReadOnly:  true,
-									},
-									{
-										Name:      "dashboards-volume",
-										MountPath: "/app/pages",
-										SubPath:   getDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.DashboardId),
-										ReadOnly:  true,
-									},
-									{
-										Name:      "model-run-dashboards-volume",
-										MountPath: "/app/build",
-										SubPath:   getModelRunDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId, req.Msg.DashboardId),
-									},
+								{
+									Name:      "web-volume",
+									MountPath: "/app/build",
+									SubPath:   getModelRunDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId, req.Msg.DashboardId),
 								},
 							},
 						},
-						Volumes: []corev1.Volume{
-							{
-								Name: "model-runs-volume",
-								VolumeSource: corev1.VolumeSource{
-									PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
-										ClaimName: "pvc-model-runs-iunvi-dev-eastus-001",
-									},
+					},
+					Volumes: []corev1.Volume{
+						{
+							Name: "model-runs-volume",
+							VolumeSource: corev1.VolumeSource{
+								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+									ClaimName: "pvc-model-runs-iunvi-dev-eastus-001",
 								},
-							}, {
-								Name: "dashboards-volume",
-								VolumeSource: corev1.VolumeSource{
-									PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
-										ClaimName: "pvc-dashboards-iunvi-dev-eastus-001",
-									},
+							},
+						}, {
+							Name: "dashboards-volume",
+							VolumeSource: corev1.VolumeSource{
+								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+									ClaimName: "pvc-dashboards-iunvi-dev-eastus-001",
 								},
-							}, {
-								Name: "model-run-dashboards-volume",
-								VolumeSource: corev1.VolumeSource{
-									PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
-										ClaimName: "pvc-model-run-dashboards-iunvi-dev-eastus-001",
-									},
+							},
+						}, {
+							Name: "web-volume",
+							VolumeSource: corev1.VolumeSource{
+								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+									ClaimName: "pvc-web-iunvi-dev-eastus-001",
 								},
 							},
 						},
 					},
 				},
 			},
-		}
-		_, err = clientset.BatchV1().Jobs("default").Create(ctx, job, metav1.CreateOptions{})
-		if err != nil {
-			return nil, err
-		}
-		return connect.NewResponse(&api.GetModelRunDashboardResponse{
-			DashboardHtml: "",
-		}), nil
+		},
+	}
+	_, err = clientset.BatchV1().Jobs("default").Create(ctx, job, metav1.CreateOptions{})
+	if err != nil {
+		return nil, err
 	}
 	return connect.NewResponse(&api.GetModelRunDashboardResponse{
-		DashboardHtml: string(dashboardHtml),
+		DashboardHtml: "",
 	}), nil
 }
 
@@ -1766,7 +1779,7 @@ func getDashboardDirectory(ctx context.Context, workspaceId string, modelId stri
 
 func getModelRunDashboardDirectory(ctx context.Context, workspaceId string, modelId string, modelRunId string, dashboardId string) string {
 	tenantId := ctx.Value("TenantDirectoryId").(string)
-	return tenantId + "/" + strings.ToLower(workspaceId) + "/" + strings.ToLower(modelId) + "/" + strings.ToLower(modelRunId) + "/" + strings.ToLower(dashboardId)
+	return "model-run-dashboards/" + tenantId + "/" + strings.ToLower(workspaceId) + "/" + strings.ToLower(modelId) + "/" + strings.ToLower(modelRunId) + "/" + strings.ToLower(dashboardId)
 }
 
 func getScope(workspaceId string) string {

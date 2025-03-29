@@ -44,7 +44,7 @@ import { useQuery } from "@connectrpc/connect-query";
 import { paths } from "@/config/paths";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { Button } from "./ui/button";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const navViewer = [
   {

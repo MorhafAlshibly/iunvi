@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { paths } from "@/config/paths";
 import { useEffect } from "react";
 import { useLogin, useUser } from "@/lib/authentication";

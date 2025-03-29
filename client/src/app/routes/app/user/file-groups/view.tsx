@@ -7,7 +7,7 @@ import { DataMode } from "@/types/api/tenantManagement_pb";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
 
 const FileGroupsViewRoute = () => {

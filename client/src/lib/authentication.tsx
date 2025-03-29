@@ -1,9 +1,9 @@
 import { configureAuth } from "react-query-auth";
-import { Navigate, useLocation } from "react-router";
 import { ActiveUser, ROLES } from "@/types/user";
 import { instance } from "@/lib/msal";
 import { paths } from "@/config/paths";
 import { loginRequest } from "@/config/authentication";
+import { Navigate, useLocation } from "react-router-dom";
 
 // api call definitions for auth (types, schemas, requests):
 // these are not part of features as this is a module shared across features

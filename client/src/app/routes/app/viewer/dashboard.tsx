@@ -10,7 +10,7 @@ import { DataMode, TableFieldType } from "@/types/api/tenantManagement_pb";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
@@ -44,7 +44,14 @@ const DashboardRoute = () => {
             setSelectedDashboardId={setDashboardId}
           />
         </div>
-        <div className="grid grid-cols-1 col-span-1"></div>
+        <div className="grid grid-cols-1 col-span-1">
+          {dashboardData?.dashboardHtml && (
+            <div
+              className="grid grid-cols-1 col-span-1"
+              dangerouslySetInnerHTML={{ __html: dashboardData.dashboardHtml }}
+            />
+          )}
+        </div>
       </div>
     </ContentLayout>
   );
