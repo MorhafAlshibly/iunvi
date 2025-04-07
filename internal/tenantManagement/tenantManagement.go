@@ -5,7 +5,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"mime"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -26,12 +28,14 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/blob"
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/container"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/blob"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
+	blobService "github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/service"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/sas"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/service"
 	_ "github.com/marcboeker/go-duckdb"
@@ -783,14 +787,14 @@ func (s *Service) CreateLandingZoneSharedAccessSignature(ctx context.Context, re
 	if err != nil {
 		return nil, err
 	}
-	// Create Blob Signature Values with desired permissions and sign with user delegation credential
-	sasQueryParams, err := sas.BlobSignatureValues{
-		Protocol:      sas.ProtocolHTTPS,
-		StartTime:     time.Now().UTC().Add(-10 * time.Second),
-		ExpiryTime:    time.Now().UTC().Add(1 * time.Hour),
-		Permissions:   (&sas.BlobPermissions{Write: true}).String(),
-		ContainerName: s.landingZoneContainerName,
-		BlobName:      directory + "/" + req.Msg.FileName,
+	// Create File Signature Values with desired permissions and sign with user delegation credential
+	sasQueryParams, err := sas.DatalakeSignatureValues{
+		Protocol:       sas.ProtocolHTTPS,
+		StartTime:      time.Now().UTC().Add(-10 * time.Second),
+		ExpiryTime:     time.Now().UTC().Add(1 * time.Hour),
+		Permissions:    (&sas.FilePermissions{Write: true}).String(),
+		FileSystemName: s.landingZoneContainerName,
+		FilePath:       directory + "/" + req.Msg.FileName,
 	}.SignWithUserDelegation(udc)
 	if err != nil {
 		return nil, err
@@ -821,7 +825,7 @@ func (s *Service) GetLandingZoneFiles(ctx context.Context, req *connect.Request[
 		return nil, err
 	}
 	directory := getLandingZoneDirectory(ctx, req.Msg.WorkspaceId)
-	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
+	svcClient, err := blobService.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -838,15 +842,15 @@ func (s *Service) GetLandingZoneFiles(ctx context.Context, req *connect.Request[
 		if err != nil {
 			return nil, err
 		}
-		for _, blob := range page.Segment.BlobItems {
-			if blob.Name == nil {
+		for _, file := range page.Segment.BlobItems {
+			if file.Name == nil {
 				continue
 			}
-			fileName := strings.TrimPrefix(*blob.Name, directory+"/")
+			fileName := strings.TrimPrefix(*file.Name, directory+"/")
 			files = append(files, &api.LandingZoneFile{
 				Name:         fileName,
-				Size:         uint64(conversion.PointerToValue(blob.Properties.ContentLength, 0)),
-				LastModified: timestamppb.New(conversion.PointerToValue(blob.Properties.LastModified, time.Time{})),
+				Size:         uint64(conversion.PointerToValue(file.Properties.ContentLength, 0)),
+				LastModified: timestamppb.New(conversion.PointerToValue(file.Properties.LastModified, time.Time{})),
 			})
 		}
 	}
@@ -938,7 +942,7 @@ func (s *Service) CreateFileGroup(ctx context.Context, req *connect.Request[api.
 	if err != nil {
 		return nil, err
 	}
-	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
+	svcClient, err := blobService.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -966,7 +970,7 @@ func (s *Service) CreateFileGroup(ctx context.Context, req *connect.Request[api.
 			return nil, err
 		}
 		blobClient := landingZoneContainerClient.NewBlobClient(getLandingZoneDirectory(ctx, workspaceId.String()) + "/" + schemaFileMapping.LandingZoneFileName)
-		// TODO: Acquire a lease on the blob to prevent other users from writing to it
+		// TODO: Acquire a lease on the file to prevent other users from writing to it
 
 		// Create []bytes of length 10KB to download the first 10KB of the file
 		buffer := make([]byte, 10*1024)
@@ -1330,7 +1334,7 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 	if err != nil {
 		return nil, err
 	}
-	// upload parameters as json to blob storage
+	// upload parameters as json to file storage
 	if appModel.ParametersSchema != nil && *appModel.ParametersSchema != "" {
 		cred, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
 		if err != nil {
@@ -1340,9 +1344,9 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 		if err != nil {
 			return nil, err
 		}
-		containerClient := svcClient.NewContainerClient(s.modelRunsContainerName)
-		blockBlobClient := containerClient.NewBlockBlobClient(getModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunId.String()) + "/parameters.json")
-		_, err = blockBlobClient.UploadBuffer(ctx, []byte(*req.Msg.Parameters), nil)
+		containerClient := svcClient.NewFileSystemClient(s.modelRunsContainerName)
+		fileClient := containerClient.NewFileClient(getModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunId.String()) + "/parameters.json")
+		err = fileClient.UploadBuffer(ctx, []byte(*req.Msg.Parameters), nil)
 		if err != nil {
 			return nil, err
 		}
@@ -1495,9 +1499,9 @@ func (s *Service) CreateDashboard(ctx context.Context, req *connect.Request[api.
 	if err != nil {
 		return nil, err
 	}
-	containerClient := svcClient.NewContainerClient(s.dashboardsContainerName)
-	blockBlobClient := containerClient.NewBlockBlobClient(getDashboardDirectory(ctx, workspaceId.String(), modelIdBytes.String(), dashboard.DashboardID.String()) + "/index.md")
-	_, err = blockBlobClient.UploadBuffer(ctx, []byte(req.Msg.Definition), nil)
+	containerClient := svcClient.NewFileSystemClient(s.dashboardsContainerName)
+	fileClient := containerClient.NewFileClient(getDashboardDirectory(ctx, workspaceId.String(), modelIdBytes.String(), dashboard.DashboardID.String()) + "/index.md")
+	err = fileClient.UploadBuffer(ctx, []byte(req.Msg.Definition), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1611,34 +1615,75 @@ func (s *Service) GetModelRunDashboard(ctx context.Context, req *connect.Request
 	if err != nil {
 		return nil, err
 	}
-	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
+	blobSvcClient, err := blobService.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
 	if err != nil {
 		return nil, err
 	}
-	modelRunsDashboardsContainerClient := svcClient.NewContainerClient(s.modelRunDashboardsContainerName)
-	blockBlobClient := modelRunsDashboardsContainerClient.NewBlockBlobClient(getModelRunDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId, req.Msg.DashboardId) + "/index.html")
-	properties, err := blockBlobClient.GetProperties(ctx, nil)
+	directory := getModelRunDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId, req.Msg.DashboardId)
+	// directoryClient := modelRunsDashboardsContainerClient.NewDirectoryClient(directory)
+	modelRunDashboardsContainerClient := blobSvcClient.NewContainerClient(s.modelRunDashboardsContainerName)
+	indexFileClient := modelRunDashboardsContainerClient.NewBlockBlobClient(directory + "/index.html")
+	if err != nil {
+		return nil, err
+	}
+	properties, err := indexFileClient.GetProperties(ctx, nil)
 	if err == nil {
-		if properties.ContentLength == nil {
-			return nil, fmt.Errorf("ContentLength is nil")
+		if properties.ContentType == nil {
+			// Loop through the files in the directory and set all their mimetypes correctly
+			pager := modelRunDashboardsContainerClient.NewListBlobsFlatPager(&container.ListBlobsFlatOptions{
+				Prefix: conversion.ValueToPointer(directory + "/"),
+			})
+			for pager.More() {
+				page, err := pager.NextPage(ctx)
+				if err != nil {
+					return nil, err
+				}
+				for _, file := range page.Segment.BlobItems {
+					if file.Name == nil {
+						continue
+					}
+					blobClient := modelRunDashboardsContainerClient.NewBlobClient(*file.Name)
+					mimeType := mime.TypeByExtension(filepath.Ext(*file.Name))
+					_, err = blobClient.SetHTTPHeaders(ctx, blob.HTTPHeaders{
+						BlobContentType: conversion.ValueToPointer(mimeType),
+					}, nil)
+					if err != nil {
+						return nil, err
+					}
+				}
+			}
 		}
-		dashboardHtml := make([]byte, *properties.ContentLength)
-		_, err = blockBlobClient.DownloadBuffer(ctx, dashboardHtml, &blob.DownloadBufferOptions{
-			Range: blob.HTTPRange{
-				Offset: 0,
-				Count:  *properties.ContentLength,
-			},
-		})
+		info := service.KeyInfo{
+			Start:  conversion.ValueToPointer(time.Now().UTC().Add(-10 * time.Second).Format(sas.TimeFormat)),
+			Expiry: conversion.ValueToPointer(time.Now().UTC().Add(48 * time.Hour).Format(sas.TimeFormat)),
+		}
+		svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
 		if err != nil {
 			return nil, err
 		}
+		udc, err := svcClient.GetUserDelegationCredential(ctx, info, nil)
+		if err != nil {
+			return nil, err
+		}
+		sasQueryParams, err := sas.DatalakeSignatureValues{
+			Protocol:       sas.ProtocolHTTPS,
+			StartTime:      time.Now().UTC().Add(-10 * time.Second),
+			ExpiryTime:     time.Now().UTC().Add(1 * time.Hour),
+			Permissions:    (&sas.DirectoryPermissions{Read: true}).String(),
+			FileSystemName: s.modelRunDashboardsContainerName,
+			DirectoryPath:  directory,
+		}.SignWithUserDelegation(udc)
+		if err != nil {
+			return nil, err
+		}
+		sasURL := fmt.Sprintf("https://%s.dfs.core.windows.net/%s/%s?%s", s.storageAccountName, s.modelRunDashboardsContainerName, directory, sasQueryParams.Encode())
 		return connect.NewResponse(&api.GetModelRunDashboardResponse{
-			DashboardHtml: string(dashboardHtml),
+			DashboardSasUrl: sasURL,
 		}), nil
 	}
 	// if it is not then start a job in aks to create the dashboard
 	// list output files in model run directory
-	modelRunsContainerClient := svcClient.NewContainerClient(s.modelRunsContainerName)
+	modelRunsContainerClient := blobSvcClient.NewContainerClient(s.modelRunsContainerName)
 	pager := modelRunsContainerClient.NewListBlobsFlatPager(&container.ListBlobsFlatOptions{
 		Prefix: conversion.ValueToPointer(getModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId) + "/"),
 	})
@@ -1648,11 +1693,11 @@ func (s *Service) GetModelRunDashboard(ctx context.Context, req *connect.Request
 		if err != nil {
 			return nil, err
 		}
-		for _, blob := range page.Segment.BlobItems {
-			if blob.Name == nil {
+		for _, file := range page.Segment.BlobItems {
+			if file.Name == nil {
 				continue
 			}
-			outputFiles = append(outputFiles, "static/data/parquets/"+strings.TrimPrefix(*blob.Name, getModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId)+"/"))
+			outputFiles = append(outputFiles, "static/data/parquets/"+strings.TrimPrefix(*file.Name, getModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId)+"/"))
 		}
 	}
 	// list dashboard files in dashboard directory
@@ -1692,7 +1737,22 @@ func (s *Service) GetModelRunDashboard(ctx context.Context, req *connect.Request
 							Args: []string{
 								"echo '" + string(manifestJsonBytes) + "' > /app/.evidence/template/static/data/manifest.json && " +
 									"echo -e '\n\ndeployment:\n  basePath: /" + s.modelRunDashboardsContainerName + "/" + getModelRunDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId, req.Msg.DashboardId) + "' >> /app/evidence.config.yaml && " +
-									"npm run build"},
+									// "npm run build",
+									"npm run build && " +
+									//"mv /app/build/* /app/postbuild && " +
+									"echo -e 'self.addEventListener(\"fetch\",(t=>{let e=t.request.url;const s=self.registration.scope;e.startsWith(s+\"entry.html\")&&(e=s+\"index.html\");const n=new URL(e),r=new URLSearchParams(location.href.split(\"?\")[1]);for(const[t,e]of r)n.searchParams.append(t,e);const o=n.toString();t.respondWith(fetch(o))}));' > /app/build/sw.js && " +
+									"echo -e '<p>Installing Service Worker, please wait...</p><script>function handleError(n){console.log(n)}navigator.serviceWorker.register(\"sw.js?\"+location.href.split(\"?\")[1]).then((n=>{if(n.installing){const e=n.installing||n.waiting;e.onstatechange=function(){\"installed\"===e.state&&window.location.reload()}}else n.active&&handleError(new Error(\"Service Worker is installed and not redirecting.\"))})).catch(handleError)</script>' > /app/build/entry.html",
+							},
+							Resources: corev1.ResourceRequirements{
+								Requests: corev1.ResourceList{
+									corev1.ResourceCPU:    resource.MustParse("500m"),
+									corev1.ResourceMemory: resource.MustParse("1Gi"),
+								},
+								Limits: corev1.ResourceList{
+									corev1.ResourceCPU:    resource.MustParse("2000m"),
+									corev1.ResourceMemory: resource.MustParse("4Gi"),
+								},
+							},
 							VolumeMounts: []corev1.VolumeMount{
 								{
 									Name:      "model-runs-volume",
@@ -1707,7 +1767,7 @@ func (s *Service) GetModelRunDashboard(ctx context.Context, req *connect.Request
 									ReadOnly:  true,
 								},
 								{
-									Name:      "web-volume",
+									Name:      "model-run-dashboards-volume",
 									MountPath: "/app/build",
 									SubPath:   getModelRunDashboardDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId, req.Msg.DashboardId),
 								},
@@ -1730,10 +1790,10 @@ func (s *Service) GetModelRunDashboard(ctx context.Context, req *connect.Request
 								},
 							},
 						}, {
-							Name: "web-volume",
+							Name: "model-run-dashboards-volume",
 							VolumeSource: corev1.VolumeSource{
 								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
-									ClaimName: "pvc-web-iunvi-dev-eastus-001",
+									ClaimName: "pvc-model-run-dashboards-iunvi-dev-eastus-001",
 								},
 							},
 						},
@@ -1747,7 +1807,7 @@ func (s *Service) GetModelRunDashboard(ctx context.Context, req *connect.Request
 		return nil, err
 	}
 	return connect.NewResponse(&api.GetModelRunDashboardResponse{
-		DashboardHtml: "",
+		DashboardSasUrl: "",
 	}), nil
 }
 
@@ -1779,7 +1839,7 @@ func getDashboardDirectory(ctx context.Context, workspaceId string, modelId stri
 
 func getModelRunDashboardDirectory(ctx context.Context, workspaceId string, modelId string, modelRunId string, dashboardId string) string {
 	tenantId := ctx.Value("TenantDirectoryId").(string)
-	return "model-run-dashboards/" + tenantId + "/" + strings.ToLower(workspaceId) + "/" + strings.ToLower(modelId) + "/" + strings.ToLower(modelRunId) + "/" + strings.ToLower(dashboardId)
+	return tenantId + "/" + strings.ToLower(workspaceId) + "/" + strings.ToLower(modelId) + "/" + strings.ToLower(modelRunId) + "/" + strings.ToLower(dashboardId)
 }
 
 func getScope(workspaceId string) string {

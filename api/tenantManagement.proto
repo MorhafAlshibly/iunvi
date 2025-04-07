@@ -258,7 +258,7 @@ message GetModelRunDashboardRequest {
 }
 
 message GetModelRunDashboardResponse {
-  string dashboardHtml = 1;
+  string dashboardSasUrl = 1;
 }
 
 message ModelRun {

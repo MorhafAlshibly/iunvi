@@ -1,27 +1,15 @@
-import { Label } from "@radix-ui/react-dropdown-menu";
 import { useMatch } from "react-router-dom";
 import { useQuery } from "@connectrpc/connect-query";
-import {
-  getModelRunDashboard,
-  getSpecification,
-} from "@/types/api/tenantManagement-TenantManagementService_connectquery";
+import { getModelRunDashboard } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { paths } from "@/config/paths";
-import { DataMode, TableFieldType } from "@/types/api/tenantManagement_pb";
-import CodeMirror from "@uiw/react-codemirror";
-import { json } from "@codemirror/lang-json";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DashboardSelector } from "@/components/dashboard-selector";
 import { ContentLayout } from "@/components/layouts/content";
 
 const DashboardRoute = () => {
-  const navigate = useNavigate();
   const id = useMatch(paths.app.viewer.dashboard.getHref(":id"))?.params.id;
-
   const [dashboardId, setDashboardId] = useState<string | null>(null);
+  const [iframeSrc, setIframeSrc] = useState<string | undefined>(undefined);
 
   const { data: dashboardData } = useQuery(
     getModelRunDashboard,
@@ -31,26 +19,36 @@ const DashboardRoute = () => {
     },
     {
       enabled: !!id && !!dashboardId,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
     },
   );
+
+  useEffect(() => {
+    if (!dashboardData?.dashboardSasUrl) return;
+    const dashboardUrlParts = dashboardData.dashboardSasUrl.split("?");
+    const baseUrl = dashboardUrlParts[0];
+    const sasToken = dashboardUrlParts[1];
+    const indexUrl = `${baseUrl}/index.html?${sasToken}`;
+    setIframeSrc(indexUrl);
+  }, [dashboardData?.dashboardSasUrl]);
 
   return (
     <ContentLayout title="Dashboard">
       <div className="grid grid-cols-1 gap-4">
-        <div className="grid grid-cols-1 col-span-1 justify-items-start">
-          <DashboardSelector
-            modelRunId={id || ""}
-            selectedDashboardId={dashboardId}
-            setSelectedDashboardId={setDashboardId}
-          />
-        </div>
+        <DashboardSelector
+          modelRunId={id || ""}
+          selectedDashboardId={dashboardId}
+          setSelectedDashboardId={setDashboardId}
+        />
         <div className="grid grid-cols-1 col-span-1">
-          {dashboardData?.dashboardHtml && (
-            <div
-              className="grid grid-cols-1 col-span-1"
-              dangerouslySetInnerHTML={{ __html: dashboardData.dashboardHtml }}
-            />
-          )}
+          <iframe
+            src={iframeSrc}
+            width="100%"
+            height="1080px"
+            style={{ border: "none" }}
+            title="Dashboard"
+          />
         </div>
       </div>
     </ContentLayout>

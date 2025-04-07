@@ -2602,10 +2602,10 @@ func (x *GetModelRunDashboardRequest) GetDashboardId() string {
 }
 
 type GetModelRunDashboardResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	DashboardHtml string                 `protobuf:"bytes,1,opt,name=dashboardHtml,proto3" json:"dashboardHtml,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	DashboardSasUrl string                 `protobuf:"bytes,1,opt,name=dashboardSasUrl,proto3" json:"dashboardSasUrl,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *GetModelRunDashboardResponse) Reset() {
@@ -2638,9 +2638,9 @@ func (*GetModelRunDashboardResponse) Descriptor() ([]byte, []int) {
 	return file_api_tenantManagement_proto_rawDescGZIP(), []int{49}
 }
 
-func (x *GetModelRunDashboardResponse) GetDashboardHtml() string {
+func (x *GetModelRunDashboardResponse) GetDashboardSasUrl() string {
 	if x != nil {
-		return x.DashboardHtml
+		return x.DashboardSasUrl
 	}
 	return ""
 }
@@ -3629,9 +3629,9 @@ const file_api_tenantManagement_proto_rawDesc = "" +
 	"\n" +
 	"modelRunId\x18\x01 \x01(\tR\n" +
 	"modelRunId\x12 \n" +
-	"\vdashboardId\x18\x02 \x01(\tR\vdashboardId\"D\n" +
-	"\x1cGetModelRunDashboardResponse\x12$\n" +
-	"\rdashboardHtml\x18\x01 \x01(\tR\rdashboardHtml\"\xbd\x01\n" +
+	"\vdashboardId\x18\x02 \x01(\tR\vdashboardId\"H\n" +
+	"\x1cGetModelRunDashboardResponse\x12(\n" +
+	"\x0fdashboardSasUrl\x18\x01 \x01(\tR\x0fdashboardSasUrl\"\xbd\x01\n" +
 	"\bModelRun\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
 	"\amodelId\x18\x02 \x01(\tR\amodelId\x12*\n" +

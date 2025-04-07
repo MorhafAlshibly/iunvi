@@ -38,7 +38,7 @@ var (
 	fileGroupsContainerName         = fs.StringLong("fileGroupsContainerName", "file-groups", "Azure Storage File Groups Container Name")
 	modelRunsContainerName          = fs.StringLong("modelRunsContainerName", "model-runs", "Azure Storage Model Runs Container Name")
 	dashboardsContainerName         = fs.StringLong("dashboardsContainerName", "dashboards", "Azure Storage Dashboards Container Name")
-	modelRunDashboardsContainerName = fs.StringLong("modelRunDashboardsContainerName", "$web", "Azure Storage Model Run Dashboards Container Name")
+	modelRunDashboardsContainerName = fs.StringLong("modelRunDashboardsContainerName", "model-run-dashboards", "Azure Storage Model Run Dashboards Container Name")
 	kubeconfigPath                  = fs.StringLong("kubeconfigPath", "", "Kubeconfig Path")
 )
 

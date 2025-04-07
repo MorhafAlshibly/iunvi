@@ -97,7 +97,7 @@ const RunModelsCreateRoute = () => {
               disabled={!validateModelRun()}
               onClick={() => {
                 createModelRunMutation.mutate(modelRun);
-                navigate(paths.app.user.landingZone.getHref());
+                navigate(paths.app.viewer.runHistory.getHref());
               }}
             >
               Run

@@ -17,7 +17,7 @@ import { Dashboard, useUppyEvent } from "@uppy/react";
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
 import "./uppy.css";
-import BlobPlugin from "@/lib/uppy-blob";
+import DataLakePlugin from "@/lib/uppy-blob";
 import { Label } from "@/components/ui/label";
 import { ChevronDown, RefreshCcw } from "lucide-react";
 import { timestampDate } from "@bufbuild/protobuf/wkt";
@@ -105,7 +105,7 @@ const LandingZoneRoute = () => {
       },
       autoProceed: false,
       allowMultipleUploadBatches: false,
-    }).use(BlobPlugin, {
+    }).use(DataLakePlugin, {
       getSasUrl: async (file: UppyFile<Meta, Body>) => {
         return getAzureSas(file.name);
       },

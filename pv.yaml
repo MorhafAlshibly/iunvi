@@ -22,3 +22,104 @@ spec:
   mountOptions:
     - "-o allow_other"
     - "--file-cache-timeout-in-seconds=120"
+    - "--use-adls=true"
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-file-groups-iunvi-dev-eastus-001
+  annotations:
+    pv.kubernetes.io/provisioned-by: blob.csi.azure.com
+spec:
+  capacity:
+    storage: 1Pi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azureblob-nfs-premium
+  mountOptions:
+    - nconnect=4
+  csi:
+    driver: blob.csi.azure.com
+    volumeHandle: saiunvideveastus001_file-groups
+    volumeAttributes:
+      resourceGroup: rg-iunvi-dev-eastus-001
+      storageAccount: saiunvideveastus001
+      containerName: file-groups
+      protocol: nfs
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-dashboards-iunvi-dev-eastus-001
+  annotations:
+    pv.kubernetes.io/provisioned-by: blob.csi.azure.com
+spec:
+  capacity:
+    storage: 1Pi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azureblob-nfs-premium
+  mountOptions:
+    - nconnect=4
+  csi:
+    driver: blob.csi.azure.com
+    volumeHandle: saiunvideveastus001_dashboards
+    volumeAttributes:
+      resourceGroup: rg-iunvi-dev-eastus-001
+      storageAccount: saiunvideveastus001
+      containerName: dashboards
+      protocol: nfs
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-model-runs-iunvi-dev-eastus-001
+  annotations:
+    pv.kubernetes.io/provisioned-by: blob.csi.azure.com
+spec:
+  capacity:
+    storage: 1Pi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azureblob-nfs-premium
+  mountOptions:
+    - nconnect=4
+  csi:
+    driver: blob.csi.azure.com
+    volumeHandle: saiunvideveastus001_model-runs
+    volumeAttributes:
+      resourceGroup: rg-iunvi-dev-eastus-001
+      storageAccount: saiunvideveastus001
+      containerName: model-runs
+      protocol: nfs
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-model-run-dashboards-iunvi-dev-eastus-001
+  annotations:
+    pv.kubernetes.io/provisioned-by: blob.csi.azure.com
+spec:
+  capacity:
+    storage: 1Pi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azureblob-nfs-premium
+  mountOptions:
+    - nconnect=4
+  csi:
+    driver: blob.csi.azure.com
+    volumeHandle: saiunvideveastus001_model-run-dashboards
+    volumeAttributes:
+      resourceGroup: rg-iunvi-dev-eastus-001
+      storageAccount: saiunvideveastus001
+      containerName: model-run-dashboards
+      protocol: nfs
