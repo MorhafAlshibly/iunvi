@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package api;
+
+import "google/protobuf/timestamp.proto";
+import "api/types.proto";
+
+option go_package = "github.com/MorhafAlshibly/iunvi/gen/api";
+
+service ModelService {
+  rpc GetRegistryTokenPasswords(GetRegistryTokenPasswordsRequest) returns (GetRegistryTokenPasswordsResponse);
+  rpc CreateRegistryTokenPassword(CreateRegistryTokenPasswordRequest) returns (CreateRegistryTokenPasswordResponse);
+  rpc GetImages(GetImagesRequest) returns (GetImagesResponse);
+  rpc CreateModel(CreateModelRequest) returns (CreateModelResponse);
+  rpc GetModels(GetModelsRequest) returns (GetModelsResponse);
+  rpc GetModel(GetModelRequest) returns (GetModelResponse);
+  rpc CreateModelRun(CreateModelRunRequest) returns (CreateModelRunResponse);
+  rpc GetModelRuns(GetModelRunsRequest) returns (GetModelRunsResponse);
+}
+
+message GetRegistryTokenPasswordsRequest {
+  string workspaceId = 1;
+}
+
+message GetRegistryTokenPasswordsResponse {
+  optional google.protobuf.Timestamp password1 = 1;
+  optional google.protobuf.Timestamp password2 = 2;
+}
+
+message CreateRegistryTokenPasswordRequest {
+  string workspaceId = 1;
+  bool password2 = 2;
+}
+
+message CreateRegistryTokenPasswordResponse {
+  string password = 1;
+  google.protobuf.Timestamp createdAt = 2;
+}
+
+message GetImagesRequest {
+  string workspaceId = 1;
+}
+
+message GetImagesResponse {
+  repeated Image images = 1;
+}
+
+message CreateModelRequest {
+  string inputSpecificationId = 1;
+  string outputSpecificationId = 2;
+  string name = 3;
+  optional string parametersSchema = 4;
+  string imageName = 5;
+}
+
+message CreateModelResponse {
+  string id = 1;
+}
+
+message GetModelsRequest {
+  string workspaceId = 1;
+}
+
+message GetModelsResponse {
+  repeated ModelName models = 1;
+}
+
+message GetModelRequest {
+  string id = 1;
+}
+
+message GetModelResponse {
+  Model model = 1;
+}
+
+message CreateModelRunRequest {
+  string modelId = 1;
+  string inputFileGroupId = 2;
+  optional string parameters = 3;
+  string name = 4;
+}
+
+message CreateModelRunResponse {
+  string id = 1;
+}
+
+message GetModelRunsRequest {
+  string workspaceId = 1;
+}
+
+message GetModelRunsResponse {
+  repeated ModelRun modelRuns = 1;
+}

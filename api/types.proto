@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package api;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/MorhafAlshibly/iunvi/gen/api";
+
+message ModelRun {
+    string id = 1;
+    string modelId = 2;
+    string inputFileGroupId = 3;
+    optional string outputFileGroupId = 4;
+    string name = 5;
+  }
+  
+  message Dashboard {
+    string id = 1;
+    string modelId = 2;
+    string name = 3;
+  }
+  
+  message Model {
+    string id = 1;
+    string name = 2;
+    string inputSpecificationId = 3;
+    string outputSpecificationId = 4;
+    optional string parametersSchema = 5;
+    string imageName = 6;
+  }
+  
+  message ModelName {
+    string id = 1;
+    string name = 2;
+  }
+  
+  message FileGroupName {
+    string id = 1;
+    string name = 2;
+  }
+  
+  message SchemaFileMapping {
+    string schemaName = 1;
+    string landingZoneFileName = 2;
+  }
+  
+  message LandingZoneFile {
+    string name = 1;
+    uint64 size = 2;
+    google.protobuf.Timestamp lastModified = 3;
+  }
+  
+  message SpecificationName {
+    string id = 1;
+    string name = 2;
+    DataMode mode = 3;
+  }
+  
+  message Specification {
+    string id = 1;
+    string name = 2;
+    repeated TableSchema tables = 3;
+  }
+  
+  message TableSchema {
+    string name = 1;
+    repeated TableField fields = 2;
+  }
+  
+  message TableField {
+    string name = 1;
+    TableFieldType type = 2;
+  }
+  
+  enum TableFieldType {
+    BIGINT = 0;
+    BIT = 1;
+    BLOB = 2;
+    BOOLEAN = 3;
+    DATE = 4;
+    DOUBLE = 5;
+    FLOAT = 6;
+    HUGEINT = 7;
+    INTEGER = 8;
+    INTERVAL = 9;
+    JSON = 10;
+    SMALLINT = 11;
+    TIME = 12;
+    TIMESTAMPTZ = 13;
+    TIMESTAMP = 14;
+    TINYINT = 15;
+    UBIGINT = 16;
+    UHUGEINT = 17;
+    UINTEGER = 18;
+    USMALLINT = 19;
+    UTINYINT = 20;
+    UUID = 21;
+    VARCHAR = 22;
+  }
+  
+  message Image {
+    string scope = 1;
+    string name = 2;
+  }
+  
+  message Workspace {
+    string id = 1;
+    string name = 2;
+  }
+  
+  message User {
+    string id = 1;
+    string username = 2;
+    string displayName = 3;
+  }
+  
+  enum WorkspaceRole {
+    UNASSIGNED = 0;
+    VIEWER = 1;
+    USER = 2;
+    DEVELOPER = 3;
+  }
+  
+  enum DataMode {
+    INPUT = 0;
+    OUTPUT = 1;
+  }

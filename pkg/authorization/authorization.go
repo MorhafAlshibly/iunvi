@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/MorhafAlshibly/iunvi/gen/api"
-	"github.com/MorhafAlshibly/iunvi/internal/tenantManagement/model"
 	"github.com/MorhafAlshibly/iunvi/pkg/conversion"
 	"github.com/MorhafAlshibly/iunvi/pkg/middleware"
+	"github.com/MorhafAlshibly/iunvi/pkg/model"
 	mssql "github.com/microsoft/go-mssqldb"
 )
 

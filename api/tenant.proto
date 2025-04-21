@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package api;
+
+import "api/types.proto";
+
+option go_package = "github.com/MorhafAlshibly/iunvi/gen/api";
+
+service TenantService {
+  rpc CreateWorkspace(CreateWorkspaceRequest) returns (CreateWorkspaceResponse);
+  rpc GetWorkspaces(GetWorkspacesRequest) returns (GetWorkspacesResponse);
+  rpc EditWorkspace(EditWorkspaceRequest) returns (EditWorkspaceResponse);
+  rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
+  rpc GetUserWorkspaceAssignment(GetUserWorkspaceAssignmentRequest) returns (GetUserWorkspaceAssignmentResponse);
+  rpc AssignUserToWorkspace(AssignUserToWorkspaceRequest) returns (AssignUserToWorkspaceResponse);
+}
+
+message CreateWorkspaceRequest {
+  string name = 1;
+}
+
+message CreateWorkspaceResponse {
+  string id = 1;
+}
+
+message GetWorkspacesRequest {
+}
+
+message GetWorkspacesResponse {
+  repeated Workspace workspaces = 1;
+}
+
+message EditWorkspaceRequest {
+  string id = 1;
+  string name = 2;
+}
+
+message EditWorkspaceResponse {
+}
+
+message GetUsersRequest {
+}
+
+message GetUsersResponse {
+  repeated User users = 1;
+}
+
+message GetUserWorkspaceAssignmentRequest {
+  string userObjectId = 1;
+  string workspaceId = 2;
+}
+
+message GetUserWorkspaceAssignmentResponse {
+  WorkspaceRole role = 1;
+}
+
+message AssignUserToWorkspaceRequest {
+  string userObjectId = 1;
+  string workspaceId = 2;
+  WorkspaceRole role = 3;
+}
+
+message AssignUserToWorkspaceResponse {
+}

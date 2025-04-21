@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package api;
+
+import "api/types.proto";
+
+option go_package = "github.com/MorhafAlshibly/iunvi/gen/api";
+
+service FileService {
+  rpc CreateSpecification(CreateSpecificationRequest) returns (CreateSpecificationResponse);
+  rpc GetSpecifications(GetSpecificationsRequest) returns (GetSpecificationsResponse);
+  rpc GetSpecification(GetSpecificationRequest) returns (GetSpecificationResponse);
+  rpc CreateLandingZoneSharedAccessSignature(CreateLandingZoneSharedAccessSignatureRequest) returns (CreateLandingZoneSharedAccessSignatureResponse);
+  rpc GetLandingZoneFiles(GetLandingZoneFilesRequest) returns (GetLandingZoneFilesResponse);
+  rpc CreateFileGroup(CreateFileGroupRequest) returns (CreateFileGroupResponse);
+  rpc GetFileGroups(GetFileGroupsRequest) returns (GetFileGroupsResponse);
+}
+
+message CreateSpecificationRequest {
+  string workspaceId = 1;
+  string name = 2;
+  DataMode mode = 3;
+  repeated TableSchema tables = 4;
+}
+
+message CreateSpecificationResponse {
+  string id = 1;
+}
+
+message GetSpecificationsRequest {
+  string workspaceId = 1;
+  optional DataMode mode = 2;
+}
+
+message GetSpecificationsResponse {
+  repeated SpecificationName specifications = 1;
+}
+
+message GetSpecificationRequest {
+  string id = 1;
+}
+
+message GetSpecificationResponse {
+  Specification specification = 1;
+  DataMode mode = 2;
+}
+
+message CreateLandingZoneSharedAccessSignatureRequest {
+  string workspaceId = 1;
+  string fileName = 2;
+}
+
+message CreateLandingZoneSharedAccessSignatureResponse {
+  string url = 1;
+}
+
+message GetLandingZoneFilesRequest {
+  string workspaceId = 1;
+  string prefix = 2;
+  optional string marker = 3;
+}
+
+message GetLandingZoneFilesResponse {
+  repeated LandingZoneFile files = 1;
+  optional string nextMarker = 2;
+}
+
+message CreateFileGroupRequest {
+  string specificationId = 1;
+  string name = 2;
+  repeated SchemaFileMapping schemaFileMappings = 3;
+}
+
+message CreateFileGroupResponse {
+  string id = 1;
+}
+
+message GetFileGroupsRequest {
+  string workspaceId = 1;
+  optional string specificationId = 2;
+}
+
+message GetFileGroupsResponse {
+  repeated FileGroupName fileGroups = 1;
+}
+

@@ -1,14 +1,23 @@
 version: "3"
 
 includes:
-   client:
-      taskfile: client/Client.yml
-      dir: client
-   tenantManagement:
-      taskfile: cmd/tenantManagement/TenantManagement.yml
-      dir: cmd/tenantManagement
+  client:
+    taskfile: client/Client.yml
+    dir: client
+  tenant:
+    taskfile: cmd/tenant/Tenant.yml
+    dir: cmd/tenant
+  file:
+    taskfile: cmd/file/File.yml
+    dir: cmd/file
+  model:
+    taskfile: cmd/model/Model.yml
+    dir: cmd/model
+  dashboard:
+    taskfile: cmd/dashboard/Dashboard.yml
+    dir: cmd/dashboard
 
 tasks:
-   generate:
-      cmds:
-         - buf generate
+  generate:
+    cmds:
+      - buf generate

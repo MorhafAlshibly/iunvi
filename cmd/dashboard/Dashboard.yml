@@ -1,0 +1,17 @@
+version: "3"
+
+tasks:
+  live:
+    dotenv: ["./env/.env.{{.ENV}}"]
+    dir: "../../"
+    cmds:
+      - air --build.cmd "go build -o bin/dashboard.exe ./cmd/dashboard/dashboard.go" --build.bin "bin\dashboard.exe" --build.exclude_dir "client"
+    requires:
+      vars: [ENV]
+  run:
+    dotenv: ["./env/.env.{{.ENV}}"]
+    dir: "../../"
+    cmds:
+      - go run ./cmd/dashboard/dashboard.go
+    requires:
+      vars: [ENV]

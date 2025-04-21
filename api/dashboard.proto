@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package api;
+
+import "api/types.proto";
+
+option go_package = "github.com/MorhafAlshibly/iunvi/gen/api";
+
+service DashboardService {
+  rpc CreateDashboard(CreateDashboardRequest) returns (CreateDashboardResponse);
+  rpc GetDashboards(GetDashboardsRequest) returns (GetDashboardsResponse);
+  rpc GetDashboard(GetDashboardRequest) returns (GetDashboardResponse);
+  rpc GetModelRunDashboard(GetModelRunDashboardRequest) returns (GetModelRunDashboardResponse); 
+}
+
+message CreateDashboardRequest {
+  string modelId = 1;
+  string name = 2;
+  string definition = 3;
+}
+
+message CreateDashboardResponse {
+  string id = 1;
+}
+
+message GetDashboardsRequest {
+  string workspaceId = 1;
+  optional string modelId = 2;
+  optional string modelRunId = 3;
+}
+
+message GetDashboardsResponse {
+  repeated Dashboard dashboards = 1;
+}
+
+message GetDashboardRequest {
+  string id = 1;
+}
+
+message GetDashboardResponse {
+  Dashboard dashboard = 1;
+}
+
+message GetModelRunDashboardRequest {
+  string modelRunId = 1;
+  string dashboardId = 2;
+}
+
+message GetModelRunDashboardResponse {
+  string dashboardSasUrl = 1;
+}

@@ -19,8 +19,8 @@ import (
 )
 
 type Authentication struct {
-	audience    string
-	azureAdJWKS string
+	audience string
+	jwks     string
 }
 
 func WithAudience(audience string) func(*Authentication) {
@@ -29,15 +29,15 @@ func WithAudience(audience string) func(*Authentication) {
 	}
 }
 
-func WithAzureAdJWKS(azureAdJWKS string) func(*Authentication) {
+func WithJWKS(jwks string) func(*Authentication) {
 	return func(input *Authentication) {
-		input.azureAdJWKS = azureAdJWKS
+		input.jwks = jwks
 	}
 }
 
 func NewAuthentication(options ...func(*Authentication)) *Authentication {
 	auth := &Authentication{
-		azureAdJWKS: "https://login.microsoftonline.com/common/discovery/v2.0/keys",
+		jwks: "https://login.microsoftonline.com/common/discovery/v2.0/keys",
 	}
 	for _, option := range options {
 		option(auth)
@@ -76,7 +76,7 @@ func (a Authentication) Middleware(next http.Handler) http.Handler {
 			}
 
 			// Fetch JWKS from Azure AD
-			keys, err := fetchJWKS(a.azureAdJWKS)
+			keys, err := fetchJWKS(a.jwks)
 			if err != nil {
 				return nil, fmt.Errorf("failed to fetch JWKS: %v", err)
 			}

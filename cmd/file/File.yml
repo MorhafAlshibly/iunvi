@@ -1,0 +1,17 @@
+version: "3"
+
+tasks:
+  live:
+    dotenv: ["./env/.env.{{.ENV}}"]
+    dir: "../../"
+    cmds:
+      - air --build.cmd "go build -o bin/file.exe ./cmd/file/file.go" --build.bin "bin\file.exe" --build.exclude_dir "client"
+    requires:
+      vars: [ENV]
+  run:
+    dotenv: ["./env/.env.{{.ENV}}"]
+    dir: "../../"
+    cmds:
+      - go run ./cmd/file/file.go
+    requires:
+      vars: [ENV]
