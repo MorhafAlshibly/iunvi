@@ -33,11 +33,16 @@ var (
 	jwks                   = fs.StringLong("jwks", "https://login.microsoftonline.com/common/discovery/v2.0/keys", "Azure AD JWKS URL")
 	sqlServer              = fs.StringLong("sqlServer", "", "SQL Server")
 	sqlDatabase            = fs.StringLong("sqlDatabase", "", "SQL Database")
-	registryName           = fs.StringLong("registryName", "criunvideveastus001", "Azure Container Registry URL")
+	registryName           = fs.StringLong("registryName", "", "Azure Container Registry URL")
 	registryTokenPrefix    = fs.StringLong("registryTokenPrefix", "webapp", "Azure Container Registry Token Prefix")
 	storageAccountName     = fs.StringLong("storageAccountName", "", "Azure Storage Account Name")
-	modelRunsContainerName = fs.StringLong("modelRunsContainerName", "", "Azure Storage Model Runs Container Name")
+	modelRunsContainerName = fs.StringLong("modelRunsContainerName", "model-runs", "Azure Storage Model Runs Container Name")
 	kubeConfigPath         = fs.StringLong("kubeConfigPath", "", "Kube Config Path")
+	inputFileMountPath     = fs.StringLong("inputFileMountPath", "/mnt/input", "Input file mount path")
+	parametersMountPath    = fs.StringLong("parametersMountPath", "/mnt/parameters", "Parameters mount path")
+	outputFileMountPath    = fs.StringLong("outputFileMountPath", "/mnt/output", "Output file mount path")
+	fileGroupsPVCName      = fs.StringLong("fileGroupsPVCName", "", "File groups PVC name")
+	modelRunsPVCName       = fs.StringLong("modelRunsPVCName", "", "Model runs PVC name")
 )
 
 func main() {
@@ -64,6 +69,11 @@ func main() {
 		model.WithStorageAccountName(*storageAccountName),
 		model.WithModelRunsContainerName(*modelRunsContainerName),
 		model.WithKubeConfigPath(*kubeConfigPath),
+		model.WithInputFileMountPath(*inputFileMountPath),
+		model.WithParametersMountPath(*parametersMountPath),
+		model.WithOutputFileMountPath(*outputFileMountPath),
+		model.WithFileGroupsPVCName(*fileGroupsPVCName),
+		model.WithModelRunsPVCName(*modelRunsPVCName),
 	)
 	mux := http.NewServeMux()
 	path, handler := apiconnect.NewModelServiceHandler(service)

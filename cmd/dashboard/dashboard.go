@@ -31,13 +31,17 @@ var (
 	jwks                            = fs.StringLong("jwks", "https://login.microsoftonline.com/common/discovery/v2.0/keys", "Azure AD JWKS URL")
 	sqlServer                       = fs.StringLong("sqlServer", "", "SQL Server")
 	sqlDatabase                     = fs.StringLong("sqlDatabase", "", "SQL Database")
-	registryName                    = fs.StringLong("registryName", "criunvideveastus001", "Azure Container Registry URL")
+	registryName                    = fs.StringLong("registryName", "", "Azure Container Registry URL")
 	registryTokenPrefix             = fs.StringLong("registryTokenPrefix", "webapp", "Azure Container Registry Token Prefix")
 	storageAccountName              = fs.StringLong("storageAccountName", "", "Azure Storage Account Name")
-	modelRunsContainerName          = fs.StringLong("modelRunsContainerName", "", "Azure Storage Model Runs Container Name")
-	dashboardsContainerName         = fs.StringLong("dashboardsContainerName", "", "Azure Storage Dashboards Container Name")
-	modelRunDashboardsContainerName = fs.StringLong("modelRunDashboardsContainerName", "", "Azure Storage Model Run Dashboards Container Name")
+	modelRunsContainerName          = fs.StringLong("modelRunsContainerName", "model-runs", "Azure Storage Model Runs Container Name")
+	dashboardsContainerName         = fs.StringLong("dashboardsContainerName", "dashboards", "Azure Storage Dashboards Container Name")
+	modelRunDashboardsContainerName = fs.StringLong("modelRunDashboardsContainerName", "model-run-dashboards", "Azure Storage Model Run Dashboards Container Name")
 	kubeConfigPath                  = fs.StringLong("kubeConfigPath", "", "Kube Config Path")
+	applyDashboardImageName         = fs.StringLong("applyDashboardImageName", "apply-dashboard", "Apply Dashboard Image Name")
+	modelRunsPVCName                = fs.StringLong("modelRunsPVCName", "", "Model runs PVC name")
+	dashboardsPVCName               = fs.StringLong("dashboardsPVCName", "", "Dashboards PVC name")
+	modelRunDashboardsPVCName       = fs.StringLong("modelRunDashboardsPVCName", "", "Model run dashboards PVC name")
 )
 
 func main() {
@@ -64,6 +68,10 @@ func main() {
 		dashboard.WithDashboardsContainerName(*dashboardsContainerName),
 		dashboard.WithModelRunDashboardsContainerName(*modelRunDashboardsContainerName),
 		dashboard.WithKubeConfigPath(*kubeConfigPath),
+		dashboard.WithApplyDashboardImageName(*applyDashboardImageName),
+		dashboard.WithModelRunsPVCName(*modelRunsPVCName),
+		dashboard.WithDashboardsPVCName(*dashboardsPVCName),
+		dashboard.WithModelRunDashboardsPVCName(*modelRunDashboardsPVCName),
 	)
 	mux := http.NewServeMux()
 	path, handler := apiconnect.NewDashboardServiceHandler(service)

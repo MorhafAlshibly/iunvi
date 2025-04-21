@@ -32,8 +32,8 @@ var (
 	sqlServer                = fs.StringLong("sqlServer", "", "SQL Server")
 	sqlDatabase              = fs.StringLong("sqlDatabase", "", "SQL Database")
 	storageAccountName       = fs.StringLong("storageAccountName", "", "Azure Storage Account Name")
-	landingZoneContainerName = fs.StringLong("landingZoneContainerName", "", "Azure Storage Landing Zone Container Name")
-	fileGroupsContainerName  = fs.StringLong("fileGroupsContainerName", "", "Azure Storage File Groups Container Name")
+	landingZoneContainerName = fs.StringLong("landingZoneContainerName", "landing-zone", "Azure Storage Landing Zone Container Name")
+	fileGroupsContainerName  = fs.StringLong("fileGroupsContainerName", "file-groups", "Azure Storage File Groups Container Name")
 )
 
 func main() {

@@ -40,6 +40,11 @@ type Service struct {
 	storageAccountName     string
 	modelRunsContainerName string
 	kubeConfigPath         string
+	inputFileMountPath     string
+	parametersMountPath    string
+	outputFileMountPath    string
+	fileGroupsPVCName      string
+	modelRunsPVCName       string
 }
 
 func WithSubscriptionId(subscriptionId string) func(*Service) {
@@ -99,6 +104,36 @@ func WithModelRunsContainerName(modelRunsContainerName string) func(*Service) {
 func WithKubeConfigPath(kubeConfigPath string) func(*Service) {
 	return func(input *Service) {
 		input.kubeConfigPath = kubeConfigPath
+	}
+}
+
+func WithInputFileMountPath(inputFileMountPath string) func(*Service) {
+	return func(input *Service) {
+		input.inputFileMountPath = inputFileMountPath
+	}
+}
+
+func WithParametersMountPath(parametersMountPath string) func(*Service) {
+	return func(input *Service) {
+		input.parametersMountPath = parametersMountPath
+	}
+}
+
+func WithOutputFileMountPath(outputFileMountPath string) func(*Service) {
+	return func(input *Service) {
+		input.outputFileMountPath = outputFileMountPath
+	}
+}
+
+func WithFileGroupsPVCName(fileGroupsPVCName string) func(*Service) {
+	return func(input *Service) {
+		input.fileGroupsPVCName = fileGroupsPVCName
+	}
+}
+
+func WithModelRunsPVCName(modelRunsPVCName string) func(*Service) {
+	return func(input *Service) {
+		input.modelRunsPVCName = modelRunsPVCName
 	}
 }
 
@@ -562,19 +597,19 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 							VolumeMounts: []corev1.VolumeMount{
 								{
 									Name:      "file-groups-volume",
-									MountPath: "/mnt/input",
+									MountPath: s.inputFileMountPath,
 									SubPath:   sculpt.FileGroupDirectory(ctx, workspaceId.String(), appModel.InputSpecificationID.String(), req.Msg.InputFileGroupId),
 									ReadOnly:  true,
 								},
 								{
 									Name:      "model-runs-volume",
-									MountPath: "/mnt/parameters",
+									MountPath: s.parametersMountPath,
 									SubPath:   sculpt.ModelRunParametersDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunId.String()),
 									ReadOnly:  true,
 								},
 								{
 									Name:      "model-runs-volume",
-									MountPath: "/mnt/output",
+									MountPath: s.outputFileMountPath,
 									SubPath:   sculpt.ModelRunOutputDirectory(ctx, workspaceId.String(), modelIdBytes.String(), modelRun.ModelRunId.String()),
 								},
 							},
@@ -585,7 +620,7 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 							Name: "file-groups-volume",
 							VolumeSource: corev1.VolumeSource{
 								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
-									ClaimName: "pvc-file-groups-iunvi-dev-eastus-001",
+									ClaimName: s.fileGroupsPVCName,
 								},
 							},
 						},
@@ -593,7 +628,7 @@ func (s *Service) CreateModelRun(ctx context.Context, req *connect.Request[api.C
 							Name: "model-runs-volume",
 							VolumeSource: corev1.VolumeSource{
 								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
-									ClaimName: "pvc-model-runs-iunvi-dev-eastus-001",
+									ClaimName: s.modelRunsPVCName,
 								},
 							},
 						},

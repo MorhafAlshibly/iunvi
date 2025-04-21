@@ -44,6 +44,10 @@ type Service struct {
 	dashboardsContainerName         string
 	modelRunDashboardsContainerName string
 	kubeConfigPath                  string
+	applyDashboardImageName         string
+	modelRunsPVCName                string
+	dashboardsPVCName               string
+	modelRunDashboardsPVCName       string
 }
 
 func WithTenantId(tenantId string) func(*Service) {
@@ -103,6 +107,30 @@ func WithModelRunDashboardsContainerName(modelRunDashboardsContainerName string)
 func WithKubeConfigPath(kubeConfigPath string) func(*Service) {
 	return func(input *Service) {
 		input.kubeConfigPath = kubeConfigPath
+	}
+}
+
+func WithApplyDashboardImageName(applyDashboardImageName string) func(*Service) {
+	return func(input *Service) {
+		input.applyDashboardImageName = applyDashboardImageName
+	}
+}
+
+func WithModelRunsPVCName(modelRunsPVCName string) func(*Service) {
+	return func(input *Service) {
+		input.modelRunsPVCName = modelRunsPVCName
+	}
+}
+
+func WithDashboardsPVCName(dashboardsPVCName string) func(*Service) {
+	return func(input *Service) {
+		input.dashboardsPVCName = dashboardsPVCName
+	}
+}
+
+func WithModelRunDashboardsPVCName(modelRunDashboardsPVCName string) func(*Service) {
+	return func(input *Service) {
+		input.modelRunDashboardsPVCName = modelRunDashboardsPVCName
 	}
 }
 
@@ -390,8 +418,8 @@ func (s *Service) GetModelRunDashboard(ctx context.Context, req *connect.Request
 					RestartPolicy: corev1.RestartPolicyNever,
 					Containers: []corev1.Container{
 						{
-							Name:  "apply-dashboard",
-							Image: fmt.Sprintf("%s.azurecr.io/apply-dashboard:latest", s.registryName),
+							Name:  s.applyDashboardImageName,
+							Image: fmt.Sprintf("%s.azurecr.io/%s:latest", s.registryName, s.applyDashboardImageName),
 							Command: []string{
 								"/bin/sh",
 								"-c",
@@ -420,7 +448,6 @@ func (s *Service) GetModelRunDashboard(ctx context.Context, req *connect.Request
 									Name:      "model-runs-volume",
 									MountPath: "/app/.evidence/template/static/data/parquets",
 									SubPath:   sculpt.ModelRunOutputDirectory(ctx, res.WorkspaceID.String(), res.ModelID.String(), req.Msg.ModelRunId),
-									// ReadOnly:  true,
 								},
 								{
 									Name:      "dashboards-volume",
@@ -441,21 +468,21 @@ func (s *Service) GetModelRunDashboard(ctx context.Context, req *connect.Request
 							Name: "model-runs-volume",
 							VolumeSource: corev1.VolumeSource{
 								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
-									ClaimName: "pvc-model-runs-iunvi-dev-eastus-001",
+									ClaimName: s.modelRunsPVCName,
 								},
 							},
 						}, {
 							Name: "dashboards-volume",
 							VolumeSource: corev1.VolumeSource{
 								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
-									ClaimName: "pvc-dashboards-iunvi-dev-eastus-001",
+									ClaimName: s.dashboardsPVCName,
 								},
 							},
 						}, {
 							Name: "model-run-dashboards-volume",
 							VolumeSource: corev1.VolumeSource{
 								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
-									ClaimName: "pvc-model-run-dashboards-iunvi-dev-eastus-001",
+									ClaimName: s.modelRunDashboardsPVCName,
 								},
 							},
 						},
