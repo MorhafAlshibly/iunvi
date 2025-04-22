@@ -1,7 +1,7 @@
 import { ReactNode, useCallback } from "react";
 import { useUser } from "@/lib/authentication";
 import { ROLES, Role, ActiveUser } from "@/types/user";
-import { Workspace, WorkspaceRole } from "@/types/api/tenantManagement_pb";
+import { Workspace, WorkspaceRole } from "@/types/api/tenant_pb";
 
 export const POLICIES = {
   "admin:access": (user: ActiveUser) => user.role === ROLES.ADMIN,

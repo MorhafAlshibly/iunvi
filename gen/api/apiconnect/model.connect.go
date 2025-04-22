@@ -22,7 +22,7 @@ const _ = connect.IsAtLeastVersion1_13_0
 
 const (
 	// ModelServiceName is the fully-qualified name of the ModelService service.
-	ModelServiceName = "api.ModelService"
+	ModelServiceName = "model.ModelService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -35,28 +35,28 @@ const (
 const (
 	// ModelServiceGetRegistryTokenPasswordsProcedure is the fully-qualified name of the ModelService's
 	// GetRegistryTokenPasswords RPC.
-	ModelServiceGetRegistryTokenPasswordsProcedure = "/api.ModelService/GetRegistryTokenPasswords"
+	ModelServiceGetRegistryTokenPasswordsProcedure = "/model.ModelService/GetRegistryTokenPasswords"
 	// ModelServiceCreateRegistryTokenPasswordProcedure is the fully-qualified name of the
 	// ModelService's CreateRegistryTokenPassword RPC.
-	ModelServiceCreateRegistryTokenPasswordProcedure = "/api.ModelService/CreateRegistryTokenPassword"
+	ModelServiceCreateRegistryTokenPasswordProcedure = "/model.ModelService/CreateRegistryTokenPassword"
 	// ModelServiceGetImagesProcedure is the fully-qualified name of the ModelService's GetImages RPC.
-	ModelServiceGetImagesProcedure = "/api.ModelService/GetImages"
+	ModelServiceGetImagesProcedure = "/model.ModelService/GetImages"
 	// ModelServiceCreateModelProcedure is the fully-qualified name of the ModelService's CreateModel
 	// RPC.
-	ModelServiceCreateModelProcedure = "/api.ModelService/CreateModel"
+	ModelServiceCreateModelProcedure = "/model.ModelService/CreateModel"
 	// ModelServiceGetModelsProcedure is the fully-qualified name of the ModelService's GetModels RPC.
-	ModelServiceGetModelsProcedure = "/api.ModelService/GetModels"
+	ModelServiceGetModelsProcedure = "/model.ModelService/GetModels"
 	// ModelServiceGetModelProcedure is the fully-qualified name of the ModelService's GetModel RPC.
-	ModelServiceGetModelProcedure = "/api.ModelService/GetModel"
+	ModelServiceGetModelProcedure = "/model.ModelService/GetModel"
 	// ModelServiceCreateModelRunProcedure is the fully-qualified name of the ModelService's
 	// CreateModelRun RPC.
-	ModelServiceCreateModelRunProcedure = "/api.ModelService/CreateModelRun"
+	ModelServiceCreateModelRunProcedure = "/model.ModelService/CreateModelRun"
 	// ModelServiceGetModelRunsProcedure is the fully-qualified name of the ModelService's GetModelRuns
 	// RPC.
-	ModelServiceGetModelRunsProcedure = "/api.ModelService/GetModelRuns"
+	ModelServiceGetModelRunsProcedure = "/model.ModelService/GetModelRuns"
 )
 
-// ModelServiceClient is a client for the api.ModelService service.
+// ModelServiceClient is a client for the model.ModelService service.
 type ModelServiceClient interface {
 	GetRegistryTokenPasswords(context.Context, *connect.Request[api.GetRegistryTokenPasswordsRequest]) (*connect.Response[api.GetRegistryTokenPasswordsResponse], error)
 	CreateRegistryTokenPassword(context.Context, *connect.Request[api.CreateRegistryTokenPasswordRequest]) (*connect.Response[api.CreateRegistryTokenPasswordResponse], error)
@@ -68,7 +68,7 @@ type ModelServiceClient interface {
 	GetModelRuns(context.Context, *connect.Request[api.GetModelRunsRequest]) (*connect.Response[api.GetModelRunsResponse], error)
 }
 
-// NewModelServiceClient constructs a client for the api.ModelService service. By default, it uses
+// NewModelServiceClient constructs a client for the model.ModelService service. By default, it uses
 // the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
 // uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or
 // connect.WithGRPCWeb() options.
@@ -142,47 +142,47 @@ type modelServiceClient struct {
 	getModelRuns                *connect.Client[api.GetModelRunsRequest, api.GetModelRunsResponse]
 }
 
-// GetRegistryTokenPasswords calls api.ModelService.GetRegistryTokenPasswords.
+// GetRegistryTokenPasswords calls model.ModelService.GetRegistryTokenPasswords.
 func (c *modelServiceClient) GetRegistryTokenPasswords(ctx context.Context, req *connect.Request[api.GetRegistryTokenPasswordsRequest]) (*connect.Response[api.GetRegistryTokenPasswordsResponse], error) {
 	return c.getRegistryTokenPasswords.CallUnary(ctx, req)
 }
 
-// CreateRegistryTokenPassword calls api.ModelService.CreateRegistryTokenPassword.
+// CreateRegistryTokenPassword calls model.ModelService.CreateRegistryTokenPassword.
 func (c *modelServiceClient) CreateRegistryTokenPassword(ctx context.Context, req *connect.Request[api.CreateRegistryTokenPasswordRequest]) (*connect.Response[api.CreateRegistryTokenPasswordResponse], error) {
 	return c.createRegistryTokenPassword.CallUnary(ctx, req)
 }
 
-// GetImages calls api.ModelService.GetImages.
+// GetImages calls model.ModelService.GetImages.
 func (c *modelServiceClient) GetImages(ctx context.Context, req *connect.Request[api.GetImagesRequest]) (*connect.Response[api.GetImagesResponse], error) {
 	return c.getImages.CallUnary(ctx, req)
 }
 
-// CreateModel calls api.ModelService.CreateModel.
+// CreateModel calls model.ModelService.CreateModel.
 func (c *modelServiceClient) CreateModel(ctx context.Context, req *connect.Request[api.CreateModelRequest]) (*connect.Response[api.CreateModelResponse], error) {
 	return c.createModel.CallUnary(ctx, req)
 }
 
-// GetModels calls api.ModelService.GetModels.
+// GetModels calls model.ModelService.GetModels.
 func (c *modelServiceClient) GetModels(ctx context.Context, req *connect.Request[api.GetModelsRequest]) (*connect.Response[api.GetModelsResponse], error) {
 	return c.getModels.CallUnary(ctx, req)
 }
 
-// GetModel calls api.ModelService.GetModel.
+// GetModel calls model.ModelService.GetModel.
 func (c *modelServiceClient) GetModel(ctx context.Context, req *connect.Request[api.GetModelRequest]) (*connect.Response[api.GetModelResponse], error) {
 	return c.getModel.CallUnary(ctx, req)
 }
 
-// CreateModelRun calls api.ModelService.CreateModelRun.
+// CreateModelRun calls model.ModelService.CreateModelRun.
 func (c *modelServiceClient) CreateModelRun(ctx context.Context, req *connect.Request[api.CreateModelRunRequest]) (*connect.Response[api.CreateModelRunResponse], error) {
 	return c.createModelRun.CallUnary(ctx, req)
 }
 
-// GetModelRuns calls api.ModelService.GetModelRuns.
+// GetModelRuns calls model.ModelService.GetModelRuns.
 func (c *modelServiceClient) GetModelRuns(ctx context.Context, req *connect.Request[api.GetModelRunsRequest]) (*connect.Response[api.GetModelRunsResponse], error) {
 	return c.getModelRuns.CallUnary(ctx, req)
 }
 
-// ModelServiceHandler is an implementation of the api.ModelService service.
+// ModelServiceHandler is an implementation of the model.ModelService service.
 type ModelServiceHandler interface {
 	GetRegistryTokenPasswords(context.Context, *connect.Request[api.GetRegistryTokenPasswordsRequest]) (*connect.Response[api.GetRegistryTokenPasswordsResponse], error)
 	CreateRegistryTokenPassword(context.Context, *connect.Request[api.CreateRegistryTokenPasswordRequest]) (*connect.Response[api.CreateRegistryTokenPasswordResponse], error)
@@ -249,7 +249,7 @@ func NewModelServiceHandler(svc ModelServiceHandler, opts ...connect.HandlerOpti
 		connect.WithSchema(modelServiceMethods.ByName("GetModelRuns")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/api.ModelService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/model.ModelService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case ModelServiceGetRegistryTokenPasswordsProcedure:
 			modelServiceGetRegistryTokenPasswordsHandler.ServeHTTP(w, r)
@@ -277,33 +277,33 @@ func NewModelServiceHandler(svc ModelServiceHandler, opts ...connect.HandlerOpti
 type UnimplementedModelServiceHandler struct{}
 
 func (UnimplementedModelServiceHandler) GetRegistryTokenPasswords(context.Context, *connect.Request[api.GetRegistryTokenPasswordsRequest]) (*connect.Response[api.GetRegistryTokenPasswordsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.ModelService.GetRegistryTokenPasswords is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("model.ModelService.GetRegistryTokenPasswords is not implemented"))
 }
 
 func (UnimplementedModelServiceHandler) CreateRegistryTokenPassword(context.Context, *connect.Request[api.CreateRegistryTokenPasswordRequest]) (*connect.Response[api.CreateRegistryTokenPasswordResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.ModelService.CreateRegistryTokenPassword is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("model.ModelService.CreateRegistryTokenPassword is not implemented"))
 }
 
 func (UnimplementedModelServiceHandler) GetImages(context.Context, *connect.Request[api.GetImagesRequest]) (*connect.Response[api.GetImagesResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.ModelService.GetImages is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("model.ModelService.GetImages is not implemented"))
 }
 
 func (UnimplementedModelServiceHandler) CreateModel(context.Context, *connect.Request[api.CreateModelRequest]) (*connect.Response[api.CreateModelResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.ModelService.CreateModel is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("model.ModelService.CreateModel is not implemented"))
 }
 
 func (UnimplementedModelServiceHandler) GetModels(context.Context, *connect.Request[api.GetModelsRequest]) (*connect.Response[api.GetModelsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.ModelService.GetModels is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("model.ModelService.GetModels is not implemented"))
 }
 
 func (UnimplementedModelServiceHandler) GetModel(context.Context, *connect.Request[api.GetModelRequest]) (*connect.Response[api.GetModelResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.ModelService.GetModel is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("model.ModelService.GetModel is not implemented"))
 }
 
 func (UnimplementedModelServiceHandler) CreateModelRun(context.Context, *connect.Request[api.CreateModelRunRequest]) (*connect.Response[api.CreateModelRunResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.ModelService.CreateModelRun is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("model.ModelService.CreateModelRun is not implemented"))
 }
 
 func (UnimplementedModelServiceHandler) GetModelRuns(context.Context, *connect.Request[api.GetModelRunsRequest]) (*connect.Response[api.GetModelRunsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.ModelService.GetModelRuns is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("model.ModelService.GetModelRuns is not implemented"))
 }

@@ -22,7 +22,7 @@ const _ = connect.IsAtLeastVersion1_13_0
 
 const (
 	// TenantServiceName is the fully-qualified name of the TenantService service.
-	TenantServiceName = "api.TenantService"
+	TenantServiceName = "tenant.TenantService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -35,24 +35,24 @@ const (
 const (
 	// TenantServiceCreateWorkspaceProcedure is the fully-qualified name of the TenantService's
 	// CreateWorkspace RPC.
-	TenantServiceCreateWorkspaceProcedure = "/api.TenantService/CreateWorkspace"
+	TenantServiceCreateWorkspaceProcedure = "/tenant.TenantService/CreateWorkspace"
 	// TenantServiceGetWorkspacesProcedure is the fully-qualified name of the TenantService's
 	// GetWorkspaces RPC.
-	TenantServiceGetWorkspacesProcedure = "/api.TenantService/GetWorkspaces"
+	TenantServiceGetWorkspacesProcedure = "/tenant.TenantService/GetWorkspaces"
 	// TenantServiceEditWorkspaceProcedure is the fully-qualified name of the TenantService's
 	// EditWorkspace RPC.
-	TenantServiceEditWorkspaceProcedure = "/api.TenantService/EditWorkspace"
+	TenantServiceEditWorkspaceProcedure = "/tenant.TenantService/EditWorkspace"
 	// TenantServiceGetUsersProcedure is the fully-qualified name of the TenantService's GetUsers RPC.
-	TenantServiceGetUsersProcedure = "/api.TenantService/GetUsers"
+	TenantServiceGetUsersProcedure = "/tenant.TenantService/GetUsers"
 	// TenantServiceGetUserWorkspaceAssignmentProcedure is the fully-qualified name of the
 	// TenantService's GetUserWorkspaceAssignment RPC.
-	TenantServiceGetUserWorkspaceAssignmentProcedure = "/api.TenantService/GetUserWorkspaceAssignment"
+	TenantServiceGetUserWorkspaceAssignmentProcedure = "/tenant.TenantService/GetUserWorkspaceAssignment"
 	// TenantServiceAssignUserToWorkspaceProcedure is the fully-qualified name of the TenantService's
 	// AssignUserToWorkspace RPC.
-	TenantServiceAssignUserToWorkspaceProcedure = "/api.TenantService/AssignUserToWorkspace"
+	TenantServiceAssignUserToWorkspaceProcedure = "/tenant.TenantService/AssignUserToWorkspace"
 )
 
-// TenantServiceClient is a client for the api.TenantService service.
+// TenantServiceClient is a client for the tenant.TenantService service.
 type TenantServiceClient interface {
 	CreateWorkspace(context.Context, *connect.Request[api.CreateWorkspaceRequest]) (*connect.Response[api.CreateWorkspaceResponse], error)
 	GetWorkspaces(context.Context, *connect.Request[api.GetWorkspacesRequest]) (*connect.Response[api.GetWorkspacesResponse], error)
@@ -62,8 +62,8 @@ type TenantServiceClient interface {
 	AssignUserToWorkspace(context.Context, *connect.Request[api.AssignUserToWorkspaceRequest]) (*connect.Response[api.AssignUserToWorkspaceResponse], error)
 }
 
-// NewTenantServiceClient constructs a client for the api.TenantService service. By default, it uses
-// the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
+// NewTenantServiceClient constructs a client for the tenant.TenantService service. By default, it
+// uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
 // uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or
 // connect.WithGRPCWeb() options.
 //
@@ -122,37 +122,37 @@ type tenantServiceClient struct {
 	assignUserToWorkspace      *connect.Client[api.AssignUserToWorkspaceRequest, api.AssignUserToWorkspaceResponse]
 }
 
-// CreateWorkspace calls api.TenantService.CreateWorkspace.
+// CreateWorkspace calls tenant.TenantService.CreateWorkspace.
 func (c *tenantServiceClient) CreateWorkspace(ctx context.Context, req *connect.Request[api.CreateWorkspaceRequest]) (*connect.Response[api.CreateWorkspaceResponse], error) {
 	return c.createWorkspace.CallUnary(ctx, req)
 }
 
-// GetWorkspaces calls api.TenantService.GetWorkspaces.
+// GetWorkspaces calls tenant.TenantService.GetWorkspaces.
 func (c *tenantServiceClient) GetWorkspaces(ctx context.Context, req *connect.Request[api.GetWorkspacesRequest]) (*connect.Response[api.GetWorkspacesResponse], error) {
 	return c.getWorkspaces.CallUnary(ctx, req)
 }
 
-// EditWorkspace calls api.TenantService.EditWorkspace.
+// EditWorkspace calls tenant.TenantService.EditWorkspace.
 func (c *tenantServiceClient) EditWorkspace(ctx context.Context, req *connect.Request[api.EditWorkspaceRequest]) (*connect.Response[api.EditWorkspaceResponse], error) {
 	return c.editWorkspace.CallUnary(ctx, req)
 }
 
-// GetUsers calls api.TenantService.GetUsers.
+// GetUsers calls tenant.TenantService.GetUsers.
 func (c *tenantServiceClient) GetUsers(ctx context.Context, req *connect.Request[api.GetUsersRequest]) (*connect.Response[api.GetUsersResponse], error) {
 	return c.getUsers.CallUnary(ctx, req)
 }
 
-// GetUserWorkspaceAssignment calls api.TenantService.GetUserWorkspaceAssignment.
+// GetUserWorkspaceAssignment calls tenant.TenantService.GetUserWorkspaceAssignment.
 func (c *tenantServiceClient) GetUserWorkspaceAssignment(ctx context.Context, req *connect.Request[api.GetUserWorkspaceAssignmentRequest]) (*connect.Response[api.GetUserWorkspaceAssignmentResponse], error) {
 	return c.getUserWorkspaceAssignment.CallUnary(ctx, req)
 }
 
-// AssignUserToWorkspace calls api.TenantService.AssignUserToWorkspace.
+// AssignUserToWorkspace calls tenant.TenantService.AssignUserToWorkspace.
 func (c *tenantServiceClient) AssignUserToWorkspace(ctx context.Context, req *connect.Request[api.AssignUserToWorkspaceRequest]) (*connect.Response[api.AssignUserToWorkspaceResponse], error) {
 	return c.assignUserToWorkspace.CallUnary(ctx, req)
 }
 
-// TenantServiceHandler is an implementation of the api.TenantService service.
+// TenantServiceHandler is an implementation of the tenant.TenantService service.
 type TenantServiceHandler interface {
 	CreateWorkspace(context.Context, *connect.Request[api.CreateWorkspaceRequest]) (*connect.Response[api.CreateWorkspaceResponse], error)
 	GetWorkspaces(context.Context, *connect.Request[api.GetWorkspacesRequest]) (*connect.Response[api.GetWorkspacesResponse], error)
@@ -205,7 +205,7 @@ func NewTenantServiceHandler(svc TenantServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(tenantServiceMethods.ByName("AssignUserToWorkspace")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/api.TenantService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/tenant.TenantService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case TenantServiceCreateWorkspaceProcedure:
 			tenantServiceCreateWorkspaceHandler.ServeHTTP(w, r)
@@ -229,25 +229,25 @@ func NewTenantServiceHandler(svc TenantServiceHandler, opts ...connect.HandlerOp
 type UnimplementedTenantServiceHandler struct{}
 
 func (UnimplementedTenantServiceHandler) CreateWorkspace(context.Context, *connect.Request[api.CreateWorkspaceRequest]) (*connect.Response[api.CreateWorkspaceResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantService.CreateWorkspace is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tenant.TenantService.CreateWorkspace is not implemented"))
 }
 
 func (UnimplementedTenantServiceHandler) GetWorkspaces(context.Context, *connect.Request[api.GetWorkspacesRequest]) (*connect.Response[api.GetWorkspacesResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantService.GetWorkspaces is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tenant.TenantService.GetWorkspaces is not implemented"))
 }
 
 func (UnimplementedTenantServiceHandler) EditWorkspace(context.Context, *connect.Request[api.EditWorkspaceRequest]) (*connect.Response[api.EditWorkspaceResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantService.EditWorkspace is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tenant.TenantService.EditWorkspace is not implemented"))
 }
 
 func (UnimplementedTenantServiceHandler) GetUsers(context.Context, *connect.Request[api.GetUsersRequest]) (*connect.Response[api.GetUsersResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantService.GetUsers is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tenant.TenantService.GetUsers is not implemented"))
 }
 
 func (UnimplementedTenantServiceHandler) GetUserWorkspaceAssignment(context.Context, *connect.Request[api.GetUserWorkspaceAssignmentRequest]) (*connect.Response[api.GetUserWorkspaceAssignmentResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantService.GetUserWorkspaceAssignment is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tenant.TenantService.GetUserWorkspaceAssignment is not implemented"))
 }
 
 func (UnimplementedTenantServiceHandler) AssignUserToWorkspace(context.Context, *connect.Request[api.AssignUserToWorkspaceRequest]) (*connect.Response[api.AssignUserToWorkspaceResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.TenantService.AssignUserToWorkspace is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tenant.TenantService.AssignUserToWorkspace is not implemented"))
 }

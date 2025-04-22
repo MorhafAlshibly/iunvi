@@ -1,8 +1,6 @@
 syntax = "proto3";
 
-package api;
-
-import "api/types.proto";
+package dashboard;
 
 option go_package = "github.com/MorhafAlshibly/iunvi/gen/api";
 
@@ -48,4 +46,10 @@ message GetModelRunDashboardRequest {
 
 message GetModelRunDashboardResponse {
   string dashboardSasUrl = 1;
+}
+
+message Dashboard {
+  string id = 1;
+  string modelId = 2;
+  string name = 3;
 }

@@ -1,11 +1,11 @@
 import React, { createContext, useState, useEffect } from "react";
-import { Workspace, WorkspaceRole } from "@/types/api/tenantManagement_pb";
+import { Workspace, WorkspaceRole } from "@/types/api/tenant_pb";
+import { useQuery } from "@connectrpc/connect-query";
+import { useUser } from "@/lib/authentication";
 import {
   getUserWorkspaceAssignment,
   getWorkspaces,
-} from "@/types/api/tenantManagement-TenantManagementService_connectquery";
-import { useQuery } from "@connectrpc/connect-query";
-import { useUser } from "@/lib/authentication";
+} from "@/types/api/tenant-TenantService_connectquery";
 
 const WorkspaceContext = createContext({
   workspaces: [] as Workspace[],

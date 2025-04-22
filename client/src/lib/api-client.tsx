@@ -34,14 +34,19 @@ export const TransportsProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  // Loop over the transports and create a TransportProvider for each and nest them
-  let tail = children;
-  for (const [key, transport] of Object.entries(transports)) {
-    tail = (
-      <TransportProvider key={key} transport={transport}>
-        {tail}
-      </TransportProvider>
-    );
-  }
-  return tail;
+  // // Loop over the transports and create a TransportProvider for each and nest them
+  // let tail = children;
+  // for (const [key, transport] of Object.entries(transports)) {
+  //   tail = (
+  //     <TransportProvider key={key} transport={transport}>
+  //       {tail}
+  //     </TransportProvider>
+  //   );
+  // }
+  // return tail;
+  return (
+    <TransportProvider transport={transports.tenant}>
+      {children}
+    </TransportProvider>
+  );
 };

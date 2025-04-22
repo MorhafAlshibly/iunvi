@@ -1,8 +1,8 @@
 import { UserWorkspacePanel } from "@/components/user-workspace-panel";
 import { ContentLayout } from "@/components/layouts/content";
 import { Separator } from "@/components/ui/separator";
-import { getUsers } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { useQuery } from "@connectrpc/connect-query";
+import { getUsers } from "@/types/api/tenant-TenantService_connectquery";
 
 const UsersRoute = () => {
   const { data } = useQuery(getUsers);

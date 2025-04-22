@@ -16,10 +16,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DataMode, SpecificationName } from "@/types/api/tenantManagement_pb";
 import { useQuery } from "@connectrpc/connect-query";
-import { getSpecifications } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { useWorkspace } from "@/hooks/use-workspace";
+import { getSpecifications } from "@/types/api/file-FileService_connectquery";
+import { DataMode } from "@/types/api/file_pb";
 
 export function SpecificationSelector({
   mode,

@@ -2,16 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
-import {
-  createModelRun,
-  getModel,
-} from "@/types/api/tenantManagement-TenantManagementService_connectquery";
-import {
-  CreateModelRunRequest,
-  CreateModelRunRequestSchema,
-  DataMode,
-  TableFieldType,
-} from "@/types/api/tenantManagement_pb";
+
 import { useMutation, useQuery } from "@connectrpc/connect-query";
 import { createRef, useEffect, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
@@ -36,6 +27,11 @@ import { ContentLayout } from "@/components/layouts/content";
 import Form from "@rjsf/core";
 import { RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
+import {
+  createModelRun,
+  getModel,
+} from "@/types/api/model-ModelService_connectquery";
+import { CreateModelRunRequest } from "@/types/api/model_pb";
 
 const RunModelsCreateRoute = () => {
   const navigate = useNavigate();
@@ -43,7 +39,7 @@ const RunModelsCreateRoute = () => {
 
   const createModelRunMutation = useMutation(createModelRun);
   const [modelRun, setModelRun] = useState<CreateModelRunRequest>({
-    $typeName: "api.CreateModelRunRequest",
+    $typeName: "model.CreateModelRunRequest",
     modelId: "",
     inputFileGroupId: "",
     parameters: undefined,

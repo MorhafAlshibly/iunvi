@@ -2,13 +2,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
-import { createSpecification } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
-import {
-  CreateSpecificationRequest,
-  CreateSpecificationRequestSchema,
-  DataMode,
-  TableFieldType,
-} from "@/types/api/tenantManagement_pb";
 import { useMutation } from "@connectrpc/connect-query";
 import { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
@@ -25,6 +18,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createSpecification } from "@/types/api/file-FileService_connectquery";
+import {
+  CreateSpecificationRequest,
+  DataMode,
+  TableFieldType,
+} from "@/types/api/file_pb";
 
 const SpecificationsCreateRoute = () => {
   const navigate = useNavigate();
@@ -33,17 +32,17 @@ const SpecificationsCreateRoute = () => {
   const createSpecificationMutation = useMutation(createSpecification);
   const [specification, setSpecification] =
     useState<CreateSpecificationRequest>({
-      $typeName: "api.CreateSpecificationRequest",
+      $typeName: "file.CreateSpecificationRequest",
       workspaceId: activeWorkspace?.id || "",
       name: "",
       mode: DataMode.INPUT,
       tables: [
         {
-          $typeName: "api.TableSchema",
+          $typeName: "file.TableSchema",
           name: "",
           fields: [
             {
-              $typeName: "api.TableField",
+              $typeName: "file.TableField",
               name: "",
               type: TableFieldType.BIGINT,
             },

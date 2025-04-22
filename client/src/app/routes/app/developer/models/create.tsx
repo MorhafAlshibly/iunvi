@@ -2,13 +2,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
-import { createModel } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
-import {
-  CreateModelRequest,
-  CreateModelRequestSchema,
-  DataMode,
-  TableFieldType,
-} from "@/types/api/tenantManagement_pb";
 import { useMutation } from "@connectrpc/connect-query";
 import { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
@@ -18,15 +11,12 @@ import { CircleX, Cross, PlusCircle } from "lucide-react";
 import { paths } from "@/config/paths";
 import { useNavigate } from "react-router-dom";
 import CreateDataTable from "@/components/create-data-table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { SpecificationSelector } from "@/components/specification-selector";
 import { ImageSelector } from "@/components/image-selector";
+import { createModel } from "@/types/api/model-ModelService_connectquery";
+import { CreateModelRequest } from "@/types/api/model_pb";
+import { DataMode } from "@/types/api/file_pb";
 
 const ModelsCreateRoute = () => {
   const navigate = useNavigate();
@@ -34,7 +24,7 @@ const ModelsCreateRoute = () => {
 
   const createModelMutation = useMutation(createModel);
   const [model, setModel] = useState<CreateModelRequest>({
-    $typeName: "api.CreateModelRequest",
+    $typeName: "model.CreateModelRequest",
     inputSpecificationId: "",
     outputSpecificationId: "",
     parametersSchema: undefined,

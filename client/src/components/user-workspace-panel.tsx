@@ -12,24 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Check, ChevronsUpDown, Command, Edit, Info, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { cn } from "@/utils/cn";
-import {
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-} from "cmdk";
 import { WorkspaceSelector } from "./workspace-selector";
-import {
-  User,
-  Workspace,
-  WorkspaceRole,
-} from "@/types/api/tenantManagement_pb";
 import { useMutation, useQuery } from "@connectrpc/connect-query";
-import { getUserWorkspaceAssignment } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { WorkspaceRoleEditor } from "./workspace-role-editor";
+import { getUserWorkspaceAssignment } from "@/types/api/tenant-TenantService_connectquery";
+import { User, Workspace, WorkspaceRole } from "@/types/api/tenant_pb";
 
 export function UserWorkspacePanel({ user }: { user: User }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

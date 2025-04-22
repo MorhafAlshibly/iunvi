@@ -16,10 +16,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DataMode, Dashboard } from "@/types/api/tenantManagement_pb";
 import { useQuery } from "@connectrpc/connect-query";
-import { getDashboards } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { useWorkspace } from "@/hooks/use-workspace";
+import { getDashboards } from "@/types/api/dashboard-DashboardService_connectquery";
 
 export function DashboardSelector({
   modelRunId,

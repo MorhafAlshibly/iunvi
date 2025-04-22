@@ -6,7 +6,7 @@ import {
   createRegistryTokenPassword,
   getImages,
   getRegistryTokenPasswords,
-} from "@/types/api/tenantManagement-TenantManagementService_connectquery";
+} from "@/types/api/model-ModelService_connectquery";
 import { RegistryTokenPassword } from "@/types/registry";
 import { timestampDate } from "@bufbuild/protobuf/wkt";
 import { useMutation, useQuery } from "@connectrpc/connect-query";

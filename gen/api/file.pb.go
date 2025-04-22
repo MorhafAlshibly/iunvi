@@ -9,6 +9,7 @@ package api
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -21,11 +22,166 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type TableFieldType int32
+
+const (
+	TableFieldType_BIGINT      TableFieldType = 0
+	TableFieldType_BIT         TableFieldType = 1
+	TableFieldType_BLOB        TableFieldType = 2
+	TableFieldType_BOOLEAN     TableFieldType = 3
+	TableFieldType_DATE        TableFieldType = 4
+	TableFieldType_DOUBLE      TableFieldType = 5
+	TableFieldType_FLOAT       TableFieldType = 6
+	TableFieldType_HUGEINT     TableFieldType = 7
+	TableFieldType_INTEGER     TableFieldType = 8
+	TableFieldType_INTERVAL    TableFieldType = 9
+	TableFieldType_JSON        TableFieldType = 10
+	TableFieldType_SMALLINT    TableFieldType = 11
+	TableFieldType_TIME        TableFieldType = 12
+	TableFieldType_TIMESTAMPTZ TableFieldType = 13
+	TableFieldType_TIMESTAMP   TableFieldType = 14
+	TableFieldType_TINYINT     TableFieldType = 15
+	TableFieldType_UBIGINT     TableFieldType = 16
+	TableFieldType_UHUGEINT    TableFieldType = 17
+	TableFieldType_UINTEGER    TableFieldType = 18
+	TableFieldType_USMALLINT   TableFieldType = 19
+	TableFieldType_UTINYINT    TableFieldType = 20
+	TableFieldType_UUID        TableFieldType = 21
+	TableFieldType_VARCHAR     TableFieldType = 22
+)
+
+// Enum value maps for TableFieldType.
+var (
+	TableFieldType_name = map[int32]string{
+		0:  "BIGINT",
+		1:  "BIT",
+		2:  "BLOB",
+		3:  "BOOLEAN",
+		4:  "DATE",
+		5:  "DOUBLE",
+		6:  "FLOAT",
+		7:  "HUGEINT",
+		8:  "INTEGER",
+		9:  "INTERVAL",
+		10: "JSON",
+		11: "SMALLINT",
+		12: "TIME",
+		13: "TIMESTAMPTZ",
+		14: "TIMESTAMP",
+		15: "TINYINT",
+		16: "UBIGINT",
+		17: "UHUGEINT",
+		18: "UINTEGER",
+		19: "USMALLINT",
+		20: "UTINYINT",
+		21: "UUID",
+		22: "VARCHAR",
+	}
+	TableFieldType_value = map[string]int32{
+		"BIGINT":      0,
+		"BIT":         1,
+		"BLOB":        2,
+		"BOOLEAN":     3,
+		"DATE":        4,
+		"DOUBLE":      5,
+		"FLOAT":       6,
+		"HUGEINT":     7,
+		"INTEGER":     8,
+		"INTERVAL":    9,
+		"JSON":        10,
+		"SMALLINT":    11,
+		"TIME":        12,
+		"TIMESTAMPTZ": 13,
+		"TIMESTAMP":   14,
+		"TINYINT":     15,
+		"UBIGINT":     16,
+		"UHUGEINT":    17,
+		"UINTEGER":    18,
+		"USMALLINT":   19,
+		"UTINYINT":    20,
+		"UUID":        21,
+		"VARCHAR":     22,
+	}
+)
+
+func (x TableFieldType) Enum() *TableFieldType {
+	p := new(TableFieldType)
+	*p = x
+	return p
+}
+
+func (x TableFieldType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (TableFieldType) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_file_proto_enumTypes[0].Descriptor()
+}
+
+func (TableFieldType) Type() protoreflect.EnumType {
+	return &file_api_file_proto_enumTypes[0]
+}
+
+func (x TableFieldType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use TableFieldType.Descriptor instead.
+func (TableFieldType) EnumDescriptor() ([]byte, []int) {
+	return file_api_file_proto_rawDescGZIP(), []int{0}
+}
+
+type DataMode int32
+
+const (
+	DataMode_INPUT  DataMode = 0
+	DataMode_OUTPUT DataMode = 1
+)
+
+// Enum value maps for DataMode.
+var (
+	DataMode_name = map[int32]string{
+		0: "INPUT",
+		1: "OUTPUT",
+	}
+	DataMode_value = map[string]int32{
+		"INPUT":  0,
+		"OUTPUT": 1,
+	}
+)
+
+func (x DataMode) Enum() *DataMode {
+	p := new(DataMode)
+	*p = x
+	return p
+}
+
+func (x DataMode) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (DataMode) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_file_proto_enumTypes[1].Descriptor()
+}
+
+func (DataMode) Type() protoreflect.EnumType {
+	return &file_api_file_proto_enumTypes[1]
+}
+
+func (x DataMode) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use DataMode.Descriptor instead.
+func (DataMode) EnumDescriptor() ([]byte, []int) {
+	return file_api_file_proto_rawDescGZIP(), []int{1}
+}
+
 type CreateSpecificationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	WorkspaceId   string                 `protobuf:"bytes,1,opt,name=workspaceId,proto3" json:"workspaceId,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Mode          DataMode               `protobuf:"varint,3,opt,name=mode,proto3,enum=api.DataMode" json:"mode,omitempty"`
+	Mode          DataMode               `protobuf:"varint,3,opt,name=mode,proto3,enum=file.DataMode" json:"mode,omitempty"`
 	Tables        []*TableSchema         `protobuf:"bytes,4,rep,name=tables,proto3" json:"tables,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -136,7 +292,7 @@ func (x *CreateSpecificationResponse) GetId() string {
 type GetSpecificationsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	WorkspaceId   string                 `protobuf:"bytes,1,opt,name=workspaceId,proto3" json:"workspaceId,omitempty"`
-	Mode          *DataMode              `protobuf:"varint,2,opt,name=mode,proto3,enum=api.DataMode,oneof" json:"mode,omitempty"`
+	Mode          *DataMode              `protobuf:"varint,2,opt,name=mode,proto3,enum=file.DataMode,oneof" json:"mode,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -276,7 +432,7 @@ func (x *GetSpecificationRequest) GetId() string {
 type GetSpecificationResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Specification *Specification         `protobuf:"bytes,1,opt,name=specification,proto3" json:"specification,omitempty"`
-	Mode          DataMode               `protobuf:"varint,2,opt,name=mode,proto3,enum=api.DataMode" json:"mode,omitempty"`
+	Mode          DataMode               `protobuf:"varint,2,opt,name=mode,proto3,enum=file.DataMode" json:"mode,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -733,29 +889,417 @@ func (x *GetFileGroupsResponse) GetFileGroups() []*FileGroupName {
 	return nil
 }
 
+type FileGroupName struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FileGroupName) Reset() {
+	*x = FileGroupName{}
+	mi := &file_api_file_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FileGroupName) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FileGroupName) ProtoMessage() {}
+
+func (x *FileGroupName) ProtoReflect() protoreflect.Message {
+	mi := &file_api_file_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FileGroupName.ProtoReflect.Descriptor instead.
+func (*FileGroupName) Descriptor() ([]byte, []int) {
+	return file_api_file_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *FileGroupName) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *FileGroupName) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type SchemaFileMapping struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	SchemaName          string                 `protobuf:"bytes,1,opt,name=schemaName,proto3" json:"schemaName,omitempty"`
+	LandingZoneFileName string                 `protobuf:"bytes,2,opt,name=landingZoneFileName,proto3" json:"landingZoneFileName,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *SchemaFileMapping) Reset() {
+	*x = SchemaFileMapping{}
+	mi := &file_api_file_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SchemaFileMapping) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SchemaFileMapping) ProtoMessage() {}
+
+func (x *SchemaFileMapping) ProtoReflect() protoreflect.Message {
+	mi := &file_api_file_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SchemaFileMapping.ProtoReflect.Descriptor instead.
+func (*SchemaFileMapping) Descriptor() ([]byte, []int) {
+	return file_api_file_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *SchemaFileMapping) GetSchemaName() string {
+	if x != nil {
+		return x.SchemaName
+	}
+	return ""
+}
+
+func (x *SchemaFileMapping) GetLandingZoneFileName() string {
+	if x != nil {
+		return x.LandingZoneFileName
+	}
+	return ""
+}
+
+type LandingZoneFile struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Size          uint64                 `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
+	LastModified  *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=lastModified,proto3" json:"lastModified,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LandingZoneFile) Reset() {
+	*x = LandingZoneFile{}
+	mi := &file_api_file_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LandingZoneFile) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LandingZoneFile) ProtoMessage() {}
+
+func (x *LandingZoneFile) ProtoReflect() protoreflect.Message {
+	mi := &file_api_file_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LandingZoneFile.ProtoReflect.Descriptor instead.
+func (*LandingZoneFile) Descriptor() ([]byte, []int) {
+	return file_api_file_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *LandingZoneFile) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *LandingZoneFile) GetSize() uint64 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+func (x *LandingZoneFile) GetLastModified() *timestamppb.Timestamp {
+	if x != nil {
+		return x.LastModified
+	}
+	return nil
+}
+
+type SpecificationName struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Mode          DataMode               `protobuf:"varint,3,opt,name=mode,proto3,enum=file.DataMode" json:"mode,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SpecificationName) Reset() {
+	*x = SpecificationName{}
+	mi := &file_api_file_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SpecificationName) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SpecificationName) ProtoMessage() {}
+
+func (x *SpecificationName) ProtoReflect() protoreflect.Message {
+	mi := &file_api_file_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SpecificationName.ProtoReflect.Descriptor instead.
+func (*SpecificationName) Descriptor() ([]byte, []int) {
+	return file_api_file_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *SpecificationName) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *SpecificationName) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *SpecificationName) GetMode() DataMode {
+	if x != nil {
+		return x.Mode
+	}
+	return DataMode_INPUT
+}
+
+type Specification struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Tables        []*TableSchema         `protobuf:"bytes,3,rep,name=tables,proto3" json:"tables,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Specification) Reset() {
+	*x = Specification{}
+	mi := &file_api_file_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Specification) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Specification) ProtoMessage() {}
+
+func (x *Specification) ProtoReflect() protoreflect.Message {
+	mi := &file_api_file_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Specification.ProtoReflect.Descriptor instead.
+func (*Specification) Descriptor() ([]byte, []int) {
+	return file_api_file_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *Specification) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Specification) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Specification) GetTables() []*TableSchema {
+	if x != nil {
+		return x.Tables
+	}
+	return nil
+}
+
+type TableSchema struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Fields        []*TableField          `protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TableSchema) Reset() {
+	*x = TableSchema{}
+	mi := &file_api_file_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TableSchema) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TableSchema) ProtoMessage() {}
+
+func (x *TableSchema) ProtoReflect() protoreflect.Message {
+	mi := &file_api_file_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TableSchema.ProtoReflect.Descriptor instead.
+func (*TableSchema) Descriptor() ([]byte, []int) {
+	return file_api_file_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *TableSchema) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *TableSchema) GetFields() []*TableField {
+	if x != nil {
+		return x.Fields
+	}
+	return nil
+}
+
+type TableField struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Type          TableFieldType         `protobuf:"varint,2,opt,name=type,proto3,enum=file.TableFieldType" json:"type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TableField) Reset() {
+	*x = TableField{}
+	mi := &file_api_file_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TableField) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TableField) ProtoMessage() {}
+
+func (x *TableField) ProtoReflect() protoreflect.Message {
+	mi := &file_api_file_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TableField.ProtoReflect.Descriptor instead.
+func (*TableField) Descriptor() ([]byte, []int) {
+	return file_api_file_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *TableField) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *TableField) GetType() TableFieldType {
+	if x != nil {
+		return x.Type
+	}
+	return TableFieldType_BIGINT
+}
+
 var File_api_file_proto protoreflect.FileDescriptor
 
 const file_api_file_proto_rawDesc = "" +
 	"\n" +
-	"\x0eapi/file.proto\x12\x03api\x1a\x0fapi/types.proto\"\x9f\x01\n" +
+	"\x0eapi/file.proto\x12\x04file\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa1\x01\n" +
 	"\x1aCreateSpecificationRequest\x12 \n" +
 	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12!\n" +
-	"\x04mode\x18\x03 \x01(\x0e2\r.api.DataModeR\x04mode\x12(\n" +
-	"\x06tables\x18\x04 \x03(\v2\x10.api.TableSchemaR\x06tables\"-\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\"\n" +
+	"\x04mode\x18\x03 \x01(\x0e2\x0e.file.DataModeR\x04mode\x12)\n" +
+	"\x06tables\x18\x04 \x03(\v2\x11.file.TableSchemaR\x06tables\"-\n" +
 	"\x1bCreateSpecificationResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"m\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"n\n" +
 	"\x18GetSpecificationsRequest\x12 \n" +
-	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\x12&\n" +
-	"\x04mode\x18\x02 \x01(\x0e2\r.api.DataModeH\x00R\x04mode\x88\x01\x01B\a\n" +
-	"\x05_mode\"[\n" +
-	"\x19GetSpecificationsResponse\x12>\n" +
-	"\x0especifications\x18\x01 \x03(\v2\x16.api.SpecificationNameR\x0especifications\")\n" +
+	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\x12'\n" +
+	"\x04mode\x18\x02 \x01(\x0e2\x0e.file.DataModeH\x00R\x04mode\x88\x01\x01B\a\n" +
+	"\x05_mode\"\\\n" +
+	"\x19GetSpecificationsResponse\x12?\n" +
+	"\x0especifications\x18\x01 \x03(\v2\x17.file.SpecificationNameR\x0especifications\")\n" +
 	"\x17GetSpecificationRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"w\n" +
-	"\x18GetSpecificationResponse\x128\n" +
-	"\rspecification\x18\x01 \x01(\v2\x12.api.SpecificationR\rspecification\x12!\n" +
-	"\x04mode\x18\x02 \x01(\x0e2\r.api.DataModeR\x04mode\"m\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"y\n" +
+	"\x18GetSpecificationResponse\x129\n" +
+	"\rspecification\x18\x01 \x01(\v2\x13.file.SpecificationR\rspecification\x12\"\n" +
+	"\x04mode\x18\x02 \x01(\x0e2\x0e.file.DataModeR\x04mode\"m\n" +
 	"-CreateLandingZoneSharedAccessSignatureRequest\x12 \n" +
 	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\x12\x1a\n" +
 	"\bfileName\x18\x02 \x01(\tR\bfileName\"B\n" +
@@ -765,35 +1309,93 @@ const file_api_file_proto_rawDesc = "" +
 	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\x12\x16\n" +
 	"\x06prefix\x18\x02 \x01(\tR\x06prefix\x12\x1b\n" +
 	"\x06marker\x18\x03 \x01(\tH\x00R\x06marker\x88\x01\x01B\t\n" +
-	"\a_marker\"}\n" +
-	"\x1bGetLandingZoneFilesResponse\x12*\n" +
-	"\x05files\x18\x01 \x03(\v2\x14.api.LandingZoneFileR\x05files\x12#\n" +
+	"\a_marker\"~\n" +
+	"\x1bGetLandingZoneFilesResponse\x12+\n" +
+	"\x05files\x18\x01 \x03(\v2\x15.file.LandingZoneFileR\x05files\x12#\n" +
 	"\n" +
 	"nextMarker\x18\x02 \x01(\tH\x00R\n" +
 	"nextMarker\x88\x01\x01B\r\n" +
-	"\v_nextMarker\"\x9e\x01\n" +
+	"\v_nextMarker\"\x9f\x01\n" +
 	"\x16CreateFileGroupRequest\x12(\n" +
 	"\x0fspecificationId\x18\x01 \x01(\tR\x0fspecificationId\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12F\n" +
-	"\x12schemaFileMappings\x18\x03 \x03(\v2\x16.api.SchemaFileMappingR\x12schemaFileMappings\")\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12G\n" +
+	"\x12schemaFileMappings\x18\x03 \x03(\v2\x17.file.SchemaFileMappingR\x12schemaFileMappings\")\n" +
 	"\x17CreateFileGroupResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"{\n" +
 	"\x14GetFileGroupsRequest\x12 \n" +
 	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\x12-\n" +
 	"\x0fspecificationId\x18\x02 \x01(\tH\x00R\x0fspecificationId\x88\x01\x01B\x12\n" +
-	"\x10_specificationId\"K\n" +
-	"\x15GetFileGroupsResponse\x122\n" +
+	"\x10_specificationId\"L\n" +
+	"\x15GetFileGroupsResponse\x123\n" +
 	"\n" +
-	"fileGroups\x18\x01 \x03(\v2\x12.api.FileGroupNameR\n" +
-	"fileGroups2\x90\x05\n" +
-	"\vFileService\x12X\n" +
-	"\x13CreateSpecification\x12\x1f.api.CreateSpecificationRequest\x1a .api.CreateSpecificationResponse\x12R\n" +
-	"\x11GetSpecifications\x12\x1d.api.GetSpecificationsRequest\x1a\x1e.api.GetSpecificationsResponse\x12O\n" +
-	"\x10GetSpecification\x12\x1c.api.GetSpecificationRequest\x1a\x1d.api.GetSpecificationResponse\x12\x91\x01\n" +
-	"&CreateLandingZoneSharedAccessSignature\x122.api.CreateLandingZoneSharedAccessSignatureRequest\x1a3.api.CreateLandingZoneSharedAccessSignatureResponse\x12X\n" +
-	"\x13GetLandingZoneFiles\x12\x1f.api.GetLandingZoneFilesRequest\x1a .api.GetLandingZoneFilesResponse\x12L\n" +
-	"\x0fCreateFileGroup\x12\x1b.api.CreateFileGroupRequest\x1a\x1c.api.CreateFileGroupResponse\x12F\n" +
-	"\rGetFileGroups\x12\x19.api.GetFileGroupsRequest\x1a\x1a.api.GetFileGroupsResponseB)Z'github.com/MorhafAlshibly/iunvi/gen/apib\x06proto3"
+	"fileGroups\x18\x01 \x03(\v2\x13.file.FileGroupNameR\n" +
+	"fileGroups\"3\n" +
+	"\rFileGroupName\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"e\n" +
+	"\x11SchemaFileMapping\x12\x1e\n" +
+	"\n" +
+	"schemaName\x18\x01 \x01(\tR\n" +
+	"schemaName\x120\n" +
+	"\x13landingZoneFileName\x18\x02 \x01(\tR\x13landingZoneFileName\"y\n" +
+	"\x0fLandingZoneFile\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
+	"\x04size\x18\x02 \x01(\x04R\x04size\x12>\n" +
+	"\flastModified\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\flastModified\"[\n" +
+	"\x11SpecificationName\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\"\n" +
+	"\x04mode\x18\x03 \x01(\x0e2\x0e.file.DataModeR\x04mode\"^\n" +
+	"\rSpecification\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12)\n" +
+	"\x06tables\x18\x03 \x03(\v2\x11.file.TableSchemaR\x06tables\"K\n" +
+	"\vTableSchema\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12(\n" +
+	"\x06fields\x18\x02 \x03(\v2\x10.file.TableFieldR\x06fields\"J\n" +
+	"\n" +
+	"TableField\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12(\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x14.file.TableFieldTypeR\x04type*\xb1\x02\n" +
+	"\x0eTableFieldType\x12\n" +
+	"\n" +
+	"\x06BIGINT\x10\x00\x12\a\n" +
+	"\x03BIT\x10\x01\x12\b\n" +
+	"\x04BLOB\x10\x02\x12\v\n" +
+	"\aBOOLEAN\x10\x03\x12\b\n" +
+	"\x04DATE\x10\x04\x12\n" +
+	"\n" +
+	"\x06DOUBLE\x10\x05\x12\t\n" +
+	"\x05FLOAT\x10\x06\x12\v\n" +
+	"\aHUGEINT\x10\a\x12\v\n" +
+	"\aINTEGER\x10\b\x12\f\n" +
+	"\bINTERVAL\x10\t\x12\b\n" +
+	"\x04JSON\x10\n" +
+	"\x12\f\n" +
+	"\bSMALLINT\x10\v\x12\b\n" +
+	"\x04TIME\x10\f\x12\x0f\n" +
+	"\vTIMESTAMPTZ\x10\r\x12\r\n" +
+	"\tTIMESTAMP\x10\x0e\x12\v\n" +
+	"\aTINYINT\x10\x0f\x12\v\n" +
+	"\aUBIGINT\x10\x10\x12\f\n" +
+	"\bUHUGEINT\x10\x11\x12\f\n" +
+	"\bUINTEGER\x10\x12\x12\r\n" +
+	"\tUSMALLINT\x10\x13\x12\f\n" +
+	"\bUTINYINT\x10\x14\x12\b\n" +
+	"\x04UUID\x10\x15\x12\v\n" +
+	"\aVARCHAR\x10\x16*!\n" +
+	"\bDataMode\x12\t\n" +
+	"\x05INPUT\x10\x00\x12\n" +
+	"\n" +
+	"\x06OUTPUT\x10\x012\x9e\x05\n" +
+	"\vFileService\x12Z\n" +
+	"\x13CreateSpecification\x12 .file.CreateSpecificationRequest\x1a!.file.CreateSpecificationResponse\x12T\n" +
+	"\x11GetSpecifications\x12\x1e.file.GetSpecificationsRequest\x1a\x1f.file.GetSpecificationsResponse\x12Q\n" +
+	"\x10GetSpecification\x12\x1d.file.GetSpecificationRequest\x1a\x1e.file.GetSpecificationResponse\x12\x93\x01\n" +
+	"&CreateLandingZoneSharedAccessSignature\x123.file.CreateLandingZoneSharedAccessSignatureRequest\x1a4.file.CreateLandingZoneSharedAccessSignatureResponse\x12Z\n" +
+	"\x13GetLandingZoneFiles\x12 .file.GetLandingZoneFilesRequest\x1a!.file.GetLandingZoneFilesResponse\x12N\n" +
+	"\x0fCreateFileGroup\x12\x1c.file.CreateFileGroupRequest\x1a\x1d.file.CreateFileGroupResponse\x12H\n" +
+	"\rGetFileGroups\x12\x1a.file.GetFileGroupsRequest\x1a\x1b.file.GetFileGroupsResponseB)Z'github.com/MorhafAlshibly/iunvi/gen/apib\x06proto3"
 
 var (
 	file_api_file_proto_rawDescOnce sync.Once
@@ -807,59 +1409,68 @@ func file_api_file_proto_rawDescGZIP() []byte {
 	return file_api_file_proto_rawDescData
 }
 
-var file_api_file_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_api_file_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_api_file_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_api_file_proto_goTypes = []any{
-	(*CreateSpecificationRequest)(nil),                     // 0: api.CreateSpecificationRequest
-	(*CreateSpecificationResponse)(nil),                    // 1: api.CreateSpecificationResponse
-	(*GetSpecificationsRequest)(nil),                       // 2: api.GetSpecificationsRequest
-	(*GetSpecificationsResponse)(nil),                      // 3: api.GetSpecificationsResponse
-	(*GetSpecificationRequest)(nil),                        // 4: api.GetSpecificationRequest
-	(*GetSpecificationResponse)(nil),                       // 5: api.GetSpecificationResponse
-	(*CreateLandingZoneSharedAccessSignatureRequest)(nil),  // 6: api.CreateLandingZoneSharedAccessSignatureRequest
-	(*CreateLandingZoneSharedAccessSignatureResponse)(nil), // 7: api.CreateLandingZoneSharedAccessSignatureResponse
-	(*GetLandingZoneFilesRequest)(nil),                     // 8: api.GetLandingZoneFilesRequest
-	(*GetLandingZoneFilesResponse)(nil),                    // 9: api.GetLandingZoneFilesResponse
-	(*CreateFileGroupRequest)(nil),                         // 10: api.CreateFileGroupRequest
-	(*CreateFileGroupResponse)(nil),                        // 11: api.CreateFileGroupResponse
-	(*GetFileGroupsRequest)(nil),                           // 12: api.GetFileGroupsRequest
-	(*GetFileGroupsResponse)(nil),                          // 13: api.GetFileGroupsResponse
-	(DataMode)(0),                                          // 14: api.DataMode
-	(*TableSchema)(nil),                                    // 15: api.TableSchema
-	(*SpecificationName)(nil),                              // 16: api.SpecificationName
-	(*Specification)(nil),                                  // 17: api.Specification
-	(*LandingZoneFile)(nil),                                // 18: api.LandingZoneFile
-	(*SchemaFileMapping)(nil),                              // 19: api.SchemaFileMapping
-	(*FileGroupName)(nil),                                  // 20: api.FileGroupName
+	(TableFieldType)(0),                                    // 0: file.TableFieldType
+	(DataMode)(0),                                          // 1: file.DataMode
+	(*CreateSpecificationRequest)(nil),                     // 2: file.CreateSpecificationRequest
+	(*CreateSpecificationResponse)(nil),                    // 3: file.CreateSpecificationResponse
+	(*GetSpecificationsRequest)(nil),                       // 4: file.GetSpecificationsRequest
+	(*GetSpecificationsResponse)(nil),                      // 5: file.GetSpecificationsResponse
+	(*GetSpecificationRequest)(nil),                        // 6: file.GetSpecificationRequest
+	(*GetSpecificationResponse)(nil),                       // 7: file.GetSpecificationResponse
+	(*CreateLandingZoneSharedAccessSignatureRequest)(nil),  // 8: file.CreateLandingZoneSharedAccessSignatureRequest
+	(*CreateLandingZoneSharedAccessSignatureResponse)(nil), // 9: file.CreateLandingZoneSharedAccessSignatureResponse
+	(*GetLandingZoneFilesRequest)(nil),                     // 10: file.GetLandingZoneFilesRequest
+	(*GetLandingZoneFilesResponse)(nil),                    // 11: file.GetLandingZoneFilesResponse
+	(*CreateFileGroupRequest)(nil),                         // 12: file.CreateFileGroupRequest
+	(*CreateFileGroupResponse)(nil),                        // 13: file.CreateFileGroupResponse
+	(*GetFileGroupsRequest)(nil),                           // 14: file.GetFileGroupsRequest
+	(*GetFileGroupsResponse)(nil),                          // 15: file.GetFileGroupsResponse
+	(*FileGroupName)(nil),                                  // 16: file.FileGroupName
+	(*SchemaFileMapping)(nil),                              // 17: file.SchemaFileMapping
+	(*LandingZoneFile)(nil),                                // 18: file.LandingZoneFile
+	(*SpecificationName)(nil),                              // 19: file.SpecificationName
+	(*Specification)(nil),                                  // 20: file.Specification
+	(*TableSchema)(nil),                                    // 21: file.TableSchema
+	(*TableField)(nil),                                     // 22: file.TableField
+	(*timestamppb.Timestamp)(nil),                          // 23: google.protobuf.Timestamp
 }
 var file_api_file_proto_depIdxs = []int32{
-	14, // 0: api.CreateSpecificationRequest.mode:type_name -> api.DataMode
-	15, // 1: api.CreateSpecificationRequest.tables:type_name -> api.TableSchema
-	14, // 2: api.GetSpecificationsRequest.mode:type_name -> api.DataMode
-	16, // 3: api.GetSpecificationsResponse.specifications:type_name -> api.SpecificationName
-	17, // 4: api.GetSpecificationResponse.specification:type_name -> api.Specification
-	14, // 5: api.GetSpecificationResponse.mode:type_name -> api.DataMode
-	18, // 6: api.GetLandingZoneFilesResponse.files:type_name -> api.LandingZoneFile
-	19, // 7: api.CreateFileGroupRequest.schemaFileMappings:type_name -> api.SchemaFileMapping
-	20, // 8: api.GetFileGroupsResponse.fileGroups:type_name -> api.FileGroupName
-	0,  // 9: api.FileService.CreateSpecification:input_type -> api.CreateSpecificationRequest
-	2,  // 10: api.FileService.GetSpecifications:input_type -> api.GetSpecificationsRequest
-	4,  // 11: api.FileService.GetSpecification:input_type -> api.GetSpecificationRequest
-	6,  // 12: api.FileService.CreateLandingZoneSharedAccessSignature:input_type -> api.CreateLandingZoneSharedAccessSignatureRequest
-	8,  // 13: api.FileService.GetLandingZoneFiles:input_type -> api.GetLandingZoneFilesRequest
-	10, // 14: api.FileService.CreateFileGroup:input_type -> api.CreateFileGroupRequest
-	12, // 15: api.FileService.GetFileGroups:input_type -> api.GetFileGroupsRequest
-	1,  // 16: api.FileService.CreateSpecification:output_type -> api.CreateSpecificationResponse
-	3,  // 17: api.FileService.GetSpecifications:output_type -> api.GetSpecificationsResponse
-	5,  // 18: api.FileService.GetSpecification:output_type -> api.GetSpecificationResponse
-	7,  // 19: api.FileService.CreateLandingZoneSharedAccessSignature:output_type -> api.CreateLandingZoneSharedAccessSignatureResponse
-	9,  // 20: api.FileService.GetLandingZoneFiles:output_type -> api.GetLandingZoneFilesResponse
-	11, // 21: api.FileService.CreateFileGroup:output_type -> api.CreateFileGroupResponse
-	13, // 22: api.FileService.GetFileGroups:output_type -> api.GetFileGroupsResponse
-	16, // [16:23] is the sub-list for method output_type
-	9,  // [9:16] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	1,  // 0: file.CreateSpecificationRequest.mode:type_name -> file.DataMode
+	21, // 1: file.CreateSpecificationRequest.tables:type_name -> file.TableSchema
+	1,  // 2: file.GetSpecificationsRequest.mode:type_name -> file.DataMode
+	19, // 3: file.GetSpecificationsResponse.specifications:type_name -> file.SpecificationName
+	20, // 4: file.GetSpecificationResponse.specification:type_name -> file.Specification
+	1,  // 5: file.GetSpecificationResponse.mode:type_name -> file.DataMode
+	18, // 6: file.GetLandingZoneFilesResponse.files:type_name -> file.LandingZoneFile
+	17, // 7: file.CreateFileGroupRequest.schemaFileMappings:type_name -> file.SchemaFileMapping
+	16, // 8: file.GetFileGroupsResponse.fileGroups:type_name -> file.FileGroupName
+	23, // 9: file.LandingZoneFile.lastModified:type_name -> google.protobuf.Timestamp
+	1,  // 10: file.SpecificationName.mode:type_name -> file.DataMode
+	21, // 11: file.Specification.tables:type_name -> file.TableSchema
+	22, // 12: file.TableSchema.fields:type_name -> file.TableField
+	0,  // 13: file.TableField.type:type_name -> file.TableFieldType
+	2,  // 14: file.FileService.CreateSpecification:input_type -> file.CreateSpecificationRequest
+	4,  // 15: file.FileService.GetSpecifications:input_type -> file.GetSpecificationsRequest
+	6,  // 16: file.FileService.GetSpecification:input_type -> file.GetSpecificationRequest
+	8,  // 17: file.FileService.CreateLandingZoneSharedAccessSignature:input_type -> file.CreateLandingZoneSharedAccessSignatureRequest
+	10, // 18: file.FileService.GetLandingZoneFiles:input_type -> file.GetLandingZoneFilesRequest
+	12, // 19: file.FileService.CreateFileGroup:input_type -> file.CreateFileGroupRequest
+	14, // 20: file.FileService.GetFileGroups:input_type -> file.GetFileGroupsRequest
+	3,  // 21: file.FileService.CreateSpecification:output_type -> file.CreateSpecificationResponse
+	5,  // 22: file.FileService.GetSpecifications:output_type -> file.GetSpecificationsResponse
+	7,  // 23: file.FileService.GetSpecification:output_type -> file.GetSpecificationResponse
+	9,  // 24: file.FileService.CreateLandingZoneSharedAccessSignature:output_type -> file.CreateLandingZoneSharedAccessSignatureResponse
+	11, // 25: file.FileService.GetLandingZoneFiles:output_type -> file.GetLandingZoneFilesResponse
+	13, // 26: file.FileService.CreateFileGroup:output_type -> file.CreateFileGroupResponse
+	15, // 27: file.FileService.GetFileGroups:output_type -> file.GetFileGroupsResponse
+	21, // [21:28] is the sub-list for method output_type
+	14, // [14:21] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_api_file_proto_init() }
@@ -867,7 +1478,6 @@ func file_api_file_proto_init() {
 	if File_api_file_proto != nil {
 		return
 	}
-	file_api_types_proto_init()
 	file_api_file_proto_msgTypes[2].OneofWrappers = []any{}
 	file_api_file_proto_msgTypes[8].OneofWrappers = []any{}
 	file_api_file_proto_msgTypes[9].OneofWrappers = []any{}
@@ -877,13 +1487,14 @@ func file_api_file_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_file_proto_rawDesc), len(file_api_file_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   14,
+			NumEnums:      2,
+			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_api_file_proto_goTypes,
 		DependencyIndexes: file_api_file_proto_depIdxs,
+		EnumInfos:         file_api_file_proto_enumTypes,
 		MessageInfos:      file_api_file_proto_msgTypes,
 	}.Build()
 	File_api_file_proto = out.File

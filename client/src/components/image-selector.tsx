@@ -16,10 +16,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DataMode, Image } from "@/types/api/tenantManagement_pb";
 import { useQuery } from "@connectrpc/connect-query";
-import { getImages } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { useWorkspace } from "@/hooks/use-workspace";
+import { getImages } from "@/types/api/model-ModelService_connectquery";
 
 export function ImageSelector({
   selectedImageName,

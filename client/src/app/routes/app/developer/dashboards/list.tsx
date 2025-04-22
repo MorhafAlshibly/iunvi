@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { paths } from "@/config/paths";
 import { useWorkspace } from "@/hooks/use-workspace";
-import { getDashboards } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
+import { getDashboards } from "@/types/api/dashboard-DashboardService_connectquery";
 import { useQuery } from "@connectrpc/connect-query";
 import { Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";

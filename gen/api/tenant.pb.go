@@ -21,6 +21,58 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type WorkspaceRole int32
+
+const (
+	WorkspaceRole_UNASSIGNED WorkspaceRole = 0
+	WorkspaceRole_VIEWER     WorkspaceRole = 1
+	WorkspaceRole_USER       WorkspaceRole = 2
+	WorkspaceRole_DEVELOPER  WorkspaceRole = 3
+)
+
+// Enum value maps for WorkspaceRole.
+var (
+	WorkspaceRole_name = map[int32]string{
+		0: "UNASSIGNED",
+		1: "VIEWER",
+		2: "USER",
+		3: "DEVELOPER",
+	}
+	WorkspaceRole_value = map[string]int32{
+		"UNASSIGNED": 0,
+		"VIEWER":     1,
+		"USER":       2,
+		"DEVELOPER":  3,
+	}
+)
+
+func (x WorkspaceRole) Enum() *WorkspaceRole {
+	p := new(WorkspaceRole)
+	*p = x
+	return p
+}
+
+func (x WorkspaceRole) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (WorkspaceRole) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_tenant_proto_enumTypes[0].Descriptor()
+}
+
+func (WorkspaceRole) Type() protoreflect.EnumType {
+	return &file_api_tenant_proto_enumTypes[0]
+}
+
+func (x WorkspaceRole) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use WorkspaceRole.Descriptor instead.
+func (WorkspaceRole) EnumDescriptor() ([]byte, []int) {
+	return file_api_tenant_proto_rawDescGZIP(), []int{0}
+}
+
 type CreateWorkspaceRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -411,7 +463,7 @@ func (x *GetUserWorkspaceAssignmentRequest) GetWorkspaceId() string {
 
 type GetUserWorkspaceAssignmentResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Role          WorkspaceRole          `protobuf:"varint,1,opt,name=role,proto3,enum=api.WorkspaceRole" json:"role,omitempty"`
+	Role          WorkspaceRole          `protobuf:"varint,1,opt,name=role,proto3,enum=tenant.WorkspaceRole" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -457,7 +509,7 @@ type AssignUserToWorkspaceRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserObjectId  string                 `protobuf:"bytes,1,opt,name=userObjectId,proto3" json:"userObjectId,omitempty"`
 	WorkspaceId   string                 `protobuf:"bytes,2,opt,name=workspaceId,proto3" json:"workspaceId,omitempty"`
-	Role          WorkspaceRole          `protobuf:"varint,3,opt,name=role,proto3,enum=api.WorkspaceRole" json:"role,omitempty"`
+	Role          WorkspaceRole          `protobuf:"varint,3,opt,name=role,proto3,enum=tenant.WorkspaceRole" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -549,44 +601,170 @@ func (*AssignUserToWorkspaceResponse) Descriptor() ([]byte, []int) {
 	return file_api_tenant_proto_rawDescGZIP(), []int{11}
 }
 
+type Workspace struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Workspace) Reset() {
+	*x = Workspace{}
+	mi := &file_api_tenant_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Workspace) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Workspace) ProtoMessage() {}
+
+func (x *Workspace) ProtoReflect() protoreflect.Message {
+	mi := &file_api_tenant_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Workspace.ProtoReflect.Descriptor instead.
+func (*Workspace) Descriptor() ([]byte, []int) {
+	return file_api_tenant_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *Workspace) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Workspace) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type User struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	DisplayName   string                 `protobuf:"bytes,3,opt,name=displayName,proto3" json:"displayName,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *User) Reset() {
+	*x = User{}
+	mi := &file_api_tenant_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *User) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*User) ProtoMessage() {}
+
+func (x *User) ProtoReflect() protoreflect.Message {
+	mi := &file_api_tenant_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use User.ProtoReflect.Descriptor instead.
+func (*User) Descriptor() ([]byte, []int) {
+	return file_api_tenant_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *User) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *User) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *User) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
 var File_api_tenant_proto protoreflect.FileDescriptor
 
 const file_api_tenant_proto_rawDesc = "" +
 	"\n" +
-	"\x10api/tenant.proto\x12\x03api\x1a\x0fapi/types.proto\",\n" +
+	"\x10api/tenant.proto\x12\x06tenant\",\n" +
 	"\x16CreateWorkspaceRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\")\n" +
 	"\x17CreateWorkspaceResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"\x16\n" +
-	"\x14GetWorkspacesRequest\"G\n" +
-	"\x15GetWorkspacesResponse\x12.\n" +
+	"\x14GetWorkspacesRequest\"J\n" +
+	"\x15GetWorkspacesResponse\x121\n" +
 	"\n" +
-	"workspaces\x18\x01 \x03(\v2\x0e.api.WorkspaceR\n" +
+	"workspaces\x18\x01 \x03(\v2\x11.tenant.WorkspaceR\n" +
 	"workspaces\":\n" +
 	"\x14EditWorkspaceRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\"\x17\n" +
 	"\x15EditWorkspaceResponse\"\x11\n" +
-	"\x0fGetUsersRequest\"3\n" +
-	"\x10GetUsersResponse\x12\x1f\n" +
-	"\x05users\x18\x01 \x03(\v2\t.api.UserR\x05users\"i\n" +
+	"\x0fGetUsersRequest\"6\n" +
+	"\x10GetUsersResponse\x12\"\n" +
+	"\x05users\x18\x01 \x03(\v2\f.tenant.UserR\x05users\"i\n" +
 	"!GetUserWorkspaceAssignmentRequest\x12\"\n" +
 	"\fuserObjectId\x18\x01 \x01(\tR\fuserObjectId\x12 \n" +
-	"\vworkspaceId\x18\x02 \x01(\tR\vworkspaceId\"L\n" +
-	"\"GetUserWorkspaceAssignmentResponse\x12&\n" +
-	"\x04role\x18\x01 \x01(\x0e2\x12.api.WorkspaceRoleR\x04role\"\x8c\x01\n" +
+	"\vworkspaceId\x18\x02 \x01(\tR\vworkspaceId\"O\n" +
+	"\"GetUserWorkspaceAssignmentResponse\x12)\n" +
+	"\x04role\x18\x01 \x01(\x0e2\x15.tenant.WorkspaceRoleR\x04role\"\x8f\x01\n" +
 	"\x1cAssignUserToWorkspaceRequest\x12\"\n" +
 	"\fuserObjectId\x18\x01 \x01(\tR\fuserObjectId\x12 \n" +
-	"\vworkspaceId\x18\x02 \x01(\tR\vworkspaceId\x12&\n" +
-	"\x04role\x18\x03 \x01(\x0e2\x12.api.WorkspaceRoleR\x04role\"\x1f\n" +
-	"\x1dAssignUserToWorkspaceResponse2\xf5\x03\n" +
-	"\rTenantService\x12L\n" +
-	"\x0fCreateWorkspace\x12\x1b.api.CreateWorkspaceRequest\x1a\x1c.api.CreateWorkspaceResponse\x12F\n" +
-	"\rGetWorkspaces\x12\x19.api.GetWorkspacesRequest\x1a\x1a.api.GetWorkspacesResponse\x12F\n" +
-	"\rEditWorkspace\x12\x19.api.EditWorkspaceRequest\x1a\x1a.api.EditWorkspaceResponse\x127\n" +
-	"\bGetUsers\x12\x14.api.GetUsersRequest\x1a\x15.api.GetUsersResponse\x12m\n" +
-	"\x1aGetUserWorkspaceAssignment\x12&.api.GetUserWorkspaceAssignmentRequest\x1a'.api.GetUserWorkspaceAssignmentResponse\x12^\n" +
-	"\x15AssignUserToWorkspace\x12!.api.AssignUserToWorkspaceRequest\x1a\".api.AssignUserToWorkspaceResponseB)Z'github.com/MorhafAlshibly/iunvi/gen/apib\x06proto3"
+	"\vworkspaceId\x18\x02 \x01(\tR\vworkspaceId\x12)\n" +
+	"\x04role\x18\x03 \x01(\x0e2\x15.tenant.WorkspaceRoleR\x04role\"\x1f\n" +
+	"\x1dAssignUserToWorkspaceResponse\"/\n" +
+	"\tWorkspace\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"T\n" +
+	"\x04User\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12 \n" +
+	"\vdisplayName\x18\x03 \x01(\tR\vdisplayName*D\n" +
+	"\rWorkspaceRole\x12\x0e\n" +
+	"\n" +
+	"UNASSIGNED\x10\x00\x12\n" +
+	"\n" +
+	"\x06VIEWER\x10\x01\x12\b\n" +
+	"\x04USER\x10\x02\x12\r\n" +
+	"\tDEVELOPER\x10\x032\x99\x04\n" +
+	"\rTenantService\x12R\n" +
+	"\x0fCreateWorkspace\x12\x1e.tenant.CreateWorkspaceRequest\x1a\x1f.tenant.CreateWorkspaceResponse\x12L\n" +
+	"\rGetWorkspaces\x12\x1c.tenant.GetWorkspacesRequest\x1a\x1d.tenant.GetWorkspacesResponse\x12L\n" +
+	"\rEditWorkspace\x12\x1c.tenant.EditWorkspaceRequest\x1a\x1d.tenant.EditWorkspaceResponse\x12=\n" +
+	"\bGetUsers\x12\x17.tenant.GetUsersRequest\x1a\x18.tenant.GetUsersResponse\x12s\n" +
+	"\x1aGetUserWorkspaceAssignment\x12).tenant.GetUserWorkspaceAssignmentRequest\x1a*.tenant.GetUserWorkspaceAssignmentResponse\x12d\n" +
+	"\x15AssignUserToWorkspace\x12$.tenant.AssignUserToWorkspaceRequest\x1a%.tenant.AssignUserToWorkspaceResponseB)Z'github.com/MorhafAlshibly/iunvi/gen/apib\x06proto3"
 
 var (
 	file_api_tenant_proto_rawDescOnce sync.Once
@@ -600,41 +778,42 @@ func file_api_tenant_proto_rawDescGZIP() []byte {
 	return file_api_tenant_proto_rawDescData
 }
 
-var file_api_tenant_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_api_tenant_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_api_tenant_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_api_tenant_proto_goTypes = []any{
-	(*CreateWorkspaceRequest)(nil),             // 0: api.CreateWorkspaceRequest
-	(*CreateWorkspaceResponse)(nil),            // 1: api.CreateWorkspaceResponse
-	(*GetWorkspacesRequest)(nil),               // 2: api.GetWorkspacesRequest
-	(*GetWorkspacesResponse)(nil),              // 3: api.GetWorkspacesResponse
-	(*EditWorkspaceRequest)(nil),               // 4: api.EditWorkspaceRequest
-	(*EditWorkspaceResponse)(nil),              // 5: api.EditWorkspaceResponse
-	(*GetUsersRequest)(nil),                    // 6: api.GetUsersRequest
-	(*GetUsersResponse)(nil),                   // 7: api.GetUsersResponse
-	(*GetUserWorkspaceAssignmentRequest)(nil),  // 8: api.GetUserWorkspaceAssignmentRequest
-	(*GetUserWorkspaceAssignmentResponse)(nil), // 9: api.GetUserWorkspaceAssignmentResponse
-	(*AssignUserToWorkspaceRequest)(nil),       // 10: api.AssignUserToWorkspaceRequest
-	(*AssignUserToWorkspaceResponse)(nil),      // 11: api.AssignUserToWorkspaceResponse
-	(*Workspace)(nil),                          // 12: api.Workspace
-	(*User)(nil),                               // 13: api.User
-	(WorkspaceRole)(0),                         // 14: api.WorkspaceRole
+	(WorkspaceRole)(0),                         // 0: tenant.WorkspaceRole
+	(*CreateWorkspaceRequest)(nil),             // 1: tenant.CreateWorkspaceRequest
+	(*CreateWorkspaceResponse)(nil),            // 2: tenant.CreateWorkspaceResponse
+	(*GetWorkspacesRequest)(nil),               // 3: tenant.GetWorkspacesRequest
+	(*GetWorkspacesResponse)(nil),              // 4: tenant.GetWorkspacesResponse
+	(*EditWorkspaceRequest)(nil),               // 5: tenant.EditWorkspaceRequest
+	(*EditWorkspaceResponse)(nil),              // 6: tenant.EditWorkspaceResponse
+	(*GetUsersRequest)(nil),                    // 7: tenant.GetUsersRequest
+	(*GetUsersResponse)(nil),                   // 8: tenant.GetUsersResponse
+	(*GetUserWorkspaceAssignmentRequest)(nil),  // 9: tenant.GetUserWorkspaceAssignmentRequest
+	(*GetUserWorkspaceAssignmentResponse)(nil), // 10: tenant.GetUserWorkspaceAssignmentResponse
+	(*AssignUserToWorkspaceRequest)(nil),       // 11: tenant.AssignUserToWorkspaceRequest
+	(*AssignUserToWorkspaceResponse)(nil),      // 12: tenant.AssignUserToWorkspaceResponse
+	(*Workspace)(nil),                          // 13: tenant.Workspace
+	(*User)(nil),                               // 14: tenant.User
 }
 var file_api_tenant_proto_depIdxs = []int32{
-	12, // 0: api.GetWorkspacesResponse.workspaces:type_name -> api.Workspace
-	13, // 1: api.GetUsersResponse.users:type_name -> api.User
-	14, // 2: api.GetUserWorkspaceAssignmentResponse.role:type_name -> api.WorkspaceRole
-	14, // 3: api.AssignUserToWorkspaceRequest.role:type_name -> api.WorkspaceRole
-	0,  // 4: api.TenantService.CreateWorkspace:input_type -> api.CreateWorkspaceRequest
-	2,  // 5: api.TenantService.GetWorkspaces:input_type -> api.GetWorkspacesRequest
-	4,  // 6: api.TenantService.EditWorkspace:input_type -> api.EditWorkspaceRequest
-	6,  // 7: api.TenantService.GetUsers:input_type -> api.GetUsersRequest
-	8,  // 8: api.TenantService.GetUserWorkspaceAssignment:input_type -> api.GetUserWorkspaceAssignmentRequest
-	10, // 9: api.TenantService.AssignUserToWorkspace:input_type -> api.AssignUserToWorkspaceRequest
-	1,  // 10: api.TenantService.CreateWorkspace:output_type -> api.CreateWorkspaceResponse
-	3,  // 11: api.TenantService.GetWorkspaces:output_type -> api.GetWorkspacesResponse
-	5,  // 12: api.TenantService.EditWorkspace:output_type -> api.EditWorkspaceResponse
-	7,  // 13: api.TenantService.GetUsers:output_type -> api.GetUsersResponse
-	9,  // 14: api.TenantService.GetUserWorkspaceAssignment:output_type -> api.GetUserWorkspaceAssignmentResponse
-	11, // 15: api.TenantService.AssignUserToWorkspace:output_type -> api.AssignUserToWorkspaceResponse
+	13, // 0: tenant.GetWorkspacesResponse.workspaces:type_name -> tenant.Workspace
+	14, // 1: tenant.GetUsersResponse.users:type_name -> tenant.User
+	0,  // 2: tenant.GetUserWorkspaceAssignmentResponse.role:type_name -> tenant.WorkspaceRole
+	0,  // 3: tenant.AssignUserToWorkspaceRequest.role:type_name -> tenant.WorkspaceRole
+	1,  // 4: tenant.TenantService.CreateWorkspace:input_type -> tenant.CreateWorkspaceRequest
+	3,  // 5: tenant.TenantService.GetWorkspaces:input_type -> tenant.GetWorkspacesRequest
+	5,  // 6: tenant.TenantService.EditWorkspace:input_type -> tenant.EditWorkspaceRequest
+	7,  // 7: tenant.TenantService.GetUsers:input_type -> tenant.GetUsersRequest
+	9,  // 8: tenant.TenantService.GetUserWorkspaceAssignment:input_type -> tenant.GetUserWorkspaceAssignmentRequest
+	11, // 9: tenant.TenantService.AssignUserToWorkspace:input_type -> tenant.AssignUserToWorkspaceRequest
+	2,  // 10: tenant.TenantService.CreateWorkspace:output_type -> tenant.CreateWorkspaceResponse
+	4,  // 11: tenant.TenantService.GetWorkspaces:output_type -> tenant.GetWorkspacesResponse
+	6,  // 12: tenant.TenantService.EditWorkspace:output_type -> tenant.EditWorkspaceResponse
+	8,  // 13: tenant.TenantService.GetUsers:output_type -> tenant.GetUsersResponse
+	10, // 14: tenant.TenantService.GetUserWorkspaceAssignment:output_type -> tenant.GetUserWorkspaceAssignmentResponse
+	12, // 15: tenant.TenantService.AssignUserToWorkspace:output_type -> tenant.AssignUserToWorkspaceResponse
 	10, // [10:16] is the sub-list for method output_type
 	4,  // [4:10] is the sub-list for method input_type
 	4,  // [4:4] is the sub-list for extension type_name
@@ -647,19 +826,19 @@ func file_api_tenant_proto_init() {
 	if File_api_tenant_proto != nil {
 		return
 	}
-	file_api_types_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_tenant_proto_rawDesc), len(file_api_tenant_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   12,
+			NumEnums:      1,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_api_tenant_proto_goTypes,
 		DependencyIndexes: file_api_tenant_proto_depIdxs,
+		EnumInfos:         file_api_tenant_proto_enumTypes,
 		MessageInfos:      file_api_tenant_proto_msgTypes,
 	}.Build()
 	File_api_tenant_proto = out.File

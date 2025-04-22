@@ -1,9 +1,8 @@
 syntax = "proto3";
 
-package api;
+package model;
 
 import "google/protobuf/timestamp.proto";
-import "api/types.proto";
 
 option go_package = "github.com/MorhafAlshibly/iunvi/gen/api";
 
@@ -90,4 +89,31 @@ message GetModelRunsRequest {
 
 message GetModelRunsResponse {
   repeated ModelRun modelRuns = 1;
+}
+
+message Image {
+  string scope = 1;
+  string name = 2;
+}
+
+message ModelRun {
+  string id = 1;
+  string modelId = 2;
+  string inputFileGroupId = 3;
+  optional string outputFileGroupId = 4;
+  string name = 5;
+}
+
+message Model {
+  string id = 1;
+  string name = 2;
+  string inputSpecificationId = 3;
+  string outputSpecificationId = 4;
+  optional string parametersSchema = 5;
+  string imageName = 6;
+}
+
+message ModelName {
+  string id = 1;
+  string name = 2;
 }

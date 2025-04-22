@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useWorkspace } from "@/hooks/use-workspace";
-import { Workspace } from "@/types/api/tenantManagement_pb";
+import { Workspace } from "@/types/api/tenant_pb";
 
 export function WorkspaceSelector({
   selectedWorkspace,

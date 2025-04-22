@@ -1,17 +1,13 @@
 import { ContentLayout } from "@/components/layouts/content";
 import { CreateWorkspace } from "@/components/create-workspace";
-import { useUser } from "@/lib/authentication";
-import {
-  createWorkspace,
-  editWorkspace,
-} from "@/types/api/tenantManagement-TenantManagementService_connectquery";
-import { ROLES } from "@/types/user";
 import { useMutation, useQuery } from "@connectrpc/connect-query";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
 import { EditWorkspace } from "@/components/edit-workspace";
+import {
+  createWorkspace,
+  editWorkspace,
+} from "@/types/api/tenant-TenantService_connectquery";
 
 const WorkspacesRoute = () => {
   const { workspaces, workspacesRefetch } = useWorkspace();

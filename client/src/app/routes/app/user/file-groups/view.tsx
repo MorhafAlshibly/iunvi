@@ -1,14 +1,14 @@
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { useMatch } from "react-router-dom";
 import { useQuery } from "@connectrpc/connect-query";
-import { getSpecification } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { paths } from "@/config/paths";
-import { DataMode } from "@/types/api/tenantManagement_pb";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
+import { getSpecification } from "@/types/api/file-FileService_connectquery";
+import { DataMode } from "@/types/api/file_pb";
 
 const FileGroupsViewRoute = () => {
   const navigate = useNavigate();

@@ -2,32 +2,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
-import { createDashboard } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
-import {
-  CreateDashboardRequest,
-  CreateDashboardRequestSchema,
-  DataMode,
-  TableFieldType,
-} from "@/types/api/tenantManagement_pb";
 import { useMutation } from "@connectrpc/connect-query";
 import { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { markdown } from "@codemirror/lang-markdown";
 import { Button } from "@/components/ui/button";
-import { CircleX, Cross, PlusCircle } from "lucide-react";
 import { paths } from "@/config/paths";
 import { useNavigate } from "react-router-dom";
-import CreateDataTable from "@/components/create-data-table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { SpecificationSelector } from "@/components/specification-selector";
-import { ImageSelector } from "@/components/image-selector";
 import { ModelSelector } from "@/components/model-selector";
+import { createDashboard } from "@/types/api/dashboard-DashboardService_connectquery";
+import { CreateDashboardRequest } from "@/types/api/dashboard_pb";
 
 const DashboardsCreateRoute = () => {
   const navigate = useNavigate();
@@ -35,7 +19,7 @@ const DashboardsCreateRoute = () => {
 
   const createDashboardMutation = useMutation(createDashboard);
   const [dashboard, setDashboard] = useState<CreateDashboardRequest>({
-    $typeName: "api.CreateDashboardRequest",
+    $typeName: "dashboard.CreateDashboardRequest",
     modelId: "",
     name: "",
     definition: "",

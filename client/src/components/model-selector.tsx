@@ -16,10 +16,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DataMode, ModelName } from "@/types/api/tenantManagement_pb";
 import { useQuery } from "@connectrpc/connect-query";
-import { getModels } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { useWorkspace } from "@/hooks/use-workspace";
+import { getModels } from "@/types/api/model-ModelService_connectquery";
 
 export function ModelSelector({
   selectedModelId,

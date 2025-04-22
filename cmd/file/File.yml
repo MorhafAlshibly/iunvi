@@ -12,6 +12,6 @@ tasks:
     dotenv: ["./env/.env.{{.ENV}}"]
     dir: "../../"
     cmds:
-      - go run ./cmd/file/file.go
+      - go build -o bin/file.exe ./cmd/file/file.go && ./bin/file.exe
     requires:
       vars: [ENV]

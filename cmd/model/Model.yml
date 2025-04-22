@@ -12,6 +12,6 @@ tasks:
     dotenv: ["./env/.env.{{.ENV}}"]
     dir: "../../"
     cmds:
-      - go run ./cmd/model/model.go
+      - go build -o bin/model.exe ./cmd/model/model.go && ./bin/model.exe
     requires:
       vars: [ENV]

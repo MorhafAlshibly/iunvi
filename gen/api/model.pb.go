@@ -806,11 +806,275 @@ func (x *GetModelRunsResponse) GetModelRuns() []*ModelRun {
 	return nil
 }
 
+type Image struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Scope         string                 `protobuf:"bytes,1,opt,name=scope,proto3" json:"scope,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Image) Reset() {
+	*x = Image{}
+	mi := &file_api_model_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Image) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Image) ProtoMessage() {}
+
+func (x *Image) ProtoReflect() protoreflect.Message {
+	mi := &file_api_model_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Image.ProtoReflect.Descriptor instead.
+func (*Image) Descriptor() ([]byte, []int) {
+	return file_api_model_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *Image) GetScope() string {
+	if x != nil {
+		return x.Scope
+	}
+	return ""
+}
+
+func (x *Image) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type ModelRun struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	ModelId           string                 `protobuf:"bytes,2,opt,name=modelId,proto3" json:"modelId,omitempty"`
+	InputFileGroupId  string                 `protobuf:"bytes,3,opt,name=inputFileGroupId,proto3" json:"inputFileGroupId,omitempty"`
+	OutputFileGroupId *string                `protobuf:"bytes,4,opt,name=outputFileGroupId,proto3,oneof" json:"outputFileGroupId,omitempty"`
+	Name              string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *ModelRun) Reset() {
+	*x = ModelRun{}
+	mi := &file_api_model_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModelRun) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModelRun) ProtoMessage() {}
+
+func (x *ModelRun) ProtoReflect() protoreflect.Message {
+	mi := &file_api_model_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModelRun.ProtoReflect.Descriptor instead.
+func (*ModelRun) Descriptor() ([]byte, []int) {
+	return file_api_model_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *ModelRun) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *ModelRun) GetModelId() string {
+	if x != nil {
+		return x.ModelId
+	}
+	return ""
+}
+
+func (x *ModelRun) GetInputFileGroupId() string {
+	if x != nil {
+		return x.InputFileGroupId
+	}
+	return ""
+}
+
+func (x *ModelRun) GetOutputFileGroupId() string {
+	if x != nil && x.OutputFileGroupId != nil {
+		return *x.OutputFileGroupId
+	}
+	return ""
+}
+
+func (x *ModelRun) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type Model struct {
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	Id                    string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name                  string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	InputSpecificationId  string                 `protobuf:"bytes,3,opt,name=inputSpecificationId,proto3" json:"inputSpecificationId,omitempty"`
+	OutputSpecificationId string                 `protobuf:"bytes,4,opt,name=outputSpecificationId,proto3" json:"outputSpecificationId,omitempty"`
+	ParametersSchema      *string                `protobuf:"bytes,5,opt,name=parametersSchema,proto3,oneof" json:"parametersSchema,omitempty"`
+	ImageName             string                 `protobuf:"bytes,6,opt,name=imageName,proto3" json:"imageName,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
+}
+
+func (x *Model) Reset() {
+	*x = Model{}
+	mi := &file_api_model_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Model) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Model) ProtoMessage() {}
+
+func (x *Model) ProtoReflect() protoreflect.Message {
+	mi := &file_api_model_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Model.ProtoReflect.Descriptor instead.
+func (*Model) Descriptor() ([]byte, []int) {
+	return file_api_model_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *Model) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Model) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Model) GetInputSpecificationId() string {
+	if x != nil {
+		return x.InputSpecificationId
+	}
+	return ""
+}
+
+func (x *Model) GetOutputSpecificationId() string {
+	if x != nil {
+		return x.OutputSpecificationId
+	}
+	return ""
+}
+
+func (x *Model) GetParametersSchema() string {
+	if x != nil && x.ParametersSchema != nil {
+		return *x.ParametersSchema
+	}
+	return ""
+}
+
+func (x *Model) GetImageName() string {
+	if x != nil {
+		return x.ImageName
+	}
+	return ""
+}
+
+type ModelName struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ModelName) Reset() {
+	*x = ModelName{}
+	mi := &file_api_model_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ModelName) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModelName) ProtoMessage() {}
+
+func (x *ModelName) ProtoReflect() protoreflect.Message {
+	mi := &file_api_model_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModelName.ProtoReflect.Descriptor instead.
+func (*ModelName) Descriptor() ([]byte, []int) {
+	return file_api_model_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *ModelName) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *ModelName) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 var File_api_model_proto protoreflect.FileDescriptor
 
 const file_api_model_proto_rawDesc = "" +
 	"\n" +
-	"\x0fapi/model.proto\x12\x03api\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x0fapi/types.proto\"D\n" +
+	"\x0fapi/model.proto\x12\x05model\x1a\x1fgoogle/protobuf/timestamp.proto\"D\n" +
 	" GetRegistryTokenPasswordsRequest\x12 \n" +
 	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\"\xbd\x01\n" +
 	"!GetRegistryTokenPasswordsResponse\x12=\n" +
@@ -827,10 +1091,9 @@ const file_api_model_proto_rawDesc = "" +
 	"\bpassword\x18\x01 \x01(\tR\bpassword\x128\n" +
 	"\tcreatedAt\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"4\n" +
 	"\x10GetImagesRequest\x12 \n" +
-	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\"7\n" +
-	"\x11GetImagesResponse\x12\"\n" +
-	"\x06images\x18\x01 \x03(\v2\n" +
-	".api.ImageR\x06images\"\xf6\x01\n" +
+	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\"9\n" +
+	"\x11GetImagesResponse\x12$\n" +
+	"\x06images\x18\x01 \x03(\v2\f.model.ImageR\x06images\"\xf6\x01\n" +
 	"\x12CreateModelRequest\x122\n" +
 	"\x14inputSpecificationId\x18\x01 \x01(\tR\x14inputSpecificationId\x124\n" +
 	"\x15outputSpecificationId\x18\x02 \x01(\tR\x15outputSpecificationId\x12\x12\n" +
@@ -841,14 +1104,13 @@ const file_api_model_proto_rawDesc = "" +
 	"\x13CreateModelResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"4\n" +
 	"\x10GetModelsRequest\x12 \n" +
-	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\";\n" +
-	"\x11GetModelsResponse\x12&\n" +
-	"\x06models\x18\x01 \x03(\v2\x0e.api.ModelNameR\x06models\"!\n" +
+	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\"=\n" +
+	"\x11GetModelsResponse\x12(\n" +
+	"\x06models\x18\x01 \x03(\v2\x10.model.ModelNameR\x06models\"!\n" +
 	"\x0fGetModelRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"4\n" +
-	"\x10GetModelResponse\x12 \n" +
-	"\x05model\x18\x01 \x01(\v2\n" +
-	".api.ModelR\x05model\"\xa5\x01\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"6\n" +
+	"\x10GetModelResponse\x12\"\n" +
+	"\x05model\x18\x01 \x01(\v2\f.model.ModelR\x05model\"\xa5\x01\n" +
 	"\x15CreateModelRunRequest\x12\x18\n" +
 	"\amodelId\x18\x01 \x01(\tR\amodelId\x12*\n" +
 	"\x10inputFileGroupId\x18\x02 \x01(\tR\x10inputFileGroupId\x12#\n" +
@@ -860,18 +1122,39 @@ const file_api_model_proto_rawDesc = "" +
 	"\x16CreateModelRunResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"7\n" +
 	"\x13GetModelRunsRequest\x12 \n" +
-	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\"C\n" +
-	"\x14GetModelRunsResponse\x12+\n" +
-	"\tmodelRuns\x18\x01 \x03(\v2\r.api.ModelRunR\tmodelRuns2\xef\x04\n" +
-	"\fModelService\x12j\n" +
-	"\x19GetRegistryTokenPasswords\x12%.api.GetRegistryTokenPasswordsRequest\x1a&.api.GetRegistryTokenPasswordsResponse\x12p\n" +
-	"\x1bCreateRegistryTokenPassword\x12'.api.CreateRegistryTokenPasswordRequest\x1a(.api.CreateRegistryTokenPasswordResponse\x12:\n" +
-	"\tGetImages\x12\x15.api.GetImagesRequest\x1a\x16.api.GetImagesResponse\x12@\n" +
-	"\vCreateModel\x12\x17.api.CreateModelRequest\x1a\x18.api.CreateModelResponse\x12:\n" +
-	"\tGetModels\x12\x15.api.GetModelsRequest\x1a\x16.api.GetModelsResponse\x127\n" +
-	"\bGetModel\x12\x14.api.GetModelRequest\x1a\x15.api.GetModelResponse\x12I\n" +
-	"\x0eCreateModelRun\x12\x1a.api.CreateModelRunRequest\x1a\x1b.api.CreateModelRunResponse\x12C\n" +
-	"\fGetModelRuns\x12\x18.api.GetModelRunsRequest\x1a\x19.api.GetModelRunsResponseB)Z'github.com/MorhafAlshibly/iunvi/gen/apib\x06proto3"
+	"\vworkspaceId\x18\x01 \x01(\tR\vworkspaceId\"E\n" +
+	"\x14GetModelRunsResponse\x12-\n" +
+	"\tmodelRuns\x18\x01 \x03(\v2\x0f.model.ModelRunR\tmodelRuns\"1\n" +
+	"\x05Image\x12\x14\n" +
+	"\x05scope\x18\x01 \x01(\tR\x05scope\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"\xbd\x01\n" +
+	"\bModelRun\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
+	"\amodelId\x18\x02 \x01(\tR\amodelId\x12*\n" +
+	"\x10inputFileGroupId\x18\x03 \x01(\tR\x10inputFileGroupId\x121\n" +
+	"\x11outputFileGroupId\x18\x04 \x01(\tH\x00R\x11outputFileGroupId\x88\x01\x01\x12\x12\n" +
+	"\x04name\x18\x05 \x01(\tR\x04nameB\x14\n" +
+	"\x12_outputFileGroupId\"\xf9\x01\n" +
+	"\x05Model\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x122\n" +
+	"\x14inputSpecificationId\x18\x03 \x01(\tR\x14inputSpecificationId\x124\n" +
+	"\x15outputSpecificationId\x18\x04 \x01(\tR\x15outputSpecificationId\x12/\n" +
+	"\x10parametersSchema\x18\x05 \x01(\tH\x00R\x10parametersSchema\x88\x01\x01\x12\x1c\n" +
+	"\timageName\x18\x06 \x01(\tR\timageNameB\x13\n" +
+	"\x11_parametersSchema\"/\n" +
+	"\tModelName\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name2\x8f\x05\n" +
+	"\fModelService\x12n\n" +
+	"\x19GetRegistryTokenPasswords\x12'.model.GetRegistryTokenPasswordsRequest\x1a(.model.GetRegistryTokenPasswordsResponse\x12t\n" +
+	"\x1bCreateRegistryTokenPassword\x12).model.CreateRegistryTokenPasswordRequest\x1a*.model.CreateRegistryTokenPasswordResponse\x12>\n" +
+	"\tGetImages\x12\x17.model.GetImagesRequest\x1a\x18.model.GetImagesResponse\x12D\n" +
+	"\vCreateModel\x12\x19.model.CreateModelRequest\x1a\x1a.model.CreateModelResponse\x12>\n" +
+	"\tGetModels\x12\x17.model.GetModelsRequest\x1a\x18.model.GetModelsResponse\x12;\n" +
+	"\bGetModel\x12\x16.model.GetModelRequest\x1a\x17.model.GetModelResponse\x12M\n" +
+	"\x0eCreateModelRun\x12\x1c.model.CreateModelRunRequest\x1a\x1d.model.CreateModelRunResponse\x12G\n" +
+	"\fGetModelRuns\x12\x1a.model.GetModelRunsRequest\x1a\x1b.model.GetModelRunsResponseB)Z'github.com/MorhafAlshibly/iunvi/gen/apib\x06proto3"
 
 var (
 	file_api_model_proto_rawDescOnce sync.Once
@@ -885,54 +1168,54 @@ func file_api_model_proto_rawDescGZIP() []byte {
 	return file_api_model_proto_rawDescData
 }
 
-var file_api_model_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_api_model_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_api_model_proto_goTypes = []any{
-	(*GetRegistryTokenPasswordsRequest)(nil),    // 0: api.GetRegistryTokenPasswordsRequest
-	(*GetRegistryTokenPasswordsResponse)(nil),   // 1: api.GetRegistryTokenPasswordsResponse
-	(*CreateRegistryTokenPasswordRequest)(nil),  // 2: api.CreateRegistryTokenPasswordRequest
-	(*CreateRegistryTokenPasswordResponse)(nil), // 3: api.CreateRegistryTokenPasswordResponse
-	(*GetImagesRequest)(nil),                    // 4: api.GetImagesRequest
-	(*GetImagesResponse)(nil),                   // 5: api.GetImagesResponse
-	(*CreateModelRequest)(nil),                  // 6: api.CreateModelRequest
-	(*CreateModelResponse)(nil),                 // 7: api.CreateModelResponse
-	(*GetModelsRequest)(nil),                    // 8: api.GetModelsRequest
-	(*GetModelsResponse)(nil),                   // 9: api.GetModelsResponse
-	(*GetModelRequest)(nil),                     // 10: api.GetModelRequest
-	(*GetModelResponse)(nil),                    // 11: api.GetModelResponse
-	(*CreateModelRunRequest)(nil),               // 12: api.CreateModelRunRequest
-	(*CreateModelRunResponse)(nil),              // 13: api.CreateModelRunResponse
-	(*GetModelRunsRequest)(nil),                 // 14: api.GetModelRunsRequest
-	(*GetModelRunsResponse)(nil),                // 15: api.GetModelRunsResponse
-	(*timestamppb.Timestamp)(nil),               // 16: google.protobuf.Timestamp
-	(*Image)(nil),                               // 17: api.Image
-	(*ModelName)(nil),                           // 18: api.ModelName
-	(*Model)(nil),                               // 19: api.Model
-	(*ModelRun)(nil),                            // 20: api.ModelRun
+	(*GetRegistryTokenPasswordsRequest)(nil),    // 0: model.GetRegistryTokenPasswordsRequest
+	(*GetRegistryTokenPasswordsResponse)(nil),   // 1: model.GetRegistryTokenPasswordsResponse
+	(*CreateRegistryTokenPasswordRequest)(nil),  // 2: model.CreateRegistryTokenPasswordRequest
+	(*CreateRegistryTokenPasswordResponse)(nil), // 3: model.CreateRegistryTokenPasswordResponse
+	(*GetImagesRequest)(nil),                    // 4: model.GetImagesRequest
+	(*GetImagesResponse)(nil),                   // 5: model.GetImagesResponse
+	(*CreateModelRequest)(nil),                  // 6: model.CreateModelRequest
+	(*CreateModelResponse)(nil),                 // 7: model.CreateModelResponse
+	(*GetModelsRequest)(nil),                    // 8: model.GetModelsRequest
+	(*GetModelsResponse)(nil),                   // 9: model.GetModelsResponse
+	(*GetModelRequest)(nil),                     // 10: model.GetModelRequest
+	(*GetModelResponse)(nil),                    // 11: model.GetModelResponse
+	(*CreateModelRunRequest)(nil),               // 12: model.CreateModelRunRequest
+	(*CreateModelRunResponse)(nil),              // 13: model.CreateModelRunResponse
+	(*GetModelRunsRequest)(nil),                 // 14: model.GetModelRunsRequest
+	(*GetModelRunsResponse)(nil),                // 15: model.GetModelRunsResponse
+	(*Image)(nil),                               // 16: model.Image
+	(*ModelRun)(nil),                            // 17: model.ModelRun
+	(*Model)(nil),                               // 18: model.Model
+	(*ModelName)(nil),                           // 19: model.ModelName
+	(*timestamppb.Timestamp)(nil),               // 20: google.protobuf.Timestamp
 }
 var file_api_model_proto_depIdxs = []int32{
-	16, // 0: api.GetRegistryTokenPasswordsResponse.password1:type_name -> google.protobuf.Timestamp
-	16, // 1: api.GetRegistryTokenPasswordsResponse.password2:type_name -> google.protobuf.Timestamp
-	16, // 2: api.CreateRegistryTokenPasswordResponse.createdAt:type_name -> google.protobuf.Timestamp
-	17, // 3: api.GetImagesResponse.images:type_name -> api.Image
-	18, // 4: api.GetModelsResponse.models:type_name -> api.ModelName
-	19, // 5: api.GetModelResponse.model:type_name -> api.Model
-	20, // 6: api.GetModelRunsResponse.modelRuns:type_name -> api.ModelRun
-	0,  // 7: api.ModelService.GetRegistryTokenPasswords:input_type -> api.GetRegistryTokenPasswordsRequest
-	2,  // 8: api.ModelService.CreateRegistryTokenPassword:input_type -> api.CreateRegistryTokenPasswordRequest
-	4,  // 9: api.ModelService.GetImages:input_type -> api.GetImagesRequest
-	6,  // 10: api.ModelService.CreateModel:input_type -> api.CreateModelRequest
-	8,  // 11: api.ModelService.GetModels:input_type -> api.GetModelsRequest
-	10, // 12: api.ModelService.GetModel:input_type -> api.GetModelRequest
-	12, // 13: api.ModelService.CreateModelRun:input_type -> api.CreateModelRunRequest
-	14, // 14: api.ModelService.GetModelRuns:input_type -> api.GetModelRunsRequest
-	1,  // 15: api.ModelService.GetRegistryTokenPasswords:output_type -> api.GetRegistryTokenPasswordsResponse
-	3,  // 16: api.ModelService.CreateRegistryTokenPassword:output_type -> api.CreateRegistryTokenPasswordResponse
-	5,  // 17: api.ModelService.GetImages:output_type -> api.GetImagesResponse
-	7,  // 18: api.ModelService.CreateModel:output_type -> api.CreateModelResponse
-	9,  // 19: api.ModelService.GetModels:output_type -> api.GetModelsResponse
-	11, // 20: api.ModelService.GetModel:output_type -> api.GetModelResponse
-	13, // 21: api.ModelService.CreateModelRun:output_type -> api.CreateModelRunResponse
-	15, // 22: api.ModelService.GetModelRuns:output_type -> api.GetModelRunsResponse
+	20, // 0: model.GetRegistryTokenPasswordsResponse.password1:type_name -> google.protobuf.Timestamp
+	20, // 1: model.GetRegistryTokenPasswordsResponse.password2:type_name -> google.protobuf.Timestamp
+	20, // 2: model.CreateRegistryTokenPasswordResponse.createdAt:type_name -> google.protobuf.Timestamp
+	16, // 3: model.GetImagesResponse.images:type_name -> model.Image
+	19, // 4: model.GetModelsResponse.models:type_name -> model.ModelName
+	18, // 5: model.GetModelResponse.model:type_name -> model.Model
+	17, // 6: model.GetModelRunsResponse.modelRuns:type_name -> model.ModelRun
+	0,  // 7: model.ModelService.GetRegistryTokenPasswords:input_type -> model.GetRegistryTokenPasswordsRequest
+	2,  // 8: model.ModelService.CreateRegistryTokenPassword:input_type -> model.CreateRegistryTokenPasswordRequest
+	4,  // 9: model.ModelService.GetImages:input_type -> model.GetImagesRequest
+	6,  // 10: model.ModelService.CreateModel:input_type -> model.CreateModelRequest
+	8,  // 11: model.ModelService.GetModels:input_type -> model.GetModelsRequest
+	10, // 12: model.ModelService.GetModel:input_type -> model.GetModelRequest
+	12, // 13: model.ModelService.CreateModelRun:input_type -> model.CreateModelRunRequest
+	14, // 14: model.ModelService.GetModelRuns:input_type -> model.GetModelRunsRequest
+	1,  // 15: model.ModelService.GetRegistryTokenPasswords:output_type -> model.GetRegistryTokenPasswordsResponse
+	3,  // 16: model.ModelService.CreateRegistryTokenPassword:output_type -> model.CreateRegistryTokenPasswordResponse
+	5,  // 17: model.ModelService.GetImages:output_type -> model.GetImagesResponse
+	7,  // 18: model.ModelService.CreateModel:output_type -> model.CreateModelResponse
+	9,  // 19: model.ModelService.GetModels:output_type -> model.GetModelsResponse
+	11, // 20: model.ModelService.GetModel:output_type -> model.GetModelResponse
+	13, // 21: model.ModelService.CreateModelRun:output_type -> model.CreateModelRunResponse
+	15, // 22: model.ModelService.GetModelRuns:output_type -> model.GetModelRunsResponse
 	15, // [15:23] is the sub-list for method output_type
 	7,  // [7:15] is the sub-list for method input_type
 	7,  // [7:7] is the sub-list for extension type_name
@@ -945,17 +1228,18 @@ func file_api_model_proto_init() {
 	if File_api_model_proto != nil {
 		return
 	}
-	file_api_types_proto_init()
 	file_api_model_proto_msgTypes[1].OneofWrappers = []any{}
 	file_api_model_proto_msgTypes[6].OneofWrappers = []any{}
 	file_api_model_proto_msgTypes[12].OneofWrappers = []any{}
+	file_api_model_proto_msgTypes[17].OneofWrappers = []any{}
+	file_api_model_proto_msgTypes[18].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_model_proto_rawDesc), len(file_api_model_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

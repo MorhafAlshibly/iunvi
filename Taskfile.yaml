@@ -21,3 +21,17 @@ tasks:
   generate:
     cmds:
       - buf generate
+  run:
+    deps:
+      - client:run
+      - tenant:run
+      - file:run
+      - model:run
+      - dashboard:run
+  live:
+    deps:
+      - client:run
+      - tenant:live
+      - file:live
+      - model:live
+      - dashboard:live

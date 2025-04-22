@@ -1,73 +1,34 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
-import {
-  createFileGroup,
-  createSpecification,
-  getLandingZoneFiles,
-  getSpecification,
-  getSpecifications,
-} from "@/types/api/tenantManagement-TenantManagementService_connectquery";
-import {
-  CreateFileGroupRequest,
-  CreateSpecificationRequest,
-  CreateSpecificationRequestSchema,
-  DataMode,
-  LandingZoneFile,
-  SpecificationName,
-  TableSchema,
-} from "@/types/api/tenantManagement_pb";
 import {
   useInfiniteQuery,
   useMutation,
   useQuery,
 } from "@connectrpc/connect-query";
 import { useState } from "react";
-import CodeMirror from "@uiw/react-codemirror";
-import { json } from "@codemirror/lang-json";
 import { Button } from "@/components/ui/button";
-import {
-  Check,
-  ChevronsUpDown,
-  CircleX,
-  Command,
-  Cross,
-  Plus,
-  PlusCircle,
-} from "lucide-react";
 import { paths } from "@/config/paths";
 import { useNavigate } from "react-router-dom";
-import CreateDataTable from "@/components/create-data-table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/utils/cn";
-import {
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-} from "cmdk";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { SpecificationSelector } from "@/components/specification-selector";
 import { FileSelector } from "@/components/file-selector";
+import {
+  CreateFileGroupRequest,
+  DataMode,
+  TableSchema,
+} from "@/types/api/file_pb";
+import {
+  createFileGroup,
+  getLandingZoneFiles,
+  getSpecification,
+} from "@/types/api/file-FileService_connectquery";
 
 const FileGroupsCreateRoute = () => {
   const navigate = useNavigate();
   const { activeWorkspace } = useWorkspace();
   const [createFileGroupInput, setCreateFileGroupInput] =
     useState<CreateFileGroupRequest>({
-      $typeName: "api.CreateFileGroupRequest",
+      $typeName: "file.CreateFileGroupRequest",
       specificationId: "",
       name: "",
       schemaFileMappings: [],
@@ -147,7 +108,7 @@ const FileGroupsCreateRoute = () => {
           newSelectedFileName ?? "";
       } else {
         newMappings.push({
-          $typeName: "api.SchemaFileMapping",
+          $typeName: "file.SchemaFileMapping",
           schemaName: table.name,
           landingZoneFileName: newSelectedFileName ?? "",
         });

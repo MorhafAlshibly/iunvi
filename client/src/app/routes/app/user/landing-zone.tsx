@@ -2,10 +2,6 @@ import { ContentLayout } from "@/components/layouts/content";
 import { Button } from "@/components/ui/button";
 import { useWorkspace } from "@/hooks/use-workspace";
 import {
-  createLandingZoneSharedAccessSignature,
-  getLandingZoneFiles,
-} from "@/types/api/tenantManagement-TenantManagementService_connectquery";
-import {
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -23,7 +19,6 @@ import { ChevronDown, RefreshCcw } from "lucide-react";
 import { timestampDate } from "@bufbuild/protobuf/wkt";
 import { formatBytes } from "@/utils/bytes";
 import { Separator } from "@/components/ui/separator";
-import { LandingZoneFile } from "@/types/api/tenantManagement_pb";
 import { Input } from "@/components/ui/input";
 import {
   Pagination,
@@ -34,6 +29,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  createLandingZoneSharedAccessSignature,
+  getLandingZoneFiles,
+} from "@/types/api/file-FileService_connectquery";
+import { LandingZoneFile } from "@/types/api/file_pb";
 
 const LandingZoneRoute = () => {
   const { activeWorkspace } = useWorkspace();

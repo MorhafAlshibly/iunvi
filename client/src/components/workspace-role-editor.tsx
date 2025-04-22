@@ -2,29 +2,7 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown, Edit } from "lucide-react";
-
-import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { useWorkspace } from "@/hooks/use-workspace";
-import {
-  User,
-  Workspace,
-  WorkspaceRole,
-} from "@/types/api/tenantManagement_pb";
-import { assignUserToWorkspace } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { useMutation } from "@connectrpc/connect-query";
 import {
   Select,
@@ -34,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { User, Workspace, WorkspaceRole } from "@/types/api/tenant_pb";
+import { assignUserToWorkspace } from "@/types/api/tenant-TenantService_connectquery";
 
 export function WorkspaceRoleEditor({
   user,

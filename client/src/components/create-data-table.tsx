@@ -2,7 +2,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
-import { TableFieldType, TableSchema } from "@/types/api/tenantManagement_pb";
 import { useMutation } from "@connectrpc/connect-query";
 import { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
@@ -16,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { TableFieldType, TableSchema } from "@/types/api/file_pb";
 
 const CreateDataTable = ({
   dataTables,
@@ -137,7 +137,7 @@ const CreateDataTable = ({
                   setDataTables((prev) => {
                     const newFields = [...prev];
                     newFields[index].fields.push({
-                      $typeName: "api.TableField",
+                      $typeName: "file.TableField",
                       name: "",
                       type: TableFieldType.BIGINT,
                     });
@@ -174,11 +174,11 @@ const CreateDataTable = ({
             setDataTables((prev) => [
               ...prev,
               {
-                $typeName: "api.TableSchema",
+                $typeName: "file.TableSchema",
                 name: "",
                 fields: [
                   {
-                    $typeName: "api.TableField",
+                    $typeName: "file.TableField",
                     name: "",
                     type: TableFieldType.BIGINT,
                   },

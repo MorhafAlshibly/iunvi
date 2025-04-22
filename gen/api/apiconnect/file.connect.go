@@ -22,7 +22,7 @@ const _ = connect.IsAtLeastVersion1_13_0
 
 const (
 	// FileServiceName is the fully-qualified name of the FileService service.
-	FileServiceName = "api.FileService"
+	FileServiceName = "file.FileService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -35,28 +35,28 @@ const (
 const (
 	// FileServiceCreateSpecificationProcedure is the fully-qualified name of the FileService's
 	// CreateSpecification RPC.
-	FileServiceCreateSpecificationProcedure = "/api.FileService/CreateSpecification"
+	FileServiceCreateSpecificationProcedure = "/file.FileService/CreateSpecification"
 	// FileServiceGetSpecificationsProcedure is the fully-qualified name of the FileService's
 	// GetSpecifications RPC.
-	FileServiceGetSpecificationsProcedure = "/api.FileService/GetSpecifications"
+	FileServiceGetSpecificationsProcedure = "/file.FileService/GetSpecifications"
 	// FileServiceGetSpecificationProcedure is the fully-qualified name of the FileService's
 	// GetSpecification RPC.
-	FileServiceGetSpecificationProcedure = "/api.FileService/GetSpecification"
+	FileServiceGetSpecificationProcedure = "/file.FileService/GetSpecification"
 	// FileServiceCreateLandingZoneSharedAccessSignatureProcedure is the fully-qualified name of the
 	// FileService's CreateLandingZoneSharedAccessSignature RPC.
-	FileServiceCreateLandingZoneSharedAccessSignatureProcedure = "/api.FileService/CreateLandingZoneSharedAccessSignature"
+	FileServiceCreateLandingZoneSharedAccessSignatureProcedure = "/file.FileService/CreateLandingZoneSharedAccessSignature"
 	// FileServiceGetLandingZoneFilesProcedure is the fully-qualified name of the FileService's
 	// GetLandingZoneFiles RPC.
-	FileServiceGetLandingZoneFilesProcedure = "/api.FileService/GetLandingZoneFiles"
+	FileServiceGetLandingZoneFilesProcedure = "/file.FileService/GetLandingZoneFiles"
 	// FileServiceCreateFileGroupProcedure is the fully-qualified name of the FileService's
 	// CreateFileGroup RPC.
-	FileServiceCreateFileGroupProcedure = "/api.FileService/CreateFileGroup"
+	FileServiceCreateFileGroupProcedure = "/file.FileService/CreateFileGroup"
 	// FileServiceGetFileGroupsProcedure is the fully-qualified name of the FileService's GetFileGroups
 	// RPC.
-	FileServiceGetFileGroupsProcedure = "/api.FileService/GetFileGroups"
+	FileServiceGetFileGroupsProcedure = "/file.FileService/GetFileGroups"
 )
 
-// FileServiceClient is a client for the api.FileService service.
+// FileServiceClient is a client for the file.FileService service.
 type FileServiceClient interface {
 	CreateSpecification(context.Context, *connect.Request[api.CreateSpecificationRequest]) (*connect.Response[api.CreateSpecificationResponse], error)
 	GetSpecifications(context.Context, *connect.Request[api.GetSpecificationsRequest]) (*connect.Response[api.GetSpecificationsResponse], error)
@@ -67,8 +67,8 @@ type FileServiceClient interface {
 	GetFileGroups(context.Context, *connect.Request[api.GetFileGroupsRequest]) (*connect.Response[api.GetFileGroupsResponse], error)
 }
 
-// NewFileServiceClient constructs a client for the api.FileService service. By default, it uses the
-// Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
+// NewFileServiceClient constructs a client for the file.FileService service. By default, it uses
+// the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
 // uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or
 // connect.WithGRPCWeb() options.
 //
@@ -134,43 +134,43 @@ type fileServiceClient struct {
 	getFileGroups                          *connect.Client[api.GetFileGroupsRequest, api.GetFileGroupsResponse]
 }
 
-// CreateSpecification calls api.FileService.CreateSpecification.
+// CreateSpecification calls file.FileService.CreateSpecification.
 func (c *fileServiceClient) CreateSpecification(ctx context.Context, req *connect.Request[api.CreateSpecificationRequest]) (*connect.Response[api.CreateSpecificationResponse], error) {
 	return c.createSpecification.CallUnary(ctx, req)
 }
 
-// GetSpecifications calls api.FileService.GetSpecifications.
+// GetSpecifications calls file.FileService.GetSpecifications.
 func (c *fileServiceClient) GetSpecifications(ctx context.Context, req *connect.Request[api.GetSpecificationsRequest]) (*connect.Response[api.GetSpecificationsResponse], error) {
 	return c.getSpecifications.CallUnary(ctx, req)
 }
 
-// GetSpecification calls api.FileService.GetSpecification.
+// GetSpecification calls file.FileService.GetSpecification.
 func (c *fileServiceClient) GetSpecification(ctx context.Context, req *connect.Request[api.GetSpecificationRequest]) (*connect.Response[api.GetSpecificationResponse], error) {
 	return c.getSpecification.CallUnary(ctx, req)
 }
 
 // CreateLandingZoneSharedAccessSignature calls
-// api.FileService.CreateLandingZoneSharedAccessSignature.
+// file.FileService.CreateLandingZoneSharedAccessSignature.
 func (c *fileServiceClient) CreateLandingZoneSharedAccessSignature(ctx context.Context, req *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error) {
 	return c.createLandingZoneSharedAccessSignature.CallUnary(ctx, req)
 }
 
-// GetLandingZoneFiles calls api.FileService.GetLandingZoneFiles.
+// GetLandingZoneFiles calls file.FileService.GetLandingZoneFiles.
 func (c *fileServiceClient) GetLandingZoneFiles(ctx context.Context, req *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error) {
 	return c.getLandingZoneFiles.CallUnary(ctx, req)
 }
 
-// CreateFileGroup calls api.FileService.CreateFileGroup.
+// CreateFileGroup calls file.FileService.CreateFileGroup.
 func (c *fileServiceClient) CreateFileGroup(ctx context.Context, req *connect.Request[api.CreateFileGroupRequest]) (*connect.Response[api.CreateFileGroupResponse], error) {
 	return c.createFileGroup.CallUnary(ctx, req)
 }
 
-// GetFileGroups calls api.FileService.GetFileGroups.
+// GetFileGroups calls file.FileService.GetFileGroups.
 func (c *fileServiceClient) GetFileGroups(ctx context.Context, req *connect.Request[api.GetFileGroupsRequest]) (*connect.Response[api.GetFileGroupsResponse], error) {
 	return c.getFileGroups.CallUnary(ctx, req)
 }
 
-// FileServiceHandler is an implementation of the api.FileService service.
+// FileServiceHandler is an implementation of the file.FileService service.
 type FileServiceHandler interface {
 	CreateSpecification(context.Context, *connect.Request[api.CreateSpecificationRequest]) (*connect.Response[api.CreateSpecificationResponse], error)
 	GetSpecifications(context.Context, *connect.Request[api.GetSpecificationsRequest]) (*connect.Response[api.GetSpecificationsResponse], error)
@@ -230,7 +230,7 @@ func NewFileServiceHandler(svc FileServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(fileServiceMethods.ByName("GetFileGroups")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/api.FileService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return "/file.FileService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case FileServiceCreateSpecificationProcedure:
 			fileServiceCreateSpecificationHandler.ServeHTTP(w, r)
@@ -256,29 +256,29 @@ func NewFileServiceHandler(svc FileServiceHandler, opts ...connect.HandlerOption
 type UnimplementedFileServiceHandler struct{}
 
 func (UnimplementedFileServiceHandler) CreateSpecification(context.Context, *connect.Request[api.CreateSpecificationRequest]) (*connect.Response[api.CreateSpecificationResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.FileService.CreateSpecification is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("file.FileService.CreateSpecification is not implemented"))
 }
 
 func (UnimplementedFileServiceHandler) GetSpecifications(context.Context, *connect.Request[api.GetSpecificationsRequest]) (*connect.Response[api.GetSpecificationsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.FileService.GetSpecifications is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("file.FileService.GetSpecifications is not implemented"))
 }
 
 func (UnimplementedFileServiceHandler) GetSpecification(context.Context, *connect.Request[api.GetSpecificationRequest]) (*connect.Response[api.GetSpecificationResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.FileService.GetSpecification is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("file.FileService.GetSpecification is not implemented"))
 }
 
 func (UnimplementedFileServiceHandler) CreateLandingZoneSharedAccessSignature(context.Context, *connect.Request[api.CreateLandingZoneSharedAccessSignatureRequest]) (*connect.Response[api.CreateLandingZoneSharedAccessSignatureResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.FileService.CreateLandingZoneSharedAccessSignature is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("file.FileService.CreateLandingZoneSharedAccessSignature is not implemented"))
 }
 
 func (UnimplementedFileServiceHandler) GetLandingZoneFiles(context.Context, *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.FileService.GetLandingZoneFiles is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("file.FileService.GetLandingZoneFiles is not implemented"))
 }
 
 func (UnimplementedFileServiceHandler) CreateFileGroup(context.Context, *connect.Request[api.CreateFileGroupRequest]) (*connect.Response[api.CreateFileGroupResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.FileService.CreateFileGroup is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("file.FileService.CreateFileGroup is not implemented"))
 }
 
 func (UnimplementedFileServiceHandler) GetFileGroups(context.Context, *connect.Request[api.GetFileGroupsRequest]) (*connect.Response[api.GetFileGroupsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("api.FileService.GetFileGroups is not implemented"))
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("file.FileService.GetFileGroups is not implemented"))
 }

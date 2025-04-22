@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { LandingZoneFile } from "@/types/api/tenantManagement_pb";
+import { LandingZoneFile } from "@/types/api/file_pb";
 
 export function FileSelector({
   files,

@@ -38,8 +38,6 @@ import {
 import { useLogout, useUser } from "@/lib/authentication";
 import { Authorization, POLICIES } from "@/lib/authorization";
 import { ActiveUser } from "@/types/user";
-import { getWorkspaces } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
-import { GetWorkspacesRequest } from "@/types/api/tenantManagement_pb";
 import { useQuery } from "@connectrpc/connect-query";
 import { paths } from "@/config/paths";
 import { useWorkspace } from "@/hooks/use-workspace";

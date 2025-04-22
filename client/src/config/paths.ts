@@ -19,7 +19,7 @@ export const paths = {
 
   app: {
     root: {
-      path: "/app",
+      path: "app",
       getHref: () => "/app",
     },
     home: {

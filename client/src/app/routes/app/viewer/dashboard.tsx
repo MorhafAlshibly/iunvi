@@ -1,10 +1,10 @@
 import { useMatch } from "react-router-dom";
 import { useQuery } from "@connectrpc/connect-query";
-import { getModelRunDashboard } from "@/types/api/tenantManagement-TenantManagementService_connectquery";
 import { paths } from "@/config/paths";
 import { useEffect, useRef, useState } from "react";
 import { DashboardSelector } from "@/components/dashboard-selector";
 import { ContentLayout } from "@/components/layouts/content";
+import { getModelRunDashboard } from "@/types/api/dashboard-DashboardService_connectquery";
 
 const DashboardRoute = () => {
   const id = useMatch(paths.app.viewer.dashboard.getHref(":id"))?.params.id;
