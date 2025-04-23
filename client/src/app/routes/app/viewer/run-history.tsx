@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { paths } from "@/config/paths";
 import { useWorkspace } from "@/hooks/use-workspace";
+import { ModelTransport } from "@/lib/api-client";
 import { getModelRuns } from "@/types/api/model-ModelService_connectquery";
 import { useQuery } from "@connectrpc/connect-query";
 import { Info } from "lucide-react";
@@ -19,6 +20,7 @@ const RunHistoryRoute = () => {
     },
     {
       enabled: !!activeWorkspace,
+      transport: ModelTransport,
     },
   );
 

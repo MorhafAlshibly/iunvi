@@ -3,9 +3,12 @@ import { ContentLayout } from "@/components/layouts/content";
 import { Separator } from "@/components/ui/separator";
 import { useQuery } from "@connectrpc/connect-query";
 import { getUsers } from "@/types/api/tenant-TenantService_connectquery";
+import { TenantTransport } from "@/lib/api-client";
 
 const UsersRoute = () => {
-  const { data } = useQuery(getUsers);
+  const { data } = useQuery(getUsers, undefined, {
+    transport: TenantTransport,
+  });
   const users = data?.users || [];
   return (
     <ContentLayout title="Users">

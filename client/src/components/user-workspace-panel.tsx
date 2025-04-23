@@ -13,10 +13,11 @@ import { Label } from "@/components/ui/label";
 import { Check, ChevronsUpDown, Command, Edit, Info, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { WorkspaceSelector } from "./workspace-selector";
-import { useMutation, useQuery } from "@connectrpc/connect-query";
+import { useQuery } from "@connectrpc/connect-query";
 import { WorkspaceRoleEditor } from "./workspace-role-editor";
 import { getUserWorkspaceAssignment } from "@/types/api/tenant-TenantService_connectquery";
 import { User, Workspace, WorkspaceRole } from "@/types/api/tenant_pb";
+import { TenantTransport } from "@/lib/api-client";
 
 export function UserWorkspacePanel({ user }: { user: User }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -27,7 +28,7 @@ export function UserWorkspacePanel({ user }: { user: User }) {
   const { data, refetch } = useQuery(
     getUserWorkspaceAssignment,
     { userObjectId: user.id, workspaceId: selectedWorkspace?.id },
-    { enabled: selectedWorkspace !== null },
+    { enabled: selectedWorkspace !== null, transport: TenantTransport },
   );
 
   useEffect(() => {

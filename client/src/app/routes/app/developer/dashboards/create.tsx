@@ -12,12 +12,15 @@ import { useNavigate } from "react-router-dom";
 import { ModelSelector } from "@/components/model-selector";
 import { createDashboard } from "@/types/api/dashboard-DashboardService_connectquery";
 import { CreateDashboardRequest } from "@/types/api/dashboard_pb";
+import { DashboardTransport } from "@/lib/api-client";
 
 const DashboardsCreateRoute = () => {
   const navigate = useNavigate();
   const { activeWorkspace } = useWorkspace();
 
-  const createDashboardMutation = useMutation(createDashboard);
+  const createDashboardMutation = useMutation(createDashboard, {
+    transport: DashboardTransport,
+  });
   const [dashboard, setDashboard] = useState<CreateDashboardRequest>({
     $typeName: "dashboard.CreateDashboardRequest",
     modelId: "",

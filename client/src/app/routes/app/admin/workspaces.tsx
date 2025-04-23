@@ -1,6 +1,6 @@
 import { ContentLayout } from "@/components/layouts/content";
 import { CreateWorkspace } from "@/components/create-workspace";
-import { useMutation, useQuery } from "@connectrpc/connect-query";
+import { useMutation } from "@connectrpc/connect-query";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { Separator } from "@/components/ui/separator";
 import { EditWorkspace } from "@/components/edit-workspace";
@@ -8,11 +8,16 @@ import {
   createWorkspace,
   editWorkspace,
 } from "@/types/api/tenant-TenantService_connectquery";
+import { TenantTransport } from "@/lib/api-client";
 
 const WorkspacesRoute = () => {
   const { workspaces, workspacesRefetch } = useWorkspace();
-  const createWorkspaceHandler = useMutation(createWorkspace);
-  const editWorkspaceHandler = useMutation(editWorkspace);
+  const createWorkspaceHandler = useMutation(createWorkspace, {
+    transport: TenantTransport,
+  });
+  const editWorkspaceHandler = useMutation(editWorkspace, {
+    transport: TenantTransport,
+  });
 
   const createWorkspaceFn = async (workspaceName: string) => {
     await createWorkspaceHandler.mutateAsync({

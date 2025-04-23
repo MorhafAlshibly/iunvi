@@ -19,6 +19,7 @@ import {
 import { useQuery } from "@connectrpc/connect-query";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { getFileGroups } from "@/types/api/file-FileService_connectquery";
+import { FileTransport } from "@/lib/api-client";
 
 export function FileGroupSelector({
   specificationId,
@@ -39,6 +40,7 @@ export function FileGroupSelector({
     },
     {
       enabled: !!activeWorkspace,
+      transport: FileTransport,
     },
   );
 

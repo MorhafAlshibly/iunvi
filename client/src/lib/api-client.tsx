@@ -10,43 +10,22 @@ const authInterceptor: Interceptor = (next) => async (request) => {
   return await next(request);
 };
 
-export const transports = {
-  tenant: createConnectTransport({
-    baseUrl: import.meta.env.VITE_TENANTURL as string,
-    interceptors: [authInterceptor],
-  }),
-  file: createConnectTransport({
-    baseUrl: import.meta.env.VITE_FILEURL as string,
-    interceptors: [authInterceptor],
-  }),
-  model: createConnectTransport({
-    baseUrl: import.meta.env.VITE_MODELURL as string,
-    interceptors: [authInterceptor],
-  }),
-  dashboard: createConnectTransport({
-    baseUrl: import.meta.env.VITE_DASHBOARDURL as string,
-    interceptors: [authInterceptor],
-  }),
-};
+export const TenantTransport = createConnectTransport({
+  baseUrl: import.meta.env.VITE_TENANTURL as string,
+  interceptors: [authInterceptor],
+});
 
-export const TransportsProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  // // Loop over the transports and create a TransportProvider for each and nest them
-  // let tail = children;
-  // for (const [key, transport] of Object.entries(transports)) {
-  //   tail = (
-  //     <TransportProvider key={key} transport={transport}>
-  //       {tail}
-  //     </TransportProvider>
-  //   );
-  // }
-  // return tail;
-  return (
-    <TransportProvider transport={transports.tenant}>
-      {children}
-    </TransportProvider>
-  );
-};
+export const FileTransport = createConnectTransport({
+  baseUrl: import.meta.env.VITE_FILEURL as string,
+  interceptors: [authInterceptor],
+});
+
+export const ModelTransport = createConnectTransport({
+  baseUrl: import.meta.env.VITE_MODELURL as string,
+  interceptors: [authInterceptor],
+});
+
+export const DashboardTransport = createConnectTransport({
+  baseUrl: import.meta.env.VITE_DASHBOARDURL as string,
+  interceptors: [authInterceptor],
+});

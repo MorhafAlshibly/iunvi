@@ -19,6 +19,7 @@ import {
 import { useQuery } from "@connectrpc/connect-query";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { getDashboards } from "@/types/api/dashboard-DashboardService_connectquery";
+import { DashboardTransport } from "@/lib/api-client";
 
 export function DashboardSelector({
   modelRunId,
@@ -39,6 +40,7 @@ export function DashboardSelector({
     },
     {
       enabled: !!activeWorkspace,
+      transport: DashboardTransport,
     },
   );
 

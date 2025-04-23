@@ -24,12 +24,15 @@ import {
   DataMode,
   TableFieldType,
 } from "@/types/api/file_pb";
+import { FileTransport } from "@/lib/api-client";
 
 const SpecificationsCreateRoute = () => {
   const navigate = useNavigate();
   const { activeWorkspace } = useWorkspace();
 
-  const createSpecificationMutation = useMutation(createSpecification);
+  const createSpecificationMutation = useMutation(createSpecification, {
+    transport: FileTransport,
+  });
   const [specification, setSpecification] =
     useState<CreateSpecificationRequest>({
       $typeName: "file.CreateSpecificationRequest",

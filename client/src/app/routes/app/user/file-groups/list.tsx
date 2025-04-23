@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { paths } from "@/config/paths";
 import { useWorkspace } from "@/hooks/use-workspace";
+import { FileTransport } from "@/lib/api-client";
 import { getFileGroups } from "@/types/api/file-FileService_connectquery";
 import { useQuery } from "@connectrpc/connect-query";
 import { Info } from "lucide-react";
@@ -18,6 +19,7 @@ const FileGroupsListRoute = () => {
     },
     {
       enabled: !!activeWorkspace,
+      transport: FileTransport,
     },
   );
 

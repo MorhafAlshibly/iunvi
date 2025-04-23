@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { DashboardSelector } from "@/components/dashboard-selector";
 import { ContentLayout } from "@/components/layouts/content";
 import { getModelRunDashboard } from "@/types/api/dashboard-DashboardService_connectquery";
+import { DashboardTransport } from "@/lib/api-client";
 
 const DashboardRoute = () => {
   const id = useMatch(paths.app.viewer.dashboard.getHref(":id"))?.params.id;
@@ -19,6 +20,7 @@ const DashboardRoute = () => {
     },
     {
       enabled: !!id && !!dashboardId,
+      transport: DashboardTransport,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
     },

@@ -2,14 +2,13 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import { useMatch } from "react-router-dom";
 import { useQuery } from "@connectrpc/connect-query";
 import { paths } from "@/config/paths";
-import CodeMirror from "@uiw/react-codemirror";
-import { json } from "@codemirror/lang-json";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { getModel } from "@/types/api/model-ModelService_connectquery";
 import { DataMode, TableFieldType } from "@/types/api/file_pb";
+import { ModelTransport } from "@/lib/api-client";
 
 const ModelsViewRoute = () => {
   const navigate = useNavigate();
@@ -22,6 +21,7 @@ const ModelsViewRoute = () => {
     },
     {
       enabled: !!id,
+      transport: ModelTransport,
     },
   );
 

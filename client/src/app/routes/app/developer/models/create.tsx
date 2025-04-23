@@ -17,12 +17,15 @@ import { ImageSelector } from "@/components/image-selector";
 import { createModel } from "@/types/api/model-ModelService_connectquery";
 import { CreateModelRequest } from "@/types/api/model_pb";
 import { DataMode } from "@/types/api/file_pb";
+import { ModelTransport } from "@/lib/api-client";
 
 const ModelsCreateRoute = () => {
   const navigate = useNavigate();
   const { activeWorkspace } = useWorkspace();
 
-  const createModelMutation = useMutation(createModel);
+  const createModelMutation = useMutation(createModel, {
+    transport: ModelTransport,
+  });
   const [model, setModel] = useState<CreateModelRequest>({
     $typeName: "model.CreateModelRequest",
     inputSpecificationId: "",

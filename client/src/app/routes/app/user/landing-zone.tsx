@@ -1,12 +1,7 @@
 import { ContentLayout } from "@/components/layouts/content";
 import { Button } from "@/components/ui/button";
 import { useWorkspace } from "@/hooks/use-workspace";
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useSuspenseInfiniteQuery,
-} from "@connectrpc/connect-query";
+import { useInfiniteQuery, useMutation } from "@connectrpc/connect-query";
 import Uppy, { Meta, UppyFile, Body } from "@uppy/core";
 import { useEffect, useState } from "react";
 import { Dashboard, useUppyEvent } from "@uppy/react";
@@ -34,6 +29,7 @@ import {
   getLandingZoneFiles,
 } from "@/types/api/file-FileService_connectquery";
 import { LandingZoneFile } from "@/types/api/file_pb";
+import { FileTransport } from "@/lib/api-client";
 
 const LandingZoneRoute = () => {
   const { activeWorkspace } = useWorkspace();
@@ -43,6 +39,9 @@ const LandingZoneRoute = () => {
 
   const createLandingZoneSharedAccessSignatureMutation = useMutation(
     createLandingZoneSharedAccessSignature,
+    {
+      transport: FileTransport,
+    },
   );
 
   const {
@@ -62,6 +61,7 @@ const LandingZoneRoute = () => {
       getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) =>
         lastPage.nextMarker,
       enabled: !!activeWorkspace?.id,
+      transport: FileTransport,
     },
   );
 
@@ -116,7 +116,7 @@ const LandingZoneRoute = () => {
     <ContentLayout title="Landing zone">
       <div className="grid grid-cols-1 gap-4">
         <div className="grid grid-cols-1 col-span-1 justify-items">
-          <Dashboard uppy={uppy} />
+          <Dashboard uppy={uppy} theme="auto" />
         </div>
         <div className="grid grid-cols-2 col-span-1 justify-items-between">
           <div className="grid grid-cols-1 col-span-1 justify-items-start content-center">

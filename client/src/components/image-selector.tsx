@@ -19,6 +19,7 @@ import {
 import { useQuery } from "@connectrpc/connect-query";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { getImages } from "@/types/api/model-ModelService_connectquery";
+import { ModelTransport } from "@/lib/api-client";
 
 export function ImageSelector({
   selectedImageName,
@@ -36,6 +37,7 @@ export function ImageSelector({
     },
     {
       enabled: !!activeWorkspace,
+      transport: ModelTransport,
     },
   );
 

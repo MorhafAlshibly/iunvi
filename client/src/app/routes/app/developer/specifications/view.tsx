@@ -10,6 +10,7 @@ import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { getSpecification } from "@/types/api/file-FileService_connectquery";
 import { DataMode, TableFieldType } from "@/types/api/file_pb";
+import { FileTransport } from "@/lib/api-client";
 
 const SpecificationsViewRoute = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const SpecificationsViewRoute = () => {
     },
     {
       enabled: !!id,
+      transport: FileTransport,
     },
   );
 

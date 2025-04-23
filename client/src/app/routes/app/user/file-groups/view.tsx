@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
 import { getSpecification } from "@/types/api/file-FileService_connectquery";
 import { DataMode } from "@/types/api/file_pb";
+import { FileTransport } from "@/lib/api-client";
 
 const FileGroupsViewRoute = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const FileGroupsViewRoute = () => {
     },
     {
       enabled: !!id,
+      transport: FileTransport,
     },
   );
 

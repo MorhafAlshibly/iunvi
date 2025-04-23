@@ -22,6 +22,7 @@ import {
   getLandingZoneFiles,
   getSpecification,
 } from "@/types/api/file-FileService_connectquery";
+import { FileTransport } from "@/lib/api-client";
 
 const FileGroupsCreateRoute = () => {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ const FileGroupsCreateRoute = () => {
     },
     {
       enabled: !!createFileGroupInput.specificationId,
+      transport: FileTransport,
     },
   );
 
@@ -120,7 +122,9 @@ const FileGroupsCreateRoute = () => {
     });
   };
 
-  const createFileGroupMutation = useMutation(createFileGroup);
+  const createFileGroupMutation = useMutation(createFileGroup, {
+    transport: FileTransport,
+  });
 
   const handleCreateFileGroup = async () => {
     if (!validateFileGroups()) {

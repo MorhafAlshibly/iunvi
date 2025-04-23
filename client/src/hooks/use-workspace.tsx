@@ -6,6 +6,7 @@ import {
   getUserWorkspaceAssignment,
   getWorkspaces,
 } from "@/types/api/tenant-TenantService_connectquery";
+import { TenantTransport } from "@/lib/api-client";
 
 const WorkspaceContext = createContext({
   workspaces: [] as Workspace[],
@@ -33,15 +34,21 @@ export const WorkspaceProvider = ({
 
   const [workspaces, setWorkspaces] = useState([] as Workspace[]);
 
-  const { data: workspacesData, refetch: workspacesRefetch } =
-    useQuery(getWorkspaces);
+  const { data: workspacesData, refetch: workspacesRefetch } = useQuery(
+    getWorkspaces,
+    undefined,
+    { transport: TenantTransport },
+  );
   const { data: workspaceRoleData, refetch: workspaceRoleRefetch } = useQuery(
     getUserWorkspaceAssignment,
     {
       userObjectId: user.data?.objectId,
       workspaceId: activeWorkspace?.id,
     },
-    { enabled: activeWorkspace !== null && user.data !== null },
+    {
+      enabled: activeWorkspace !== null && user.data !== null,
+      transport: TenantTransport,
+    },
   );
 
   useEffect(() => {

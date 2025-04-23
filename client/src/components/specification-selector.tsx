@@ -20,6 +20,7 @@ import { useQuery } from "@connectrpc/connect-query";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { getSpecifications } from "@/types/api/file-FileService_connectquery";
 import { DataMode } from "@/types/api/file_pb";
+import { FileTransport } from "@/lib/api-client";
 
 export function SpecificationSelector({
   mode,
@@ -42,6 +43,7 @@ export function SpecificationSelector({
     },
     {
       enabled: !!activeWorkspace,
+      transport: FileTransport,
     },
   );
 

@@ -2,6 +2,7 @@ import { ContentLayout } from "@/components/layouts/content";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useWorkspace } from "@/hooks/use-workspace";
+import { ModelTransport } from "@/lib/api-client";
 import {
   createRegistryTokenPassword,
   getImages,
@@ -32,7 +33,7 @@ const RegistryRoute = () => {
     {
       workspaceId: activeWorkspace?.id,
     },
-    { enabled: activeWorkspace != null },
+    { enabled: activeWorkspace != null, transport: ModelTransport },
   );
 
   useEffect(() => {
@@ -57,6 +58,7 @@ const RegistryRoute = () => {
 
   const createRegistryTokenPasswordMutation = useMutation(
     createRegistryTokenPassword,
+    { transport: ModelTransport },
   );
 
   const handleCreatePassword = async (password2: boolean) => {
@@ -90,7 +92,7 @@ const RegistryRoute = () => {
     {
       workspaceId: activeWorkspace?.id,
     },
-    { enabled: activeWorkspace != null },
+    { enabled: activeWorkspace != null, transport: ModelTransport },
   );
 
   const images = imagesData?.images ?? [];

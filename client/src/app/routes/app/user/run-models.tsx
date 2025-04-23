@@ -5,39 +5,28 @@ import { useWorkspace } from "@/hooks/use-workspace";
 
 import { useMutation, useQuery } from "@connectrpc/connect-query";
 import { createRef, useEffect, useState } from "react";
-import CodeMirror from "@uiw/react-codemirror";
-import { json } from "@codemirror/lang-json";
 import { Button } from "@/components/ui/button";
-import { CircleX, Cross, PlusCircle } from "lucide-react";
 import { paths } from "@/config/paths";
 import { useNavigate } from "react-router-dom";
-import CreateDataTable from "@/components/create-data-table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { SpecificationSelector } from "@/components/specification-selector";
-import { ImageSelector } from "@/components/image-selector";
 import { FileGroupSelector } from "@/components/file-group-selector";
 import { ModelSelector } from "@/components/model-selector";
 import { ContentLayout } from "@/components/layouts/content";
 import Form from "@rjsf/core";
-import { RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
 import {
   createModelRun,
   getModel,
 } from "@/types/api/model-ModelService_connectquery";
 import { CreateModelRunRequest } from "@/types/api/model_pb";
+import { ModelTransport } from "@/lib/api-client";
 
 const RunModelsCreateRoute = () => {
   const navigate = useNavigate();
   const { activeWorkspace } = useWorkspace();
 
-  const createModelRunMutation = useMutation(createModelRun);
+  const createModelRunMutation = useMutation(createModelRun, {
+    transport: ModelTransport,
+  });
   const [modelRun, setModelRun] = useState<CreateModelRunRequest>({
     $typeName: "model.CreateModelRunRequest",
     modelId: "",
@@ -53,6 +42,7 @@ const RunModelsCreateRoute = () => {
     },
     {
       enabled: !!modelRun.modelId,
+      transport: ModelTransport,
     },
   );
 

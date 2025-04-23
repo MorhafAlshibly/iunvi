@@ -8,6 +8,7 @@ import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { getModel } from "@/types/api/model-ModelService_connectquery";
 import { TableFieldType } from "@/types/api/file_pb";
+import { ModelTransport } from "@/lib/api-client";
 
 const ModelsViewRoute = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const ModelsViewRoute = () => {
     },
     {
       enabled: !!id,
+      transport: ModelTransport,
     },
   );
 

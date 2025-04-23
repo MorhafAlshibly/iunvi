@@ -1,11 +1,5 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useWorkspace } from "@/hooks/use-workspace";
-import { useMutation } from "@connectrpc/connect-query";
-import { useState } from "react";
-import CodeMirror from "@uiw/react-codemirror";
-import { json } from "@codemirror/lang-json";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, CircleX, Plus, PlusCircle, X } from "lucide-react";
 import {

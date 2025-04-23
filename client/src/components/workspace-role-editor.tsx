@@ -14,6 +14,7 @@ import {
 } from "./ui/select";
 import { User, Workspace, WorkspaceRole } from "@/types/api/tenant_pb";
 import { assignUserToWorkspace } from "@/types/api/tenant-TenantService_connectquery";
+import { TenantTransport } from "@/lib/api-client";
 
 export function WorkspaceRoleEditor({
   user,
@@ -32,7 +33,9 @@ export function WorkspaceRoleEditor({
     setSelectedWorkspaceRole(currentRole);
   }, [currentRole]);
 
-  const assignUserToWorkspaceMutation = useMutation(assignUserToWorkspace);
+  const assignUserToWorkspaceMutation = useMutation(assignUserToWorkspace, {
+    transport: TenantTransport,
+  });
 
   const handleAssignUserToWorkspace = async () => {
     if (workspace && selectedWorkspaceRole !== currentRole) {
