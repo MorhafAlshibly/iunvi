@@ -1,6 +1,7 @@
 package dashboard
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -233,16 +234,16 @@ func (s *Service) GetDashboards(ctx context.Context, req *connect.Request[api.Ge
 	if err != nil {
 		return nil, err
 	}
-	var dashboardNames []*api.Dashboard
+	var apiDashboards []*api.Dashboard
 	for _, dashboard := range dashboards {
-		dashboardNames = append(dashboardNames, &api.Dashboard{
+		apiDashboards = append(apiDashboards, &api.Dashboard{
 			Id:      dashboard.DashboardID.String(),
 			ModelId: dashboard.ModelID.String(),
 			Name:    dashboard.Name,
 		})
 	}
 	return connect.NewResponse(&api.GetDashboardsResponse{
-		Dashboards: dashboardNames,
+		Dashboards: apiDashboards,
 	}), nil
 }
 
@@ -267,6 +268,51 @@ func (s *Service) GetDashboard(ctx context.Context, req *connect.Request[api.Get
 			ModelId: dashboard.ModelID.String(),
 			Name:    dashboard.Name,
 		},
+	}), nil
+}
+
+func (s *Service) GetDashboardMarkdown(ctx context.Context, req *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardMarkdownResponse], error) {
+	if req.Msg.Id == "" {
+		return nil, fmt.Errorf("DashboardId is required")
+	}
+	dashboardIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.Id)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	dashboard, err := database.GetDashboard(ctx, model.GetDashboardParams{
+		DashboardId: dashboardIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	workspaceId, err := database.GetWorkspaceIdByModelId(ctx, model.GetWorkspaceIdByModelIdParams{
+		ModelId: dashboard.ModelID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	cred, err := azidentity.NewClientSecretCredential(s.tenantId, s.clientId, s.clientSecret, nil)
+	if err != nil {
+		return nil, err
+	}
+	svcClient, err := service.NewClient(fmt.Sprintf("https://%s.blob.core.windows.net", s.storageAccountName), cred, nil)
+	if err != nil {
+		return nil, err
+	}
+	containerClient := svcClient.NewFileSystemClient(s.dashboardsContainerName)
+	fileClient := containerClient.NewFileClient(sculpt.DashboardDirectory(ctx, workspaceId.String(), dashboard.ModelID.String(), dashboard.DashboardID.String()) + "/index.md")
+	content, err := fileClient.DownloadStream(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	markdown := bytes.Buffer{}
+	_, err = markdown.ReadFrom(content.Body)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(&api.GetDashboardMarkdownResponse{
+		Markdown: markdown.String(),
 	}), nil
 }
 

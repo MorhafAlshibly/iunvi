@@ -2,8 +2,6 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import { useMatch } from "react-router-dom";
 import { useQuery } from "@connectrpc/connect-query";
 import { paths } from "@/config/paths";
-import CodeMirror from "@uiw/react-codemirror";
-import { json } from "@codemirror/lang-json";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
@@ -32,27 +30,27 @@ const SpecificationsViewRoute = () => {
 
   return (
     <div className="grid grid-cols-1 gap-4">
-      <div className="grid grid-cols-2 col-span-1 justify-items-between">
-        <div className="grid grid-cols-1 col-span-1 justify-items-start">
-          <Label className="col-span-1 content-center text-lg font-medium">
-            {specification?.name}
-          </Label>
-        </div>
-        <div className="grid grid-cols-1 col-span-1 justify-items-end">
-          <Button
-            size="lg"
-            variant="outline"
-            onClick={() => {
-              navigate(paths.app.developer.specifications.list.getHref());
-            }}
-          >
-            <CircleArrowLeft />
-            Back
-          </Button>
-        </div>
-      </div>
       {specification ? (
         <>
+          <div className="grid grid-cols-2 col-span-1 justify-items-between">
+            <div className="grid grid-cols-1 col-span-1 justify-items-start">
+              <Label className="col-span-1 content-center text-lg font-medium">
+                {specification?.name}
+              </Label>
+            </div>
+            <div className="grid grid-cols-1 col-span-1 justify-items-end">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                <CircleArrowLeft />
+                Back
+              </Button>
+            </div>
+          </div>
           <Label className="col-span-1 content-center mt-4 text-md font-normal">
             Data tables -{" "}
             {specificationData?.mode == DataMode.INPUT ? "CSV" : "Parquet"}

@@ -54,6 +54,9 @@ const (
 	// FileServiceGetFileGroupsProcedure is the fully-qualified name of the FileService's GetFileGroups
 	// RPC.
 	FileServiceGetFileGroupsProcedure = "/file.FileService/GetFileGroups"
+	// FileServiceGetFileGroupProcedure is the fully-qualified name of the FileService's GetFileGroup
+	// RPC.
+	FileServiceGetFileGroupProcedure = "/file.FileService/GetFileGroup"
 )
 
 // FileServiceClient is a client for the file.FileService service.
@@ -65,6 +68,7 @@ type FileServiceClient interface {
 	GetLandingZoneFiles(context.Context, *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error)
 	CreateFileGroup(context.Context, *connect.Request[api.CreateFileGroupRequest]) (*connect.Response[api.CreateFileGroupResponse], error)
 	GetFileGroups(context.Context, *connect.Request[api.GetFileGroupsRequest]) (*connect.Response[api.GetFileGroupsResponse], error)
+	GetFileGroup(context.Context, *connect.Request[api.GetFileGroupRequest]) (*connect.Response[api.GetFileGroupResponse], error)
 }
 
 // NewFileServiceClient constructs a client for the file.FileService service. By default, it uses
@@ -120,6 +124,12 @@ func NewFileServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(fileServiceMethods.ByName("GetFileGroups")),
 			connect.WithClientOptions(opts...),
 		),
+		getFileGroup: connect.NewClient[api.GetFileGroupRequest, api.GetFileGroupResponse](
+			httpClient,
+			baseURL+FileServiceGetFileGroupProcedure,
+			connect.WithSchema(fileServiceMethods.ByName("GetFileGroup")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -132,6 +142,7 @@ type fileServiceClient struct {
 	getLandingZoneFiles                    *connect.Client[api.GetLandingZoneFilesRequest, api.GetLandingZoneFilesResponse]
 	createFileGroup                        *connect.Client[api.CreateFileGroupRequest, api.CreateFileGroupResponse]
 	getFileGroups                          *connect.Client[api.GetFileGroupsRequest, api.GetFileGroupsResponse]
+	getFileGroup                           *connect.Client[api.GetFileGroupRequest, api.GetFileGroupResponse]
 }
 
 // CreateSpecification calls file.FileService.CreateSpecification.
@@ -170,6 +181,11 @@ func (c *fileServiceClient) GetFileGroups(ctx context.Context, req *connect.Requ
 	return c.getFileGroups.CallUnary(ctx, req)
 }
 
+// GetFileGroup calls file.FileService.GetFileGroup.
+func (c *fileServiceClient) GetFileGroup(ctx context.Context, req *connect.Request[api.GetFileGroupRequest]) (*connect.Response[api.GetFileGroupResponse], error) {
+	return c.getFileGroup.CallUnary(ctx, req)
+}
+
 // FileServiceHandler is an implementation of the file.FileService service.
 type FileServiceHandler interface {
 	CreateSpecification(context.Context, *connect.Request[api.CreateSpecificationRequest]) (*connect.Response[api.CreateSpecificationResponse], error)
@@ -179,6 +195,7 @@ type FileServiceHandler interface {
 	GetLandingZoneFiles(context.Context, *connect.Request[api.GetLandingZoneFilesRequest]) (*connect.Response[api.GetLandingZoneFilesResponse], error)
 	CreateFileGroup(context.Context, *connect.Request[api.CreateFileGroupRequest]) (*connect.Response[api.CreateFileGroupResponse], error)
 	GetFileGroups(context.Context, *connect.Request[api.GetFileGroupsRequest]) (*connect.Response[api.GetFileGroupsResponse], error)
+	GetFileGroup(context.Context, *connect.Request[api.GetFileGroupRequest]) (*connect.Response[api.GetFileGroupResponse], error)
 }
 
 // NewFileServiceHandler builds an HTTP handler from the service implementation. It returns the path
@@ -230,6 +247,12 @@ func NewFileServiceHandler(svc FileServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(fileServiceMethods.ByName("GetFileGroups")),
 		connect.WithHandlerOptions(opts...),
 	)
+	fileServiceGetFileGroupHandler := connect.NewUnaryHandler(
+		FileServiceGetFileGroupProcedure,
+		svc.GetFileGroup,
+		connect.WithSchema(fileServiceMethods.ByName("GetFileGroup")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/file.FileService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case FileServiceCreateSpecificationProcedure:
@@ -246,6 +269,8 @@ func NewFileServiceHandler(svc FileServiceHandler, opts ...connect.HandlerOption
 			fileServiceCreateFileGroupHandler.ServeHTTP(w, r)
 		case FileServiceGetFileGroupsProcedure:
 			fileServiceGetFileGroupsHandler.ServeHTTP(w, r)
+		case FileServiceGetFileGroupProcedure:
+			fileServiceGetFileGroupHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -281,4 +306,8 @@ func (UnimplementedFileServiceHandler) CreateFileGroup(context.Context, *connect
 
 func (UnimplementedFileServiceHandler) GetFileGroups(context.Context, *connect.Request[api.GetFileGroupsRequest]) (*connect.Response[api.GetFileGroupsResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("file.FileService.GetFileGroups is not implemented"))
+}
+
+func (UnimplementedFileServiceHandler) GetFileGroup(context.Context, *connect.Request[api.GetFileGroupRequest]) (*connect.Response[api.GetFileGroupResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("file.FileService.GetFileGroup is not implemented"))
 }

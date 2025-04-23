@@ -4,90 +4,128 @@ import { useQuery } from "@connectrpc/connect-query";
 import { paths } from "@/config/paths";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ArrowBigLeft, CircleArrowLeft } from "lucide-react";
+import { ArrowBigLeft, CircleArrowLeft, Info } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { getModel } from "@/types/api/model-ModelService_connectquery";
-import { DataMode, TableFieldType } from "@/types/api/file_pb";
-import { ModelTransport } from "@/lib/api-client";
+import { DashboardTransport, ModelTransport } from "@/lib/api-client";
+import CodeMirror from "@uiw/react-codemirror";
+import { useDarkMode } from "usehooks-ts";
+import {
+  getDashboard,
+  getDashboardMarkdown,
+} from "@/types/api/dashboard-DashboardService_connectquery";
+import { markdown } from "@codemirror/lang-markdown";
 
-const ModelsViewRoute = () => {
+const DashboardsViewRoute = () => {
   const navigate = useNavigate();
-  const id = useMatch(paths.app.developer.models.root.getHref() + "/:id")
+  const id = useMatch(paths.app.developer.dashboards.root.getHref() + "/:id")
     ?.params.id;
-  const { data: modelData } = useQuery(
-    getModel,
+
+  const { data: dashboardData } = useQuery(
+    getDashboard,
     {
       id: id || "",
     },
     {
       enabled: !!id,
+      transport: DashboardTransport,
+    },
+  );
+
+  const dashboard = dashboardData?.dashboard;
+
+  const { data: dashboardMarkdownData } = useQuery(
+    getDashboardMarkdown,
+    {
+      id: dashboard?.id || "",
+    },
+    {
+      enabled: !!id,
+      transport: DashboardTransport,
+    },
+  );
+
+  const dashboardMarkdown = dashboardMarkdownData?.markdown;
+
+  const { data: modelData } = useQuery(
+    getModel,
+    {
+      id: dashboard?.modelId || "",
+    },
+    {
+      enabled: !!dashboard?.modelId,
       transport: ModelTransport,
     },
   );
 
   const model = modelData?.model;
 
+  const darkMode = useDarkMode();
+
   return (
     <div className="grid grid-cols-1 gap-4">
-      <div className="grid grid-cols-2 col-span-1 justify-items-between">
-        <div className="grid grid-cols-1 col-span-1 justify-items-start">
-          <Label className="col-span-1 content-center text-lg font-medium">
-            {model?.name}
-          </Label>
-        </div>
-        <div className="grid grid-cols-1 col-span-1 justify-items-end">
-          <Button
-            size="lg"
-            variant="outline"
-            onClick={() => {
-              navigate(paths.app.developer.models.list.getHref());
-            }}
-          >
-            <CircleArrowLeft />
-            Back
-          </Button>
-        </div>
-      </div>
-      {model ? (
+      {dashboard && model ? (
         <>
-          <Label className="col-span-1 content-center mt-4 text-md font-normal">
-            Data tables -{" "}
-            {modelData?.mode == DataMode.INPUT ? "CSV" : "Parquet"}
-          </Label>
-          {model.tables.map((table, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-1 col-span-1 border p-4 gap-4"
-            >
-              <Label className="col-span-1 content-center font-normal">
-                {table.name}
+          <div className="grid grid-cols-2 col-span-1 justify-items-between">
+            <div className="grid grid-cols-1 col-span-1 justify-items-start">
+              <Label className="col-span-1 content-center text-lg font-medium">
+                {dashboard.name}
               </Label>
-              <div className="grid grid-cols-1 col-span-1 gap-2">
-                {table.fields.map((field, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-2 col-span-1 justify-items-between"
-                  >
-                    <div className="grid grid-cols-1 col-span-1 justify-items-start content-center">
-                      <Label className="text-sm font-light">{field.name}</Label>
-                    </div>
-                    <div className="grid grid-cols-1 col-span-1 justify-items-end content-center">
-                      <Label className="text-sm font-medium">
-                        {TableFieldType[field.type]}
-                      </Label>
-                    </div>
-                    <div className="col-span-2">
-                      <Separator className="mt-2" />
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
-          ))}
+            <div className="grid grid-cols-1 col-span-1 justify-items-end">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                <CircleArrowLeft />
+                Back
+              </Button>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 col-span-1 justify-items-between p-2 mt-4">
+            <div className="grid grid-cols-1 col-span-1 justify-items-start content-center">
+              <Label className="font-normal">Model</Label>
+            </div>
+            <div className="grid grid-cols-1 col-span-1 justify-items-end content-center">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  navigate(paths.app.developer.models.view.getHref(model.id));
+                }}
+              >
+                <Info />
+                {model.name}
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 col-span-2">
+              <Separator className="mt-2" />
+            </div>
+          </div>
+          {dashboardMarkdown ? (
+            <>
+              <div className="grid grid-cols-1 col-span-1 content-center mt-4">
+                <Label className="font-medium">Evidence Markdown</Label>
+              </div>
+              <div className="grid grid-cols-1 col-span-1">
+                <CodeMirror
+                  value={dashboardMarkdown}
+                  height="auto"
+                  extensions={[markdown()]}
+                  editable={false}
+                  theme={darkMode.isDarkMode ? "dark" : "light"}
+                  className="col-span-1 border"
+                />
+              </div>
+            </>
+          ) : null}
         </>
       ) : null}
     </div>
   );
 };
 
-export default ModelsViewRoute;
+export default DashboardsViewRoute;

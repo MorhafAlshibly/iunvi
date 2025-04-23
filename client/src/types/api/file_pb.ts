@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file api/file.proto.
  */
 export const file_api_file: GenFile = /*@__PURE__*/
-  fileDesc("Cg5hcGkvZmlsZS5wcm90bxIEZmlsZSKAAQoaQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDAoEbmFtZRgCIAEoCRIcCgRtb2RlGAMgASgOMg4uZmlsZS5EYXRhTW9kZRIhCgZ0YWJsZXMYBCADKAsyES5maWxlLlRhYmxlU2NoZW1hIikKG0NyZWF0ZVNwZWNpZmljYXRpb25SZXNwb25zZRIKCgJpZBgBIAEoCSJbChhHZXRTcGVjaWZpY2F0aW9uc1JlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSIQoEbW9kZRgCIAEoDjIOLmZpbGUuRGF0YU1vZGVIAIgBAUIHCgVfbW9kZSJMChlHZXRTcGVjaWZpY2F0aW9uc1Jlc3BvbnNlEi8KDnNwZWNpZmljYXRpb25zGAEgAygLMhcuZmlsZS5TcGVjaWZpY2F0aW9uTmFtZSIlChdHZXRTcGVjaWZpY2F0aW9uUmVxdWVzdBIKCgJpZBgBIAEoCSJkChhHZXRTcGVjaWZpY2F0aW9uUmVzcG9uc2USKgoNc3BlY2lmaWNhdGlvbhgBIAEoCzITLmZpbGUuU3BlY2lmaWNhdGlvbhIcCgRtb2RlGAIgASgOMg4uZmlsZS5EYXRhTW9kZSJWCi1DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEAoIZmlsZU5hbWUYAiABKAkiPQouQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXNwb25zZRILCgN1cmwYASABKAkiYQoaR2V0TGFuZGluZ1pvbmVGaWxlc1JlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDgoGcHJlZml4GAIgASgJEhMKBm1hcmtlchgDIAEoCUgAiAEBQgkKB19tYXJrZXIiawobR2V0TGFuZGluZ1pvbmVGaWxlc1Jlc3BvbnNlEiQKBWZpbGVzGAEgAygLMhUuZmlsZS5MYW5kaW5nWm9uZUZpbGUSFwoKbmV4dE1hcmtlchgCIAEoCUgAiAEBQg0KC19uZXh0TWFya2VyInQKFkNyZWF0ZUZpbGVHcm91cFJlcXVlc3QSFwoPc3BlY2lmaWNhdGlvbklkGAEgASgJEgwKBG5hbWUYAiABKAkSMwoSc2NoZW1hRmlsZU1hcHBpbmdzGAMgAygLMhcuZmlsZS5TY2hlbWFGaWxlTWFwcGluZyIlChdDcmVhdGVGaWxlR3JvdXBSZXNwb25zZRIKCgJpZBgBIAEoCSJdChRHZXRGaWxlR3JvdXBzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCRIcCg9zcGVjaWZpY2F0aW9uSWQYAiABKAlIAIgBAUISChBfc3BlY2lmaWNhdGlvbklkIkAKFUdldEZpbGVHcm91cHNSZXNwb25zZRInCgpmaWxlR3JvdXBzGAEgAygLMhMuZmlsZS5GaWxlR3JvdXBOYW1lIikKDUZpbGVHcm91cE5hbWUSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCSJEChFTY2hlbWFGaWxlTWFwcGluZxISCgpzY2hlbWFOYW1lGAEgASgJEhsKE2xhbmRpbmdab25lRmlsZU5hbWUYAiABKAkiXwoPTGFuZGluZ1pvbmVGaWxlEgwKBG5hbWUYASABKAkSDAoEc2l6ZRgCIAEoBBIwCgxsYXN0TW9kaWZpZWQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIksKEVNwZWNpZmljYXRpb25OYW1lEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSHAoEbW9kZRgDIAEoDjIOLmZpbGUuRGF0YU1vZGUiTAoNU3BlY2lmaWNhdGlvbhIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEiEKBnRhYmxlcxgDIAMoCzIRLmZpbGUuVGFibGVTY2hlbWEiPQoLVGFibGVTY2hlbWESDAoEbmFtZRgBIAEoCRIgCgZmaWVsZHMYAiADKAsyEC5maWxlLlRhYmxlRmllbGQiPgoKVGFibGVGaWVsZBIMCgRuYW1lGAEgASgJEiIKBHR5cGUYAiABKA4yFC5maWxlLlRhYmxlRmllbGRUeXBlKrECCg5UYWJsZUZpZWxkVHlwZRIKCgZCSUdJTlQQABIHCgNCSVQQARIICgRCTE9CEAISCwoHQk9PTEVBThADEggKBERBVEUQBBIKCgZET1VCTEUQBRIJCgVGTE9BVBAGEgsKB0hVR0VJTlQQBxILCgdJTlRFR0VSEAgSDAoISU5URVJWQUwQCRIICgRKU09OEAoSDAoIU01BTExJTlQQCxIICgRUSU1FEAwSDwoLVElNRVNUQU1QVFoQDRINCglUSU1FU1RBTVAQDhILCgdUSU5ZSU5UEA8SCwoHVUJJR0lOVBAQEgwKCFVIVUdFSU5UEBESDAoIVUlOVEVHRVIQEhINCglVU01BTExJTlQQExIMCghVVElOWUlOVBAUEggKBFVVSUQQFRILCgdWQVJDSEFSEBYqIQoIRGF0YU1vZGUSCQoFSU5QVVQQABIKCgZPVVRQVVQQATKeBQoLRmlsZVNlcnZpY2USWgoTQ3JlYXRlU3BlY2lmaWNhdGlvbhIgLmZpbGUuQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QaIS5maWxlLkNyZWF0ZVNwZWNpZmljYXRpb25SZXNwb25zZRJUChFHZXRTcGVjaWZpY2F0aW9ucxIeLmZpbGUuR2V0U3BlY2lmaWNhdGlvbnNSZXF1ZXN0Gh8uZmlsZS5HZXRTcGVjaWZpY2F0aW9uc1Jlc3BvbnNlElEKEEdldFNwZWNpZmljYXRpb24SHS5maWxlLkdldFNwZWNpZmljYXRpb25SZXF1ZXN0Gh4uZmlsZS5HZXRTcGVjaWZpY2F0aW9uUmVzcG9uc2USkwEKJkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlEjMuZmlsZS5DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlcXVlc3QaNC5maWxlLkNyZWF0ZUxhbmRpbmdab25lU2hhcmVkQWNjZXNzU2lnbmF0dXJlUmVzcG9uc2USWgoTR2V0TGFuZGluZ1pvbmVGaWxlcxIgLmZpbGUuR2V0TGFuZGluZ1pvbmVGaWxlc1JlcXVlc3QaIS5maWxlLkdldExhbmRpbmdab25lRmlsZXNSZXNwb25zZRJOCg9DcmVhdGVGaWxlR3JvdXASHC5maWxlLkNyZWF0ZUZpbGVHcm91cFJlcXVlc3QaHS5maWxlLkNyZWF0ZUZpbGVHcm91cFJlc3BvbnNlEkgKDUdldEZpbGVHcm91cHMSGi5maWxlLkdldEZpbGVHcm91cHNSZXF1ZXN0GhsuZmlsZS5HZXRGaWxlR3JvdXBzUmVzcG9uc2VCKVonZ2l0aHViLmNvbS9Nb3JoYWZBbHNoaWJseS9pdW52aS9nZW4vYXBpYgZwcm90bzM", [file_google_protobuf_timestamp]);
+  fileDesc("Cg5hcGkvZmlsZS5wcm90bxIEZmlsZSKAAQoaQ3JlYXRlU3BlY2lmaWNhdGlvblJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDAoEbmFtZRgCIAEoCRIcCgRtb2RlGAMgASgOMg4uZmlsZS5EYXRhTW9kZRIhCgZ0YWJsZXMYBCADKAsyES5maWxlLlRhYmxlU2NoZW1hIikKG0NyZWF0ZVNwZWNpZmljYXRpb25SZXNwb25zZRIKCgJpZBgBIAEoCSJbChhHZXRTcGVjaWZpY2F0aW9uc1JlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSIQoEbW9kZRgCIAEoDjIOLmZpbGUuRGF0YU1vZGVIAIgBAUIHCgVfbW9kZSJMChlHZXRTcGVjaWZpY2F0aW9uc1Jlc3BvbnNlEi8KDnNwZWNpZmljYXRpb25zGAEgAygLMhcuZmlsZS5TcGVjaWZpY2F0aW9uTmFtZSIlChdHZXRTcGVjaWZpY2F0aW9uUmVxdWVzdBIKCgJpZBgBIAEoCSJkChhHZXRTcGVjaWZpY2F0aW9uUmVzcG9uc2USKgoNc3BlY2lmaWNhdGlvbhgBIAEoCzITLmZpbGUuU3BlY2lmaWNhdGlvbhIcCgRtb2RlGAIgASgOMg4uZmlsZS5EYXRhTW9kZSJWCi1DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSEAoIZmlsZU5hbWUYAiABKAkiPQouQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXNwb25zZRILCgN1cmwYASABKAkiYQoaR2V0TGFuZGluZ1pvbmVGaWxlc1JlcXVlc3QSEwoLd29ya3NwYWNlSWQYASABKAkSDgoGcHJlZml4GAIgASgJEhMKBm1hcmtlchgDIAEoCUgAiAEBQgkKB19tYXJrZXIiawobR2V0TGFuZGluZ1pvbmVGaWxlc1Jlc3BvbnNlEiQKBWZpbGVzGAEgAygLMhUuZmlsZS5MYW5kaW5nWm9uZUZpbGUSFwoKbmV4dE1hcmtlchgCIAEoCUgAiAEBQg0KC19uZXh0TWFya2VyInQKFkNyZWF0ZUZpbGVHcm91cFJlcXVlc3QSFwoPc3BlY2lmaWNhdGlvbklkGAEgASgJEgwKBG5hbWUYAiABKAkSMwoSc2NoZW1hRmlsZU1hcHBpbmdzGAMgAygLMhcuZmlsZS5TY2hlbWFGaWxlTWFwcGluZyIlChdDcmVhdGVGaWxlR3JvdXBSZXNwb25zZRIKCgJpZBgBIAEoCSJdChRHZXRGaWxlR3JvdXBzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCRIcCg9zcGVjaWZpY2F0aW9uSWQYAiABKAlIAIgBAUISChBfc3BlY2lmaWNhdGlvbklkIkAKFUdldEZpbGVHcm91cHNSZXNwb25zZRInCgpmaWxlR3JvdXBzGAEgAygLMhMuZmlsZS5GaWxlR3JvdXBOYW1lIiEKE0dldEZpbGVHcm91cFJlcXVlc3QSCgoCaWQYASABKAkiOgoUR2V0RmlsZUdyb3VwUmVzcG9uc2USIgoJZmlsZUdyb3VwGAEgASgLMg8uZmlsZS5GaWxlR3JvdXAiWgoJRmlsZUdyb3VwEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSMwoSc2NoZW1hRmlsZU1hcHBpbmdzGAMgAygLMhcuZmlsZS5TY2hlbWFGaWxlTWFwcGluZyIpCg1GaWxlR3JvdXBOYW1lEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkiRAoRU2NoZW1hRmlsZU1hcHBpbmcSEgoKc2NoZW1hTmFtZRgBIAEoCRIbChNsYW5kaW5nWm9uZUZpbGVOYW1lGAIgASgJIl8KD0xhbmRpbmdab25lRmlsZRIMCgRuYW1lGAEgASgJEgwKBHNpemUYAiABKAQSMAoMbGFzdE1vZGlmaWVkGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCJLChFTcGVjaWZpY2F0aW9uTmFtZRIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhwKBG1vZGUYAyABKA4yDi5maWxlLkRhdGFNb2RlIkwKDVNwZWNpZmljYXRpb24SCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIhCgZ0YWJsZXMYAyADKAsyES5maWxlLlRhYmxlU2NoZW1hIj0KC1RhYmxlU2NoZW1hEgwKBG5hbWUYASABKAkSIAoGZmllbGRzGAIgAygLMhAuZmlsZS5UYWJsZUZpZWxkIj4KClRhYmxlRmllbGQSDAoEbmFtZRgBIAEoCRIiCgR0eXBlGAIgASgOMhQuZmlsZS5UYWJsZUZpZWxkVHlwZSqxAgoOVGFibGVGaWVsZFR5cGUSCgoGQklHSU5UEAASBwoDQklUEAESCAoEQkxPQhACEgsKB0JPT0xFQU4QAxIICgREQVRFEAQSCgoGRE9VQkxFEAUSCQoFRkxPQVQQBhILCgdIVUdFSU5UEAcSCwoHSU5URUdFUhAIEgwKCElOVEVSVkFMEAkSCAoESlNPThAKEgwKCFNNQUxMSU5UEAsSCAoEVElNRRAMEg8KC1RJTUVTVEFNUFRaEA0SDQoJVElNRVNUQU1QEA4SCwoHVElOWUlOVBAPEgsKB1VCSUdJTlQQEBIMCghVSFVHRUlOVBAREgwKCFVJTlRFR0VSEBISDQoJVVNNQUxMSU5UEBMSDAoIVVRJTllJTlQQFBIICgRVVUlEEBUSCwoHVkFSQ0hBUhAWKiEKCERhdGFNb2RlEgkKBUlOUFVUEAASCgoGT1VUUFVUEAEy5QUKC0ZpbGVTZXJ2aWNlEloKE0NyZWF0ZVNwZWNpZmljYXRpb24SIC5maWxlLkNyZWF0ZVNwZWNpZmljYXRpb25SZXF1ZXN0GiEuZmlsZS5DcmVhdGVTcGVjaWZpY2F0aW9uUmVzcG9uc2USVAoRR2V0U3BlY2lmaWNhdGlvbnMSHi5maWxlLkdldFNwZWNpZmljYXRpb25zUmVxdWVzdBofLmZpbGUuR2V0U3BlY2lmaWNhdGlvbnNSZXNwb25zZRJRChBHZXRTcGVjaWZpY2F0aW9uEh0uZmlsZS5HZXRTcGVjaWZpY2F0aW9uUmVxdWVzdBoeLmZpbGUuR2V0U3BlY2lmaWNhdGlvblJlc3BvbnNlEpMBCiZDcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZRIzLmZpbGUuQ3JlYXRlTGFuZGluZ1pvbmVTaGFyZWRBY2Nlc3NTaWduYXR1cmVSZXF1ZXN0GjQuZmlsZS5DcmVhdGVMYW5kaW5nWm9uZVNoYXJlZEFjY2Vzc1NpZ25hdHVyZVJlc3BvbnNlEloKE0dldExhbmRpbmdab25lRmlsZXMSIC5maWxlLkdldExhbmRpbmdab25lRmlsZXNSZXF1ZXN0GiEuZmlsZS5HZXRMYW5kaW5nWm9uZUZpbGVzUmVzcG9uc2USTgoPQ3JlYXRlRmlsZUdyb3VwEhwuZmlsZS5DcmVhdGVGaWxlR3JvdXBSZXF1ZXN0Gh0uZmlsZS5DcmVhdGVGaWxlR3JvdXBSZXNwb25zZRJICg1HZXRGaWxlR3JvdXBzEhouZmlsZS5HZXRGaWxlR3JvdXBzUmVxdWVzdBobLmZpbGUuR2V0RmlsZUdyb3Vwc1Jlc3BvbnNlEkUKDEdldEZpbGVHcm91cBIZLmZpbGUuR2V0RmlsZUdyb3VwUmVxdWVzdBoaLmZpbGUuR2V0RmlsZUdyb3VwUmVzcG9uc2VCKVonZ2l0aHViLmNvbS9Nb3JoYWZBbHNoaWJseS9pdW52aS9nZW4vYXBpYgZwcm90bzM", [file_google_protobuf_timestamp]);
 
 /**
  * @generated from message file.CreateSpecificationRequest
@@ -313,6 +313,67 @@ export const GetFileGroupsResponseSchema: GenMessage<GetFileGroupsResponse> = /*
   messageDesc(file_api_file, 13);
 
 /**
+ * @generated from message file.GetFileGroupRequest
+ */
+export type GetFileGroupRequest = Message<"file.GetFileGroupRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message file.GetFileGroupRequest.
+ * Use `create(GetFileGroupRequestSchema)` to create a new message.
+ */
+export const GetFileGroupRequestSchema: GenMessage<GetFileGroupRequest> = /*@__PURE__*/
+  messageDesc(file_api_file, 14);
+
+/**
+ * @generated from message file.GetFileGroupResponse
+ */
+export type GetFileGroupResponse = Message<"file.GetFileGroupResponse"> & {
+  /**
+   * @generated from field: file.FileGroup fileGroup = 1;
+   */
+  fileGroup?: FileGroup;
+};
+
+/**
+ * Describes the message file.GetFileGroupResponse.
+ * Use `create(GetFileGroupResponseSchema)` to create a new message.
+ */
+export const GetFileGroupResponseSchema: GenMessage<GetFileGroupResponse> = /*@__PURE__*/
+  messageDesc(file_api_file, 15);
+
+/**
+ * @generated from message file.FileGroup
+ */
+export type FileGroup = Message<"file.FileGroup"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from field: repeated file.SchemaFileMapping schemaFileMappings = 3;
+   */
+  schemaFileMappings: SchemaFileMapping[];
+};
+
+/**
+ * Describes the message file.FileGroup.
+ * Use `create(FileGroupSchema)` to create a new message.
+ */
+export const FileGroupSchema: GenMessage<FileGroup> = /*@__PURE__*/
+  messageDesc(file_api_file, 16);
+
+/**
  * @generated from message file.FileGroupName
  */
 export type FileGroupName = Message<"file.FileGroupName"> & {
@@ -332,7 +393,7 @@ export type FileGroupName = Message<"file.FileGroupName"> & {
  * Use `create(FileGroupNameSchema)` to create a new message.
  */
 export const FileGroupNameSchema: GenMessage<FileGroupName> = /*@__PURE__*/
-  messageDesc(file_api_file, 14);
+  messageDesc(file_api_file, 17);
 
 /**
  * @generated from message file.SchemaFileMapping
@@ -354,7 +415,7 @@ export type SchemaFileMapping = Message<"file.SchemaFileMapping"> & {
  * Use `create(SchemaFileMappingSchema)` to create a new message.
  */
 export const SchemaFileMappingSchema: GenMessage<SchemaFileMapping> = /*@__PURE__*/
-  messageDesc(file_api_file, 15);
+  messageDesc(file_api_file, 18);
 
 /**
  * @generated from message file.LandingZoneFile
@@ -381,7 +442,7 @@ export type LandingZoneFile = Message<"file.LandingZoneFile"> & {
  * Use `create(LandingZoneFileSchema)` to create a new message.
  */
 export const LandingZoneFileSchema: GenMessage<LandingZoneFile> = /*@__PURE__*/
-  messageDesc(file_api_file, 16);
+  messageDesc(file_api_file, 19);
 
 /**
  * @generated from message file.SpecificationName
@@ -408,7 +469,7 @@ export type SpecificationName = Message<"file.SpecificationName"> & {
  * Use `create(SpecificationNameSchema)` to create a new message.
  */
 export const SpecificationNameSchema: GenMessage<SpecificationName> = /*@__PURE__*/
-  messageDesc(file_api_file, 17);
+  messageDesc(file_api_file, 20);
 
 /**
  * @generated from message file.Specification
@@ -435,7 +496,7 @@ export type Specification = Message<"file.Specification"> & {
  * Use `create(SpecificationSchema)` to create a new message.
  */
 export const SpecificationSchema: GenMessage<Specification> = /*@__PURE__*/
-  messageDesc(file_api_file, 18);
+  messageDesc(file_api_file, 21);
 
 /**
  * @generated from message file.TableSchema
@@ -457,7 +518,7 @@ export type TableSchema = Message<"file.TableSchema"> & {
  * Use `create(TableSchemaSchema)` to create a new message.
  */
 export const TableSchemaSchema: GenMessage<TableSchema> = /*@__PURE__*/
-  messageDesc(file_api_file, 19);
+  messageDesc(file_api_file, 22);
 
 /**
  * @generated from message file.TableField
@@ -479,7 +540,7 @@ export type TableField = Message<"file.TableField"> & {
  * Use `create(TableFieldSchema)` to create a new message.
  */
 export const TableFieldSchema: GenMessage<TableField> = /*@__PURE__*/
-  messageDesc(file_api_file, 20);
+  messageDesc(file_api_file, 23);
 
 /**
  * @generated from enum file.TableFieldType
@@ -687,6 +748,14 @@ export const FileService: GenService<{
     methodKind: "unary";
     input: typeof GetFileGroupsRequestSchema;
     output: typeof GetFileGroupsResponseSchema;
+  },
+  /**
+   * @generated from rpc file.FileService.GetFileGroup
+   */
+  getFileGroup: {
+    methodKind: "unary";
+    input: typeof GetFileGroupRequestSchema;
+    output: typeof GetFileGroupResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_api_file, 0);

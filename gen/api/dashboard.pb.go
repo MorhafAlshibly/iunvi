@@ -317,6 +317,50 @@ func (x *GetDashboardResponse) GetDashboard() *Dashboard {
 	return nil
 }
 
+type GetDashboardMarkdownResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Markdown      string                 `protobuf:"bytes,1,opt,name=markdown,proto3" json:"markdown,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDashboardMarkdownResponse) Reset() {
+	*x = GetDashboardMarkdownResponse{}
+	mi := &file_api_dashboard_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDashboardMarkdownResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDashboardMarkdownResponse) ProtoMessage() {}
+
+func (x *GetDashboardMarkdownResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_dashboard_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDashboardMarkdownResponse.ProtoReflect.Descriptor instead.
+func (*GetDashboardMarkdownResponse) Descriptor() ([]byte, []int) {
+	return file_api_dashboard_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GetDashboardMarkdownResponse) GetMarkdown() string {
+	if x != nil {
+		return x.Markdown
+	}
+	return ""
+}
+
 type GetModelRunDashboardRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ModelRunId    string                 `protobuf:"bytes,1,opt,name=modelRunId,proto3" json:"modelRunId,omitempty"`
@@ -327,7 +371,7 @@ type GetModelRunDashboardRequest struct {
 
 func (x *GetModelRunDashboardRequest) Reset() {
 	*x = GetModelRunDashboardRequest{}
-	mi := &file_api_dashboard_proto_msgTypes[6]
+	mi := &file_api_dashboard_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -339,7 +383,7 @@ func (x *GetModelRunDashboardRequest) String() string {
 func (*GetModelRunDashboardRequest) ProtoMessage() {}
 
 func (x *GetModelRunDashboardRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_dashboard_proto_msgTypes[6]
+	mi := &file_api_dashboard_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -352,7 +396,7 @@ func (x *GetModelRunDashboardRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetModelRunDashboardRequest.ProtoReflect.Descriptor instead.
 func (*GetModelRunDashboardRequest) Descriptor() ([]byte, []int) {
-	return file_api_dashboard_proto_rawDescGZIP(), []int{6}
+	return file_api_dashboard_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetModelRunDashboardRequest) GetModelRunId() string {
@@ -378,7 +422,7 @@ type GetModelRunDashboardResponse struct {
 
 func (x *GetModelRunDashboardResponse) Reset() {
 	*x = GetModelRunDashboardResponse{}
-	mi := &file_api_dashboard_proto_msgTypes[7]
+	mi := &file_api_dashboard_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -390,7 +434,7 @@ func (x *GetModelRunDashboardResponse) String() string {
 func (*GetModelRunDashboardResponse) ProtoMessage() {}
 
 func (x *GetModelRunDashboardResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_dashboard_proto_msgTypes[7]
+	mi := &file_api_dashboard_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -403,7 +447,7 @@ func (x *GetModelRunDashboardResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetModelRunDashboardResponse.ProtoReflect.Descriptor instead.
 func (*GetModelRunDashboardResponse) Descriptor() ([]byte, []int) {
-	return file_api_dashboard_proto_rawDescGZIP(), []int{7}
+	return file_api_dashboard_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetModelRunDashboardResponse) GetDashboardSasUrl() string {
@@ -424,7 +468,7 @@ type Dashboard struct {
 
 func (x *Dashboard) Reset() {
 	*x = Dashboard{}
-	mi := &file_api_dashboard_proto_msgTypes[8]
+	mi := &file_api_dashboard_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -436,7 +480,7 @@ func (x *Dashboard) String() string {
 func (*Dashboard) ProtoMessage() {}
 
 func (x *Dashboard) ProtoReflect() protoreflect.Message {
-	mi := &file_api_dashboard_proto_msgTypes[8]
+	mi := &file_api_dashboard_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -449,7 +493,7 @@ func (x *Dashboard) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Dashboard.ProtoReflect.Descriptor instead.
 func (*Dashboard) Descriptor() ([]byte, []int) {
-	return file_api_dashboard_proto_rawDescGZIP(), []int{8}
+	return file_api_dashboard_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *Dashboard) GetId() string {
@@ -502,7 +546,9 @@ const file_api_dashboard_proto_rawDesc = "" +
 	"\x13GetDashboardRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"J\n" +
 	"\x14GetDashboardResponse\x122\n" +
-	"\tdashboard\x18\x01 \x01(\v2\x14.dashboard.DashboardR\tdashboard\"_\n" +
+	"\tdashboard\x18\x01 \x01(\v2\x14.dashboard.DashboardR\tdashboard\":\n" +
+	"\x1cGetDashboardMarkdownResponse\x12\x1a\n" +
+	"\bmarkdown\x18\x01 \x01(\tR\bmarkdown\"_\n" +
 	"\x1bGetModelRunDashboardRequest\x12\x1e\n" +
 	"\n" +
 	"modelRunId\x18\x01 \x01(\tR\n" +
@@ -513,11 +559,12 @@ const file_api_dashboard_proto_rawDesc = "" +
 	"\tDashboard\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
 	"\amodelId\x18\x02 \x01(\tR\amodelId\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name2\xfa\x02\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name2\xdb\x03\n" +
 	"\x10DashboardService\x12X\n" +
 	"\x0fCreateDashboard\x12!.dashboard.CreateDashboardRequest\x1a\".dashboard.CreateDashboardResponse\x12R\n" +
 	"\rGetDashboards\x12\x1f.dashboard.GetDashboardsRequest\x1a .dashboard.GetDashboardsResponse\x12O\n" +
-	"\fGetDashboard\x12\x1e.dashboard.GetDashboardRequest\x1a\x1f.dashboard.GetDashboardResponse\x12g\n" +
+	"\fGetDashboard\x12\x1e.dashboard.GetDashboardRequest\x1a\x1f.dashboard.GetDashboardResponse\x12_\n" +
+	"\x14GetDashboardMarkdown\x12\x1e.dashboard.GetDashboardRequest\x1a'.dashboard.GetDashboardMarkdownResponse\x12g\n" +
 	"\x14GetModelRunDashboard\x12&.dashboard.GetModelRunDashboardRequest\x1a'.dashboard.GetModelRunDashboardResponseB)Z'github.com/MorhafAlshibly/iunvi/gen/apib\x06proto3"
 
 var (
@@ -532,7 +579,7 @@ func file_api_dashboard_proto_rawDescGZIP() []byte {
 	return file_api_dashboard_proto_rawDescData
 }
 
-var file_api_dashboard_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_api_dashboard_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_api_dashboard_proto_goTypes = []any{
 	(*CreateDashboardRequest)(nil),       // 0: dashboard.CreateDashboardRequest
 	(*CreateDashboardResponse)(nil),      // 1: dashboard.CreateDashboardResponse
@@ -540,23 +587,26 @@ var file_api_dashboard_proto_goTypes = []any{
 	(*GetDashboardsResponse)(nil),        // 3: dashboard.GetDashboardsResponse
 	(*GetDashboardRequest)(nil),          // 4: dashboard.GetDashboardRequest
 	(*GetDashboardResponse)(nil),         // 5: dashboard.GetDashboardResponse
-	(*GetModelRunDashboardRequest)(nil),  // 6: dashboard.GetModelRunDashboardRequest
-	(*GetModelRunDashboardResponse)(nil), // 7: dashboard.GetModelRunDashboardResponse
-	(*Dashboard)(nil),                    // 8: dashboard.Dashboard
+	(*GetDashboardMarkdownResponse)(nil), // 6: dashboard.GetDashboardMarkdownResponse
+	(*GetModelRunDashboardRequest)(nil),  // 7: dashboard.GetModelRunDashboardRequest
+	(*GetModelRunDashboardResponse)(nil), // 8: dashboard.GetModelRunDashboardResponse
+	(*Dashboard)(nil),                    // 9: dashboard.Dashboard
 }
 var file_api_dashboard_proto_depIdxs = []int32{
-	8, // 0: dashboard.GetDashboardsResponse.dashboards:type_name -> dashboard.Dashboard
-	8, // 1: dashboard.GetDashboardResponse.dashboard:type_name -> dashboard.Dashboard
+	9, // 0: dashboard.GetDashboardsResponse.dashboards:type_name -> dashboard.Dashboard
+	9, // 1: dashboard.GetDashboardResponse.dashboard:type_name -> dashboard.Dashboard
 	0, // 2: dashboard.DashboardService.CreateDashboard:input_type -> dashboard.CreateDashboardRequest
 	2, // 3: dashboard.DashboardService.GetDashboards:input_type -> dashboard.GetDashboardsRequest
 	4, // 4: dashboard.DashboardService.GetDashboard:input_type -> dashboard.GetDashboardRequest
-	6, // 5: dashboard.DashboardService.GetModelRunDashboard:input_type -> dashboard.GetModelRunDashboardRequest
-	1, // 6: dashboard.DashboardService.CreateDashboard:output_type -> dashboard.CreateDashboardResponse
-	3, // 7: dashboard.DashboardService.GetDashboards:output_type -> dashboard.GetDashboardsResponse
-	5, // 8: dashboard.DashboardService.GetDashboard:output_type -> dashboard.GetDashboardResponse
-	7, // 9: dashboard.DashboardService.GetModelRunDashboard:output_type -> dashboard.GetModelRunDashboardResponse
-	6, // [6:10] is the sub-list for method output_type
-	2, // [2:6] is the sub-list for method input_type
+	4, // 5: dashboard.DashboardService.GetDashboardMarkdown:input_type -> dashboard.GetDashboardRequest
+	7, // 6: dashboard.DashboardService.GetModelRunDashboard:input_type -> dashboard.GetModelRunDashboardRequest
+	1, // 7: dashboard.DashboardService.CreateDashboard:output_type -> dashboard.CreateDashboardResponse
+	3, // 8: dashboard.DashboardService.GetDashboards:output_type -> dashboard.GetDashboardsResponse
+	5, // 9: dashboard.DashboardService.GetDashboard:output_type -> dashboard.GetDashboardResponse
+	6, // 10: dashboard.DashboardService.GetDashboardMarkdown:output_type -> dashboard.GetDashboardMarkdownResponse
+	8, // 11: dashboard.DashboardService.GetModelRunDashboard:output_type -> dashboard.GetModelRunDashboardResponse
+	7, // [7:12] is the sub-list for method output_type
+	2, // [2:7] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -574,7 +624,7 @@ func file_api_dashboard_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_dashboard_proto_rawDesc), len(file_api_dashboard_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

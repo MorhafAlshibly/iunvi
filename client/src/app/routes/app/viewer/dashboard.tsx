@@ -31,8 +31,8 @@ const DashboardRoute = () => {
     const dashboardUrlParts = dashboardData.dashboardSasUrl.split("?");
     const baseUrl = dashboardUrlParts[0];
     const sasToken = dashboardUrlParts[1];
-    const indexUrl = `${baseUrl}/index.html?${sasToken}`;
-    setIframeSrc(indexUrl);
+    const entryUrl = `${baseUrl}/entry.html?${sasToken}`;
+    setIframeSrc(entryUrl);
   }, [dashboardData?.dashboardSasUrl]);
 
   return (

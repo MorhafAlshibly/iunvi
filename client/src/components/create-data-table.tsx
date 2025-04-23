@@ -143,20 +143,6 @@ const CreateDataTable = ({
               </Button>
             </div>
           </div>
-          {/* <CodeMirror
-            value={table.schema}
-            height="auto"
-            placeholder={"Schema"}
-            extensions={[json()]}
-            onChange={(value) => {
-              setDataTables((prev) => {
-                const newTables = [...prev];
-                newTables[index].schema = value;
-                return newTables;
-              });
-            }}
-            className="col-span-1 border"
-          /> */}
         </div>
       ))}
       <div className="grid grid-cols-1 col-span-1 justify-items-center">

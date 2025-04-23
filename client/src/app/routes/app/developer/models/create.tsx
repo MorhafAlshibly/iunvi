@@ -18,6 +18,7 @@ import { createModel } from "@/types/api/model-ModelService_connectquery";
 import { CreateModelRequest } from "@/types/api/model_pb";
 import { DataMode } from "@/types/api/file_pb";
 import { ModelTransport } from "@/lib/api-client";
+import { useDarkMode } from "usehooks-ts";
 
 const ModelsCreateRoute = () => {
   const navigate = useNavigate();
@@ -49,6 +50,8 @@ const ModelsCreateRoute = () => {
     }
     return true;
   };
+
+  const darkMode = useDarkMode();
 
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -139,6 +142,7 @@ const ModelsCreateRoute = () => {
               parametersSchema: value.trim() ? value : undefined,
             })
           }
+          theme={darkMode.isDarkMode ? "dark" : "light"}
           extensions={[json()]}
         />
       </div>

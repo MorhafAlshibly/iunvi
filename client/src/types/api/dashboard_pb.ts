@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file api/dashboard.proto.
  */
 export const file_api_dashboard: GenFile = /*@__PURE__*/
-  fileDesc("ChNhcGkvZGFzaGJvYXJkLnByb3RvEglkYXNoYm9hcmQiSwoWQ3JlYXRlRGFzaGJvYXJkUmVxdWVzdBIPCgdtb2RlbElkGAEgASgJEgwKBG5hbWUYAiABKAkSEgoKZGVmaW5pdGlvbhgDIAEoCSIlChdDcmVhdGVEYXNoYm9hcmRSZXNwb25zZRIKCgJpZBgBIAEoCSJ1ChRHZXREYXNoYm9hcmRzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCRIUCgdtb2RlbElkGAIgASgJSACIAQESFwoKbW9kZWxSdW5JZBgDIAEoCUgBiAEBQgoKCF9tb2RlbElkQg0KC19tb2RlbFJ1bklkIkEKFUdldERhc2hib2FyZHNSZXNwb25zZRIoCgpkYXNoYm9hcmRzGAEgAygLMhQuZGFzaGJvYXJkLkRhc2hib2FyZCIhChNHZXREYXNoYm9hcmRSZXF1ZXN0EgoKAmlkGAEgASgJIj8KFEdldERhc2hib2FyZFJlc3BvbnNlEicKCWRhc2hib2FyZBgBIAEoCzIULmRhc2hib2FyZC5EYXNoYm9hcmQiRgobR2V0TW9kZWxSdW5EYXNoYm9hcmRSZXF1ZXN0EhIKCm1vZGVsUnVuSWQYASABKAkSEwoLZGFzaGJvYXJkSWQYAiABKAkiNwocR2V0TW9kZWxSdW5EYXNoYm9hcmRSZXNwb25zZRIXCg9kYXNoYm9hcmRTYXNVcmwYASABKAkiNgoJRGFzaGJvYXJkEgoKAmlkGAEgASgJEg8KB21vZGVsSWQYAiABKAkSDAoEbmFtZRgDIAEoCTL6AgoQRGFzaGJvYXJkU2VydmljZRJYCg9DcmVhdGVEYXNoYm9hcmQSIS5kYXNoYm9hcmQuQ3JlYXRlRGFzaGJvYXJkUmVxdWVzdBoiLmRhc2hib2FyZC5DcmVhdGVEYXNoYm9hcmRSZXNwb25zZRJSCg1HZXREYXNoYm9hcmRzEh8uZGFzaGJvYXJkLkdldERhc2hib2FyZHNSZXF1ZXN0GiAuZGFzaGJvYXJkLkdldERhc2hib2FyZHNSZXNwb25zZRJPCgxHZXREYXNoYm9hcmQSHi5kYXNoYm9hcmQuR2V0RGFzaGJvYXJkUmVxdWVzdBofLmRhc2hib2FyZC5HZXREYXNoYm9hcmRSZXNwb25zZRJnChRHZXRNb2RlbFJ1bkRhc2hib2FyZBImLmRhc2hib2FyZC5HZXRNb2RlbFJ1bkRhc2hib2FyZFJlcXVlc3QaJy5kYXNoYm9hcmQuR2V0TW9kZWxSdW5EYXNoYm9hcmRSZXNwb25zZUIpWidnaXRodWIuY29tL01vcmhhZkFsc2hpYmx5L2l1bnZpL2dlbi9hcGliBnByb3RvMw");
+  fileDesc("ChNhcGkvZGFzaGJvYXJkLnByb3RvEglkYXNoYm9hcmQiSwoWQ3JlYXRlRGFzaGJvYXJkUmVxdWVzdBIPCgdtb2RlbElkGAEgASgJEgwKBG5hbWUYAiABKAkSEgoKZGVmaW5pdGlvbhgDIAEoCSIlChdDcmVhdGVEYXNoYm9hcmRSZXNwb25zZRIKCgJpZBgBIAEoCSJ1ChRHZXREYXNoYm9hcmRzUmVxdWVzdBITCgt3b3Jrc3BhY2VJZBgBIAEoCRIUCgdtb2RlbElkGAIgASgJSACIAQESFwoKbW9kZWxSdW5JZBgDIAEoCUgBiAEBQgoKCF9tb2RlbElkQg0KC19tb2RlbFJ1bklkIkEKFUdldERhc2hib2FyZHNSZXNwb25zZRIoCgpkYXNoYm9hcmRzGAEgAygLMhQuZGFzaGJvYXJkLkRhc2hib2FyZCIhChNHZXREYXNoYm9hcmRSZXF1ZXN0EgoKAmlkGAEgASgJIj8KFEdldERhc2hib2FyZFJlc3BvbnNlEicKCWRhc2hib2FyZBgBIAEoCzIULmRhc2hib2FyZC5EYXNoYm9hcmQiMAocR2V0RGFzaGJvYXJkTWFya2Rvd25SZXNwb25zZRIQCghtYXJrZG93bhgBIAEoCSJGChtHZXRNb2RlbFJ1bkRhc2hib2FyZFJlcXVlc3QSEgoKbW9kZWxSdW5JZBgBIAEoCRITCgtkYXNoYm9hcmRJZBgCIAEoCSI3ChxHZXRNb2RlbFJ1bkRhc2hib2FyZFJlc3BvbnNlEhcKD2Rhc2hib2FyZFNhc1VybBgBIAEoCSI2CglEYXNoYm9hcmQSCgoCaWQYASABKAkSDwoHbW9kZWxJZBgCIAEoCRIMCgRuYW1lGAMgASgJMtsDChBEYXNoYm9hcmRTZXJ2aWNlElgKD0NyZWF0ZURhc2hib2FyZBIhLmRhc2hib2FyZC5DcmVhdGVEYXNoYm9hcmRSZXF1ZXN0GiIuZGFzaGJvYXJkLkNyZWF0ZURhc2hib2FyZFJlc3BvbnNlElIKDUdldERhc2hib2FyZHMSHy5kYXNoYm9hcmQuR2V0RGFzaGJvYXJkc1JlcXVlc3QaIC5kYXNoYm9hcmQuR2V0RGFzaGJvYXJkc1Jlc3BvbnNlEk8KDEdldERhc2hib2FyZBIeLmRhc2hib2FyZC5HZXREYXNoYm9hcmRSZXF1ZXN0Gh8uZGFzaGJvYXJkLkdldERhc2hib2FyZFJlc3BvbnNlEl8KFEdldERhc2hib2FyZE1hcmtkb3duEh4uZGFzaGJvYXJkLkdldERhc2hib2FyZFJlcXVlc3QaJy5kYXNoYm9hcmQuR2V0RGFzaGJvYXJkTWFya2Rvd25SZXNwb25zZRJnChRHZXRNb2RlbFJ1bkRhc2hib2FyZBImLmRhc2hib2FyZC5HZXRNb2RlbFJ1bkRhc2hib2FyZFJlcXVlc3QaJy5kYXNoYm9hcmQuR2V0TW9kZWxSdW5EYXNoYm9hcmRSZXNwb25zZUIpWidnaXRodWIuY29tL01vcmhhZkFsc2hpYmx5L2l1bnZpL2dlbi9hcGliBnByb3RvMw");
 
 /**
  * @generated from message dashboard.CreateDashboardRequest
@@ -135,6 +135,23 @@ export const GetDashboardResponseSchema: GenMessage<GetDashboardResponse> = /*@_
   messageDesc(file_api_dashboard, 5);
 
 /**
+ * @generated from message dashboard.GetDashboardMarkdownResponse
+ */
+export type GetDashboardMarkdownResponse = Message<"dashboard.GetDashboardMarkdownResponse"> & {
+  /**
+   * @generated from field: string markdown = 1;
+   */
+  markdown: string;
+};
+
+/**
+ * Describes the message dashboard.GetDashboardMarkdownResponse.
+ * Use `create(GetDashboardMarkdownResponseSchema)` to create a new message.
+ */
+export const GetDashboardMarkdownResponseSchema: GenMessage<GetDashboardMarkdownResponse> = /*@__PURE__*/
+  messageDesc(file_api_dashboard, 6);
+
+/**
  * @generated from message dashboard.GetModelRunDashboardRequest
  */
 export type GetModelRunDashboardRequest = Message<"dashboard.GetModelRunDashboardRequest"> & {
@@ -154,7 +171,7 @@ export type GetModelRunDashboardRequest = Message<"dashboard.GetModelRunDashboar
  * Use `create(GetModelRunDashboardRequestSchema)` to create a new message.
  */
 export const GetModelRunDashboardRequestSchema: GenMessage<GetModelRunDashboardRequest> = /*@__PURE__*/
-  messageDesc(file_api_dashboard, 6);
+  messageDesc(file_api_dashboard, 7);
 
 /**
  * @generated from message dashboard.GetModelRunDashboardResponse
@@ -171,7 +188,7 @@ export type GetModelRunDashboardResponse = Message<"dashboard.GetModelRunDashboa
  * Use `create(GetModelRunDashboardResponseSchema)` to create a new message.
  */
 export const GetModelRunDashboardResponseSchema: GenMessage<GetModelRunDashboardResponse> = /*@__PURE__*/
-  messageDesc(file_api_dashboard, 7);
+  messageDesc(file_api_dashboard, 8);
 
 /**
  * @generated from message dashboard.Dashboard
@@ -198,7 +215,7 @@ export type Dashboard = Message<"dashboard.Dashboard"> & {
  * Use `create(DashboardSchema)` to create a new message.
  */
 export const DashboardSchema: GenMessage<Dashboard> = /*@__PURE__*/
-  messageDesc(file_api_dashboard, 8);
+  messageDesc(file_api_dashboard, 9);
 
 /**
  * @generated from service dashboard.DashboardService
@@ -227,6 +244,14 @@ export const DashboardService: GenService<{
     methodKind: "unary";
     input: typeof GetDashboardRequestSchema;
     output: typeof GetDashboardResponseSchema;
+  },
+  /**
+   * @generated from rpc dashboard.DashboardService.GetDashboardMarkdown
+   */
+  getDashboardMarkdown: {
+    methodKind: "unary";
+    input: typeof GetDashboardRequestSchema;
+    output: typeof GetDashboardMarkdownResponseSchema;
   },
   /**
    * @generated from rpc dashboard.DashboardService.GetModelRunDashboard

@@ -38,3 +38,8 @@ export const createFileGroup = FileService.method.createFileGroup;
  * @generated from rpc file.FileService.GetFileGroups
  */
 export const getFileGroups = FileService.method.getFileGroups;
+
+/**
+ * @generated from rpc file.FileService.GetFileGroup
+ */
+export const getFileGroup = FileService.method.getFileGroup;

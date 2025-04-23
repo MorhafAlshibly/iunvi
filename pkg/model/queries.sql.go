@@ -449,6 +449,35 @@ func (q *Queries) GetFileGroupBySpecificationIdAndName(ctx context.Context, arg 
 	return item, err
 }
 
+const GetFileGroupById = `-- name: GetFileGroupById :one
+SELECT FileGroupId,
+	   SpecificationId,
+	   CreatedBy,
+	   Name,
+	   ShareWithWorkspace,
+	   CreatedAt
+FROM app.FileGroups
+WHERE FileGroupId = @FileGroupId;
+`
+
+type GetFileGroupByIdParams struct {
+	FileGroupId mssql.UniqueIdentifier `db:"FileGroupId"`
+}
+
+func (q *Queries) GetFileGroupById(ctx context.Context, arg GetFileGroupByIdParams) (AppFileGroup, error) {
+	row := q.db.QueryRowContext(ctx, GetFileGroupById, sql.Named("FileGroupId", arg.FileGroupId))
+	var item AppFileGroup
+	err := row.Scan(
+		&item.FileGroupID,
+		&item.SpecificationID,
+		&item.CreatedBy,
+		&item.Name,
+		&item.ShareWithWorkspace,
+		&item.CreatedAt,
+	)
+	return item, err
+}
+
 const CreateFile = `-- name: CreateFile :execresult
 INSERT INTO app.Files (FileGroupId, FileSchemaId, Name)
 SELECT @FileGroupId, fs.FileSchemaId, @Name
@@ -528,6 +557,58 @@ func (q *Queries) GetFileGroups(ctx context.Context, arg GetFileGroupsParams) ([
 			&i.Name,
 			&i.ShareWithWorkspace,
 			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const GetFilesByFileGroupId = `-- name: GetFilesByFileGroupId :many
+SELECT DISTINCT f.FileId,
+	   f.FileGroupId,
+	   f.FileSchemaId,
+	   f.Name,
+	   fs.Name AS FileSchemaName
+FROM app.Files f
+JOIN app.FileSchemas fs ON f.FileSchemaId = fs.FileSchemaId
+WHERE f.FileGroupId = @FileGroupId;
+`
+
+type GetFilesByFileGroupIdParams struct {
+	FileGroupId mssql.UniqueIdentifier `db:"FileGroupId"`
+}
+
+type GetFilesByFileGroupIdRow struct {
+	FileID         mssql.UniqueIdentifier `db:"FileId"`
+	FileGroupID    mssql.UniqueIdentifier `db:"FileGroupId"`
+	FileSchemaID   mssql.UniqueIdentifier `db:"FileSchemaId"`
+	Name           string                 `db:"Name"`
+	FileSchemaName string                 `db:"FileSchemaName"`
+}
+
+func (q *Queries) GetFilesByFileGroupId(ctx context.Context, arg GetFilesByFileGroupIdParams) ([]GetFilesByFileGroupIdRow, error) {
+	rows, err := q.db.QueryContext(ctx, GetFilesByFileGroupId, sql.Named("FileGroupId", arg.FileGroupId))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetFilesByFileGroupIdRow
+	for rows.Next() {
+		var i GetFilesByFileGroupIdRow
+		if err := rows.Scan(
+			&i.FileID,
+			&i.FileGroupID,
+			&i.FileSchemaID,
+			&i.Name,
+			&i.FileSchemaName,
 		); err != nil {
 			return nil, err
 		}
@@ -893,7 +974,7 @@ func (q *Queries) GetDashboardByModelIdAndName(ctx context.Context, arg GetDashb
 }
 
 const GetDashboardsByWorkspaceIdAndModelId = `-- name: GetDashboardsByWorkspaceIdAndModelId :many
-SELECT d.DashboardId,
+SELECT DISTINCT d.DashboardId,
 	   d.ModelId,
 	   d.Name,
 	   d.CreatedAt

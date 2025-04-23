@@ -13,6 +13,7 @@ import { ModelSelector } from "@/components/model-selector";
 import { createDashboard } from "@/types/api/dashboard-DashboardService_connectquery";
 import { CreateDashboardRequest } from "@/types/api/dashboard_pb";
 import { DashboardTransport } from "@/lib/api-client";
+import { useDarkMode } from "usehooks-ts";
 
 const DashboardsCreateRoute = () => {
   const navigate = useNavigate();
@@ -34,6 +35,8 @@ const DashboardsCreateRoute = () => {
     if (!dashboard.definition) return false;
     return true;
   };
+
+  const darkMode = useDarkMode();
 
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -93,6 +96,7 @@ const DashboardsCreateRoute = () => {
               definition: value,
             })
           }
+          theme={darkMode.isDarkMode ? "dark" : "light"}
           extensions={[markdown()]}
         />
       </div>

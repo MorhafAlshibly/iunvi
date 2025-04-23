@@ -20,6 +20,11 @@ export const getDashboards = DashboardService.method.getDashboards;
 export const getDashboard = DashboardService.method.getDashboard;
 
 /**
+ * @generated from rpc dashboard.DashboardService.GetDashboardMarkdown
+ */
+export const getDashboardMarkdown = DashboardService.method.getDashboardMarkdown;
+
+/**
  * @generated from rpc dashboard.DashboardService.GetModelRunDashboard
  */
 export const getModelRunDashboard = DashboardService.method.getModelRunDashboard;

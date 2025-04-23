@@ -27,34 +27,47 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     href: string;
   }>;
   const splitPath = path.replace(/^\/app\//, "").split("/");
-  const pathObjectsLength = pathObjects.length;
-  for (let i = 0; i < splitPath.length; i++) {
-    const pathPart = splitPath[i];
-    for (const key in curr) {
-      const item = curr[key as keyof typeof curr];
-      if (item.root) {
-        if (item.root.path !== pathPart) continue;
-      } else if (item.path !== pathPart) continue;
-      // Convert hyphen casing to spaced text
-      const pathName = pathPart
-        .replace(/-/g, " ")
-        .replace(/([a-z])([A-Z])/g, "$1 $2")
-        .replace(/\b\w/g, (char) => char.toUpperCase());
-      let href = "";
-      if (i > 0) {
-        href = `/${splitPath.slice(1, i + 1).join("/")}`;
-      }
-      pathObjects.push({
-        text: pathName,
-        href: href,
-      });
-      curr = item;
-      break;
-    }
-    if (pathObjectsLength === pathObjects.length) {
-      // If no match is found, break the loop
-      break;
-    }
+  // const pathObjectsLength = pathObjects.length;
+  // for (let i = 0; i < splitPath.length; i++) {
+  //   const pathPart = splitPath[i];
+  //   for (const key in curr) {
+  //     const item = curr[key as keyof typeof curr];
+  //     if (item.root) {
+  //       if (item.root.path !== pathPart) continue;
+  //     } else if (item.path !== pathPart) continue;
+  //     // Convert hyphen casing to spaced text
+  //     const pathName = pathPart
+  //       .replace(/-/g, " ")
+  //       .replace(/([a-z])([A-Z])/g, "$1 $2")
+  //       .replace(/\b\w/g, (char) => char.toUpperCase());
+  //     let href = "";
+  //     if (i > 0) {
+  //       href = `/${splitPath.slice(1, i + 1).join("/")}`;
+  //     }
+  //     pathObjects.push({
+  //       text: pathName,
+  //       href: href,
+  //     });
+  //     curr = item;
+  //     break;
+  //   }
+  //   if (pathObjectsLength === pathObjects.length) {
+  //     // If no match is found, break the loop
+  //     break;
+  //   }
+  // }
+
+  let href = "/app";
+  for (const pathPart of splitPath) {
+    const pathName = pathPart
+      .replace(/-/g, " ")
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+    href += `/${pathPart}`;
+    pathObjects.push({
+      text: pathName,
+      href: href,
+    });
   }
 
   return (
@@ -70,20 +83,28 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 {pathObjects.map((item, index) => {
                   if (index === pathObjects.length - 1) {
                     return (
-                      <BreadcrumbItem key={index}>
-                        <BreadcrumbPage>{item.text}</BreadcrumbPage>
-                      </BreadcrumbItem>
+                      <div
+                        key={index}
+                        className="inline-flex items-center gap-1.5"
+                      >
+                        <BreadcrumbItem>
+                          <BreadcrumbPage>{item.text}</BreadcrumbPage>
+                        </BreadcrumbItem>
+                      </div>
                     );
                   }
                   return (
-                    <>
-                      <BreadcrumbItem key={index} className="hidden md:block">
+                    <div
+                      key={index}
+                      className="inline-flex items-center gap-1.5"
+                    >
+                      <BreadcrumbItem>
                         <BreadcrumbLink onClick={() => navigate(item.href)}>
                           {item.text}
                         </BreadcrumbLink>
                       </BreadcrumbItem>
-                      <BreadcrumbSeparator className="hidden md:block" />
-                    </>
+                      <BreadcrumbSeparator />
+                    </div>
                   );
                 })}
               </BreadcrumbList>

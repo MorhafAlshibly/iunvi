@@ -573,3 +573,40 @@ func (s *Service) GetFileGroups(ctx context.Context, req *connect.Request[api.Ge
 		FileGroups: fileGroupNames,
 	}), nil
 }
+
+func (s *Service) GetFileGroup(ctx context.Context, req *connect.Request[api.GetFileGroupRequest]) (*connect.Response[api.GetFileGroupResponse], error) {
+	if req.Msg.Id == "" {
+		return nil, fmt.Errorf("FileGroupId is required")
+	}
+	fileGroupIdBytes, err := conversion.StringToUniqueIdentifier(req.Msg.Id)
+	if err != nil {
+		return nil, err
+	}
+	database := model.New(middleware.GetTx(ctx))
+	fileGroup, err := database.GetFileGroupById(ctx, model.GetFileGroupByIdParams{
+		FileGroupId: fileGroupIdBytes,
+	})
+	if err != nil {
+		return nil, err
+	}
+	var schemaFileMappings []*api.SchemaFileMapping
+	files, err := database.GetFilesByFileGroupId(ctx, model.GetFilesByFileGroupIdParams{
+		FileGroupId: fileGroup.FileGroupID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	for _, file := range files {
+		schemaFileMappings = append(schemaFileMappings, &api.SchemaFileMapping{
+			SchemaName:          file.FileSchemaName,
+			LandingZoneFileName: file.Name,
+		})
+	}
+	return connect.NewResponse(&api.GetFileGroupResponse{
+		FileGroup: &api.FileGroup{
+			Id:                 fileGroup.FileGroupID.String(),
+			Name:               fileGroup.Name,
+			SchemaFileMappings: schemaFileMappings,
+		},
+	}), nil
+}

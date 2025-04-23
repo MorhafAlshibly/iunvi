@@ -8,6 +8,7 @@ service DashboardService {
   rpc CreateDashboard(CreateDashboardRequest) returns (CreateDashboardResponse);
   rpc GetDashboards(GetDashboardsRequest) returns (GetDashboardsResponse);
   rpc GetDashboard(GetDashboardRequest) returns (GetDashboardResponse);
+  rpc GetDashboardMarkdown(GetDashboardRequest) returns (GetDashboardMarkdownResponse);
   rpc GetModelRunDashboard(GetModelRunDashboardRequest) returns (GetModelRunDashboardResponse); 
 }
 
@@ -37,6 +38,10 @@ message GetDashboardRequest {
 
 message GetDashboardResponse {
   Dashboard dashboard = 1;
+}
+
+message GetDashboardMarkdownResponse {
+  string markdown = 1;
 }
 
 message GetModelRunDashboardRequest {

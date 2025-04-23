@@ -14,6 +14,7 @@ service FileService {
   rpc GetLandingZoneFiles(GetLandingZoneFilesRequest) returns (GetLandingZoneFilesResponse);
   rpc CreateFileGroup(CreateFileGroupRequest) returns (CreateFileGroupResponse);
   rpc GetFileGroups(GetFileGroupsRequest) returns (GetFileGroupsResponse);
+  rpc GetFileGroup(GetFileGroupRequest) returns (GetFileGroupResponse);
 }
 
 message CreateSpecificationRequest {
@@ -82,6 +83,19 @@ message GetFileGroupsRequest {
 
 message GetFileGroupsResponse {
   repeated FileGroupName fileGroups = 1;
+}
+
+message GetFileGroupRequest {
+  string id = 1;
+}
+message GetFileGroupResponse {
+  FileGroup fileGroup = 1;
+}
+
+message FileGroup {
+  string id = 1;
+  string name = 2;
+  repeated SchemaFileMapping schemaFileMappings = 3;
 }
 
 message FileGroupName {

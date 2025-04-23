@@ -42,6 +42,9 @@ const (
 	// DashboardServiceGetDashboardProcedure is the fully-qualified name of the DashboardService's
 	// GetDashboard RPC.
 	DashboardServiceGetDashboardProcedure = "/dashboard.DashboardService/GetDashboard"
+	// DashboardServiceGetDashboardMarkdownProcedure is the fully-qualified name of the
+	// DashboardService's GetDashboardMarkdown RPC.
+	DashboardServiceGetDashboardMarkdownProcedure = "/dashboard.DashboardService/GetDashboardMarkdown"
 	// DashboardServiceGetModelRunDashboardProcedure is the fully-qualified name of the
 	// DashboardService's GetModelRunDashboard RPC.
 	DashboardServiceGetModelRunDashboardProcedure = "/dashboard.DashboardService/GetModelRunDashboard"
@@ -52,6 +55,7 @@ type DashboardServiceClient interface {
 	CreateDashboard(context.Context, *connect.Request[api.CreateDashboardRequest]) (*connect.Response[api.CreateDashboardResponse], error)
 	GetDashboards(context.Context, *connect.Request[api.GetDashboardsRequest]) (*connect.Response[api.GetDashboardsResponse], error)
 	GetDashboard(context.Context, *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardResponse], error)
+	GetDashboardMarkdown(context.Context, *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardMarkdownResponse], error)
 	GetModelRunDashboard(context.Context, *connect.Request[api.GetModelRunDashboardRequest]) (*connect.Response[api.GetModelRunDashboardResponse], error)
 }
 
@@ -84,6 +88,12 @@ func NewDashboardServiceClient(httpClient connect.HTTPClient, baseURL string, op
 			connect.WithSchema(dashboardServiceMethods.ByName("GetDashboard")),
 			connect.WithClientOptions(opts...),
 		),
+		getDashboardMarkdown: connect.NewClient[api.GetDashboardRequest, api.GetDashboardMarkdownResponse](
+			httpClient,
+			baseURL+DashboardServiceGetDashboardMarkdownProcedure,
+			connect.WithSchema(dashboardServiceMethods.ByName("GetDashboardMarkdown")),
+			connect.WithClientOptions(opts...),
+		),
 		getModelRunDashboard: connect.NewClient[api.GetModelRunDashboardRequest, api.GetModelRunDashboardResponse](
 			httpClient,
 			baseURL+DashboardServiceGetModelRunDashboardProcedure,
@@ -98,6 +108,7 @@ type dashboardServiceClient struct {
 	createDashboard      *connect.Client[api.CreateDashboardRequest, api.CreateDashboardResponse]
 	getDashboards        *connect.Client[api.GetDashboardsRequest, api.GetDashboardsResponse]
 	getDashboard         *connect.Client[api.GetDashboardRequest, api.GetDashboardResponse]
+	getDashboardMarkdown *connect.Client[api.GetDashboardRequest, api.GetDashboardMarkdownResponse]
 	getModelRunDashboard *connect.Client[api.GetModelRunDashboardRequest, api.GetModelRunDashboardResponse]
 }
 
@@ -116,6 +127,11 @@ func (c *dashboardServiceClient) GetDashboard(ctx context.Context, req *connect.
 	return c.getDashboard.CallUnary(ctx, req)
 }
 
+// GetDashboardMarkdown calls dashboard.DashboardService.GetDashboardMarkdown.
+func (c *dashboardServiceClient) GetDashboardMarkdown(ctx context.Context, req *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardMarkdownResponse], error) {
+	return c.getDashboardMarkdown.CallUnary(ctx, req)
+}
+
 // GetModelRunDashboard calls dashboard.DashboardService.GetModelRunDashboard.
 func (c *dashboardServiceClient) GetModelRunDashboard(ctx context.Context, req *connect.Request[api.GetModelRunDashboardRequest]) (*connect.Response[api.GetModelRunDashboardResponse], error) {
 	return c.getModelRunDashboard.CallUnary(ctx, req)
@@ -126,6 +142,7 @@ type DashboardServiceHandler interface {
 	CreateDashboard(context.Context, *connect.Request[api.CreateDashboardRequest]) (*connect.Response[api.CreateDashboardResponse], error)
 	GetDashboards(context.Context, *connect.Request[api.GetDashboardsRequest]) (*connect.Response[api.GetDashboardsResponse], error)
 	GetDashboard(context.Context, *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardResponse], error)
+	GetDashboardMarkdown(context.Context, *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardMarkdownResponse], error)
 	GetModelRunDashboard(context.Context, *connect.Request[api.GetModelRunDashboardRequest]) (*connect.Response[api.GetModelRunDashboardResponse], error)
 }
 
@@ -154,6 +171,12 @@ func NewDashboardServiceHandler(svc DashboardServiceHandler, opts ...connect.Han
 		connect.WithSchema(dashboardServiceMethods.ByName("GetDashboard")),
 		connect.WithHandlerOptions(opts...),
 	)
+	dashboardServiceGetDashboardMarkdownHandler := connect.NewUnaryHandler(
+		DashboardServiceGetDashboardMarkdownProcedure,
+		svc.GetDashboardMarkdown,
+		connect.WithSchema(dashboardServiceMethods.ByName("GetDashboardMarkdown")),
+		connect.WithHandlerOptions(opts...),
+	)
 	dashboardServiceGetModelRunDashboardHandler := connect.NewUnaryHandler(
 		DashboardServiceGetModelRunDashboardProcedure,
 		svc.GetModelRunDashboard,
@@ -168,6 +191,8 @@ func NewDashboardServiceHandler(svc DashboardServiceHandler, opts ...connect.Han
 			dashboardServiceGetDashboardsHandler.ServeHTTP(w, r)
 		case DashboardServiceGetDashboardProcedure:
 			dashboardServiceGetDashboardHandler.ServeHTTP(w, r)
+		case DashboardServiceGetDashboardMarkdownProcedure:
+			dashboardServiceGetDashboardMarkdownHandler.ServeHTTP(w, r)
 		case DashboardServiceGetModelRunDashboardProcedure:
 			dashboardServiceGetModelRunDashboardHandler.ServeHTTP(w, r)
 		default:
@@ -189,6 +214,10 @@ func (UnimplementedDashboardServiceHandler) GetDashboards(context.Context, *conn
 
 func (UnimplementedDashboardServiceHandler) GetDashboard(context.Context, *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("dashboard.DashboardService.GetDashboard is not implemented"))
+}
+
+func (UnimplementedDashboardServiceHandler) GetDashboardMarkdown(context.Context, *connect.Request[api.GetDashboardRequest]) (*connect.Response[api.GetDashboardMarkdownResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("dashboard.DashboardService.GetDashboardMarkdown is not implemented"))
 }
 
 func (UnimplementedDashboardServiceHandler) GetModelRunDashboard(context.Context, *connect.Request[api.GetModelRunDashboardRequest]) (*connect.Response[api.GetModelRunDashboardResponse], error) {
