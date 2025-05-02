@@ -31,7 +31,6 @@ import (
 	blobService "github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/service"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/sas"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/service"
-	_ "github.com/marcboeker/go-duckdb"
 )
 
 type Service struct {

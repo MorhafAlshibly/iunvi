@@ -16,8 +16,6 @@ import (
 	msgraphsdk "github.com/microsoftgraph/msgraph-sdk-go"
 	msgraphcore "github.com/microsoftgraph/msgraph-sdk-go-core"
 	"github.com/microsoftgraph/msgraph-sdk-go/models"
-
-	_ "github.com/marcboeker/go-duckdb"
 )
 
 type Service struct {

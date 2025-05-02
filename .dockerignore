@@ -1,0 +1,15 @@
+
+node_modules
+bin
+dist
+build
+migrations
+tmp
+
+Dockerfile
+.git
+.gitignore
+.prettierrc
+
+*.yaml
+*.yml

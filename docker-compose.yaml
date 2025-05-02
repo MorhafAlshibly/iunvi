@@ -1,0 +1,61 @@
+services:
+  tenant:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        service: tenant
+        port: 8001
+        image_suffix: -alpine
+        cgo_enabled: 0
+    ports:
+      - "8001:8001"
+    env_file:
+      - ./env/.env.dev
+  file:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        service: file
+        port: 8002
+        cgo_enabled: 1
+    ports:
+      - "8002:8002"
+    env_file:
+      - ./env/.env.dev
+  model:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        service: model
+        port: 8003
+        image_suffix: -alpine
+        cgo_enabled: 0
+    ports:
+      - "8003:8003"
+    env_file:
+      - ./env/.env.dev
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        service: dashboard
+        port: 8004
+        image_suffix: -alpine
+        cgo_enabled: 0
+    ports:
+      - "8004:8004"
+    env_file:
+      - ./env/.env.dev
+  client:
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+      args:
+        port: 7575
+        env_file: ./env/.env.dev
+    ports:
+      - "7575:7575"

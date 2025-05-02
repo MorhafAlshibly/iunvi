@@ -2,19 +2,19 @@ version: "3"
 
 includes:
   client:
-    taskfile: client/Client.yml
+    taskfile: client/Client.yaml
     dir: client
   tenant:
-    taskfile: cmd/tenant/Tenant.yml
+    taskfile: cmd/tenant/Tenant.yaml
     dir: cmd/tenant
   file:
-    taskfile: cmd/file/File.yml
+    taskfile: cmd/file/File.yaml
     dir: cmd/file
   model:
-    taskfile: cmd/model/Model.yml
+    taskfile: cmd/model/Model.yaml
     dir: cmd/model
   dashboard:
-    taskfile: cmd/dashboard/Dashboard.yml
+    taskfile: cmd/dashboard/Dashboard.yaml
     dir: cmd/dashboard
 
 tasks:

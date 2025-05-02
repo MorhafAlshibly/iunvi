@@ -25,7 +25,6 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azdatalake/service"
-	_ "github.com/marcboeker/go-duckdb"
 	"github.com/santhosh-tekuri/jsonschema/v6"
 )
 
