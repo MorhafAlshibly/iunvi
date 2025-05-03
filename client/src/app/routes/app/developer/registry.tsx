@@ -159,26 +159,35 @@ const RegistryRoute = () => {
             )}
           </div>
         ))}
-        <div>
-          <div className="flex mt-10">
-            <Label className="flex-1 items-center font-semibold text-lg">
-              Images
-            </Label>
-            <div className="flex-1 text-right">
-              <Button size="sm" variant="ghost" onClick={() => refetchImages()}>
+        <div className="grid grid-cols-1 gap-4 col-span-1 mt-10">
+          <div className="grid grid-cols-2 col-span-1">
+            <div className="grid grid-cols-1 col-span-1 justify-items-start">
+              <Label className="col-span-1 content-center font-semibold text-lg">
+                Images
+              </Label>
+            </div>
+            <div className="grid grid-cols-1 col-span-1 justify-items-end">
+              <Button
+                className="col-span-1"
+                size="sm"
+                variant="ghost"
+                onClick={() => refetchImages()}
+              >
                 <RefreshCcw />
               </Button>
             </div>
+            <Separator className="col-span-2 my-2" />
           </div>
-          <Separator className="my-2" />
-          {images.map((image) => (
-            <div key={image.name} className="grid grid-cols-3">
-              <Label className="flex col-span-3 items-center">
-                {image.name}
-              </Label>
-              <Separator className="col-span-3 my-2" />
-            </div>
-          ))}
+          <div className="grid grid-cols-1 col-span-1">
+            {images.map((image) => (
+              <div key={image.name} className="grid grid-cols-1 col-span-1">
+                <Label className="col-span-1 content-center">
+                  {image.name}
+                </Label>
+                <Separator className="col-span-1 my-2" />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </ContentLayout>
